@@ -6,7 +6,7 @@ let popUp = null;
 
 function initializeCalRun(enable = false)
 {
-	enableButtons(false);
+	enableButtons(enable);
 	loadDependencies();
 }
 
