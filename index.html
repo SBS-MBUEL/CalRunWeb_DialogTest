@@ -6,59 +6,56 @@
         <META http-equiv='X-UA-Compatible' content='IE=edge'>
         <META charset='utf-8'>
         <META name='viewport' content='width=device-width, initial-scale=1.0'>
-        <LINK rel='stylesheet' type='text/css' href='css/calRun.css'>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="http://localhost:8080/socket.io/socket.io.js"></script>
-        <script type="text/javascript" src="../sbGlobal/sbGlobalFunctions.js"></script>
-        <script type="text/javascript" src="js/calRunFrontEnd.js"></script>
-        <script type="text/javascript">
+			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">
+			<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+			<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script>
+			<script type="text/javascript" src="http://localhost:8080/socket.io/socket.io.js"></script>
+			<script type="text/javascript" src="../sbGlobal/sbGlobalFunctions.js"></script>
+			<script type="text/javascript" src="js/calRunFrontEnd.js"></script>
+			<script type="text/javascript">
             //This is how we get the program working
             //Load global files and then initialize the calRun system
             initializeGlobals(initializeCalRun);
-        </script>
+			</script>
+			<LINK rel='stylesheet' href='css/calRun.css'>
     
     </HEAD>
     <!--This ensures the body of the page takes up all the viewable area-->
     <BODY style='height:100vh;'>
         <!--Navigation bar-->
-        <nav role="navigation" class=" pt-4 container-fluid navBar navbar navbar-expand-lg navbar-light bg-light">
+        <nav role="navigation" class="container-fluid navBar navbar navbar-light bg-light">
             <div class='row' id="main-menu">
-				<div class="col-1 col-lg-6">
-					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#calMenu" aria-controls="calMenu" aria-expanded="false" aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon"></span>
-					</button>
+				<div class="col-6">
 	
-					<div id="calMenu" class='inline collapse navbar-collapse'>
-						<div id="btnStart" class='navElement navButton btn btn-info'>
+					<div id="calMenu" class='inline'>
+						<div id="btnStart" class='navElement navButton btn btn-primary'>
 							<img src="images/start.png">Start
 						</div>
-						<div id="btnStop" class='navElement navButton btn btn-info'>
+						<div id="btnStop" class='navElement navButton btn btn-primary'>
 							<img src="images/stop.png">Stop
 						</div>
-						<div id="btnNext" class='navElement navButton btn btn-info'>
+						<div id="btnNext" class='navElement navButton btn btn-primary'>
 							<img src="images/nextcal.png">Next
 						</div>
-						<div id="btnTerminal" class='navElement navButton btn btn-info'>
+						<div id="btnTerminal" class='navElement navButton btn btn-primary'>
 							<img src="images/terminal.png">Terminal
 						</div>
-						<div id="btnAction" class='navElement navButton btn btn-info'>
+						<div id="btnAction" class='navElement navButton btn btn-primary'>
 							<img src="images/control.png">Control
 						</div>
-						<div id="btnConfigure" class='navElement navButton btn btn-info'>
+						<div id="btnConfigure" class='navElement navButton btn btn-primary'>
 							<img src="images/setup.png">Setup
 						</div>
-						<div id="btnCalCert" class='navElement navButton btn btn-info'>
+						<div id="btnCalCert" class='navElement navButton btn btn-primary'>
 							<img src="images/graph.png">Graph
 						</div>
-						<div id="btnBug" class='navElement navButton btn btn-info'>
+						<div id="btnBug" class='navElement navButton btn btn-primary'>
 							<img src="images/bug.png">Bug
 						</div>
 	
 					</div>
 				</div>
-				<div class="col-11 col-lg-6 float-right">
+				<div class="col-6 float-right">
 					<div class='systemName' contenteditable='true'>Not Set</div>
 					<div class='systemName'>System Name:</div>
 
