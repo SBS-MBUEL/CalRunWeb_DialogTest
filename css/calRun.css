@@ -39,10 +39,10 @@
 	font-weight: bold;		
 }
 
-.navButton:hover
+/* .navButton:hover
 {
 	background-color:#ADD8E6 !important;
-}
+} */
 
 .navButton img 
 {
@@ -55,10 +55,21 @@
 
 .controlLink {
 	text-decoration: underline; 
-	color: blue !important;
+	color: #11195c;
 	cursor: pointer;
 }
 
-input {
-	width: 20%;
+.controlLink:hover {
+	text-decoration: none; 
+	border-bottom: 1px dashed #00ADDD;
+	color: #00ADDD;
+	cursor: pointer;
+}
+
+.btn-primary {
+	background-color: #11195c;
+}
+
+.btn-primary:hover {
+	background-color: #00ADDD; 
 }

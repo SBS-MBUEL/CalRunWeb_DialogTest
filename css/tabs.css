@@ -1,0 +1,61 @@
+
+a:hover,a:focus{
+    outline: none;
+    text-decoration: none;
+    
+}
+.tab .nav-tabs{
+    background: #dde2e0;
+    padding: 5px 0;
+    text-align: center;
+}
+.tab .nav-tabs li{
+    margin-bottom: 0;
+    margin-right: 0;
+    float: none;
+    display: inline-block;
+}
+.tab .nav-tabs li a{
+    font-size: 14px;
+    color: #11195c;
+    background: #fafbfb;
+    margin-right: 5px;
+    padding: 20px 25px;
+    border-radius: 0;
+    text-transform: uppercase;
+}
+.tab .nav-tabs li a:hover{
+    background-color: #00ADDD;
+    border-color: transparent;
+}
+.tab .nav-tabs li a i{
+    font-size: 25px;
+    margin-right: 10px;
+}
+.tab .nav-tabs li.active a,
+.tab .nav-tabs li.active a:hover{
+    background: #11195c;
+    color: #fff;
+    border: 1px solid transparent;
+}
+.tab .tab-content{
+    font-size: 14px;
+    color: #11195c;
+    line-height: 30px;
+    background: #e7ecea;
+    padding: 20px 85px;
+}
+.btn {
+    font-size: 0.9em;
+}
+
+@media only screen and (max-width: 990px){
+    .tab .nav-tabs li a{ padding: 15px 10px; }
+    .tab .tab-content{ padding: 20px 25px; }
+}
+@media only screen and (max-width: 767px){
+    .tab .nav-tabs li a{ padding: 15px 5px; }
+}
+@media only screen and (max-width: 480px){
+    .tab .nav-tabs li{ width:100%; }
+}

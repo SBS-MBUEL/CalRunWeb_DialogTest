@@ -7,146 +7,634 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel='stylesheet' href='./css/calRun.css'>
+    <link rel='stylesheet' href='./css/tabs.css'>
 
     <title>configuration</title>
 </head>
 <body>
-    <h1 class="pl-1 text-center">Control Devices</h1>
     <content class="container-fluid text-center">
-        <div class="header ">
-            <div class="pl-1 row font-weight-bold">
-                <div class="col-1">
-                    Device
-                </div>
-                <div class="col-1">
-                    SN
-                </div>
-                <div class="col-1">
-                    Port
-                </div>
-                <div class="col-1">
-                    Baud
-                </div>
-                <div class="col-1">
-                    Format
-                </div>
-                <div class="col-1">
-                    Delay
-                </div>
-                <div class="col-1">
-                    Commands to Configure
-                </div>
-                <div class="col-1">
-                    Sample Commands
-                </div>
-                <div class="col-3 text-center">
-                    Measurands
-                </div>
-                <div class="col-1 text-center">
-                    Update
-                </div>
-            </div>
-        </div>
-        <div class="controlDevice">
-            <div class="pl-1 mb-1 row">
-                <div class="controlLink col-1 ">
-                    Device
-                </div>
-                <div class="col-1">
-                    <span class="controlLink">SN</span>
-                </div>
-                <div class="col-1">
-                    <span class="controlLink">Port</span>
-                </div>
-                <div class="col-1">
-                    <span class="controlLink">Baud</span>
-                </div>
-                <div class="col-1">
-                    <span class="controlLink">Format</span>
-                </div>
-                <div class="col-1">
-                    <span class="controlLink">Delay</span>
-                </div>
-                <div class="col-1">
-                    <span class="controlLink">Set</span>
-                </div>
-                <div class="col-1">
-                    <span class="controlLink">Set</span>
-                </div>
-                <div class="col-3 text-center">
-                    <div class="btn btn-primary">
-                        Add Measurand
-                    </div>
-                </div>
-                <div class="col-1">
-                    <div class="row no-gutters">
-                        <div class="col-6">
-                            &nbsp;
-                        </div>
-                        <div class="col-6">
-                            <div class="btn btn-success">
-                                <i class="fa fa-plus" aria-hidden="true"></i>
+        <div class="row">
+            <div class="col-10">
+                <div class="tab" role="tabpanel">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="tab-select" role="presentation" class="active"><a href="#controlDevices" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-desktop"></i> Control Devices</a></li>
+                        <li class="tab-select" role="presentation"><a href="#instrumentConfiguration" aria-controls="profile" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-cube"></i>Instrument Configs</a></li>
+                        <li class="tab-select" role="presentation"><a href="#setPoints" aria-controls="messages" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-dot-circle-o"></i>Set Points</a></li>
+                        <li class="tab-select" role="presentation"><a href="#references" aria-controls="messages" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-thermometer-half"></i>References</a></li>
+                        <li class="tab-select" role="presentation"><a href="#Section4" aria-controls="messages" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-briefcase"></i>Section 4</a></li>
+                    </ul>
+                    <div class="tab-content tabs">
+                        <div role="tabpanel" class="tab-pane active fade in show" id="controlDevices">
+                            <h1 class="pl-1 text-center">Control Devices</h1>
+                            <div class="header ">
+                                <div class="pl-1 row font-weight-bold">
+                                    <div class="col-1">
+                                        Device
+                                    </div>
+                                    <div class="col-1">
+                                        SN
+                                    </div>
+                                    <div class="col-1">
+                                        Port
+                                    </div>
+                                    <div class="col-1">
+                                        Baud
+                                    </div>
+                                    <div class="col-1">
+                                        Format
+                                    </div>
+                                    <div class="col-1">
+                                        Delay
+                                    </div>
+                                    <div class="col-1">
+                                        Commands to Configure
+                                    </div>
+                                    <div class="col-1">
+                                        Sample Commands
+                                    </div>
+                                    <div class="col-3 text-center">
+                                        Measurands
+                                    </div>
+                                    <div class="col-1 text-center">
+                                        Update
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-    
-                </div>
-            </div>
-        </div>
-        <div class="options">
-            <div class="pl-1 row text-center">
-                <div class="col-1">
-                    ECO-V2
-                </div>
-                <div class="col-1">
-                    117
-                </div>
-                <div class="col-1">
-                    COM-1
-                </div>
-                <div class="col-1">
-                    19200
-                </div>
-                <div class="col-1">
-                    8,n,1
-                </div>
-                <div class="col-1">
-                    5 Secs
-                </div>
-                <div class="col-1">
-                    <span class="controlLink">View</span>
-                </div>
-                <div class="col-1">
-                    <span class="controlLink">View</span>
-                </div>
-                <div class="col-3 text-center">
-                    <div class="mb-1 btn btn-primary">
-                        FDOM
-                    </div>
-                    <br />
-                    <div class="btn btn-primary">
-                        Add Measurand
-                    </div>
-                </div>
-                <div class="col-1" >
-                    <div class="row mb-1 no-gutters">
-                        <div class="col-6">
-                            <div class="btn btn-success no-gutters">
-                                <i class="fa fa-save"></i>
+                            <div class="controlDevice">
+                                <div class="pl-1 mb-1 row">
+                                    <div class="col-1 ">
+                                        <span class="controlLink">Device</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">SN</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Port</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Baud</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Format</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Delay</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Set</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Set</span>
+                                    </div>
+                                    <div class="col-3 text-center">
+                                        <div class="btn btn-primary">
+                                            Add Measurand
+                                        </div>
+                                    </div>
+                                    <div class="col-1">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                &nbsp;
+                                            </div>
+                                            <div class="col-4">
+                                                &nbsp;
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="btn btn-success">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                        
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="btn btn-danger">
-                                <i class="fa fa-remove" aria-hidden="true"></i>
+                            <div class="controlDevice">
+                                <div class="pl-1 row text-center">
+                                    <div class="col-1">
+                                        <span class="controlLink">ECO-V2</span>
+                                    </div>
+                                    <div class="col-1">
+                                        117
+                                    </div>
+                                    <div class="col-1">
+                                        COM-1
+                                    </div>
+                                    <div class="col-1">
+                                        19200
+                                    </div>
+                                    <div class="col-1">
+                                        8,n,1
+                                    </div>
+                                    <div class="col-1">
+                                        5 Secs
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">View</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">View</span>
+                                    </div>
+                                    <div class="col-3 text-center">
+                                        <div class="mb-1 btn btn-primary">
+                                            FDOM
+                                        </div>
+                                        <br />
+                                        <div class="btn btn-primary">
+                                            Add Measurand
+                                        </div>
+                                    </div>
+                                    <div class="col-1" >
+                                        <div class="row mb-1">
+                                            <div class="col-4">
+                                                <div class="btn btn-info">
+                                                    <i class="fa fa-copy"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="btn btn-success">
+                                                    <i class="fa fa-save"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="btn btn-danger">
+                                                    <i class="fa fa-remove" aria-hidden="true"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                        
+                                    </div>
+                                </div>
                             </div>
+                
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="instrumentConfiguration">
+                            <h1 class="pl-1 text-center">Instrument Configuration</h1>
+                            <div class="header ">
+                                <div class="pl-1 row font-weight-bold">
+                                    <div class="col-1">
+                                        Device
+                                    </div>
+                                    <div class="col-1">
+                                        SN
+                                    </div>
+                                    <div class="col-1">
+                                        Port
+                                    </div>
+                                    <div class="col-1">
+                                        Baud
+                                    </div>
+                                    <div class="col-1">
+                                        Format
+                                    </div>
+                                    <div class="col-1">
+                                        Delay
+                                    </div>
+                                    <div class="col-1">
+                                        Commands to Configure
+                                    </div>
+                                    <div class="col-1">
+                                        Sample Commands
+                                    </div>
+                                    <div class="col-3 text-center">
+                                        Measurands
+                                    </div>
+                                    <div class="col-1 text-center">
+                                        Update
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="intrumentConfig">
+                                <div class="pl-1 mb-1 row">
+                                    <div class="col-1 ">
+                                        <span class="controlLink">Device</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">SN</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Port</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Baud</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Format</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Delay</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Set</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Set</span>
+                                    </div>
+                                    <div class="col-3 text-center">
+                                        <div class="btn btn-primary">
+                                            Add Measurand
+                                        </div>
+                                    </div>
+                                    <div class="col-1">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                &nbsp;
+                                            </div>                                            
+                                            <div class="col-4">
+                                                &nbsp;
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="btn btn-success">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="intrumentConfig">
+                                <div class="pl-1 row text-center">
+                                    <div class="col-1">
+                                        ECO-V2
+                                    </div>
+                                    <div class="col-1">
+                                        117
+                                    </div>
+                                    <div class="col-1">
+                                        COM-1
+                                    </div>
+                                    <div class="col-1">
+                                        19200
+                                    </div>
+                                    <div class="col-1">
+                                        8,n,1
+                                    </div>
+                                    <div class="col-1">
+                                        5 Secs
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">View</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">View</span>
+                                    </div>
+                                    <div class="col-3 text-center">
+                                        <div class="mb-1 btn btn-primary">
+                                            FDOM
+                                        </div>
+                                        <br />
+                                        <div class="btn btn-primary">
+                                            Add Measurand
+                                        </div>
+                                    </div>
+                                    <div class="col-1" >
+                                        <div class="row mb-1">
+                                            <div class="col-4">
+                                                <div class="btn btn-info">
+                                                    <i class="fa fa-copy"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="btn btn-success">
+                                                    <i class="fa fa-save"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="btn btn-danger">
+                                                    <i class="fa fa-remove" aria-hidden="true"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                        
+                                    </div>
+                                </div>
+                            </div>
+                
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="setPoints">
+                            <h1 class="pl-1 text-center">Set Point</h1>
+                            <div class="header ">
+                                <div class="pl-1 row font-weight-bold">
+                                    <div class="col-1">
+                                        Device Type
+                                    </div>
+                                    <div class="col-1">
+                                        Model
+                                    </div>
+                                    <div class="col-1">
+                                        SN
+                                    </div>
+                                    <div class="col-1">
+                                        Measurand
+                                    </div>
+                                    <div class="col-1">
+                                        Measurand Sub-Type
+                                    </div>
+                                    <div class="col-1">
+                                        Peristaltic Pump Number
+                                    </div>
+                                    <div class="col-1">
+                                        Injection Volume
+                                    </div>
+                                    <div class="col-1">
+                                        Pump Rate
+                                    </div>
+                                    <div class="col-1">
+                                        Drain
+                                    </div>
+                                    <div class="col-1 text-center">
+                                        Fill
+                                    </div>
+                                    <div class="col-1 text-center">
+                                        Calculate After
+                                    </div>
+                                    <div class="col-1 text-center">
+                                        Update
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="setpoint">
+                                <div class="pl-1 mb-1 row">
+                                    <div class="col-1 ">
+                                        <span class="controlLink">Device</span>
+                                    </div>
+                                    <div class="col-1 ">
+                                        <span class="controlLink">Model</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">SN</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <div class="btn btn-primary">
+                                            Measurand
+                                        </div>
+                                    </div>
+                                    <div class="col-1">
+                                        <div class="btn btn-primary">
+                                            Sub Measurand
+                                        </div>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Peristaltic Pump Number</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Injection Volume</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Pump Rate</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Drain</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Fill</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Calculate After</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                &nbsp;
+                                            </div>
+                                            <div class="col-4">
+                                                &nbsp;
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="btn btn-success">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="setpoint">
+                                <div class="pl-1 mb-1 row">
+                                    <div class="col-1 ">
+                                        <span class="controlLink">Device</span>
+                                    </div>
+                                    <div class="col-1 ">
+                                        <span class="controlLink">Model</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">SN</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <div class="btn btn-primary">
+                                            Measurand
+                                        </div>
+                                    </div>
+                                    <div class="col-1">
+                                        <div class="btn btn-primary">
+                                            Sub Measurand
+                                        </div>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Peristaltic Pump Number</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Injection Volume</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Pump Rate</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Drain</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Fill</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Calculate After</span>
+                                    </div>
+                                    <div class="col-1" >
+                                        <div class="row mb-1">
+                                            <div class="col-4">
+                                                <div class="btn btn-info">
+                                                    <i class="fa fa-copy"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="btn btn-success">
+                                                    <i class="fa fa-save"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="btn btn-danger">
+                                                    <i class="fa fa-remove" aria-hidden="true"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                        
+                                    </div>
+                                </div>
+                            </div>
+                
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="references">
+                            <h1 class="pl-1 text-center">References</h1>
+                            <div class="header ">
+                                <div class="pl-1 row font-weight-bold">
+                                    <div class="col-1">
+                                        Device
+                                    </div>
+                                    <div class="col-1">
+                                        SN
+                                    </div>
+                                    <div class="col-1">
+                                        Port
+                                    </div>
+                                    <div class="col-1">
+                                        Baud
+                                    </div>
+                                    <div class="col-1">
+                                        Format
+                                    </div>
+                                    <div class="col-1">
+                                        Delay
+                                    </div>
+                                    <div class="col-1">
+                                        Commands to Configure
+                                    </div>
+                                    <div class="col-1">
+                                        Sample Command
+                                    </div>
+                                    <div class="col-1">
+                                        Start Command
+                                    </div>
+                                    <div class="col-2 text-center">
+                                        Measurands
+                                    </div>
+                                    <div class="col-1 text-center">
+                                        Update
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="reference">
+                                <div class="pl-1 mb-1 row">
+                                    <div class="col-1 ">
+                                        <span class="controlLink">Device</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">SN</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Port</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Baud</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Format</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Delay</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Set</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Set</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">Set</span>
+                                    </div>
+                                    <div class="col-2 text-center">
+                                        <div class="btn btn-primary">
+                                            Add Measurand
+                                        </div>
+                                    </div>
+                                    <div class="col-1">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                &nbsp;
+                                            </div>
+                                            <div class="col-4">
+                                                &nbsp;
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="btn btn-success">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="reference">
+                                <div class="pl-1 row text-center">
+                                    <div class="col-1">
+                                        <span class="controlLink">ECO-V2</span>
+                                    </div>
+                                    <div class="col-1">
+                                        117
+                                    </div>
+                                    <div class="col-1">
+                                        COM-1
+                                    </div>
+                                    <div class="col-1">
+                                        19200
+                                    </div>
+                                    <div class="col-1">
+                                        8,n,1
+                                    </div>
+                                    <div class="col-1">
+                                        5 Secs
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">View</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">View</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="controlLink">View</span>
+                                    </div>
+                                    <div class="col-2 text-center">
+                                        <div class="mb-1 btn btn-primary">
+                                            FDOM
+                                        </div>
+                                        <br />
+                                        <div class="btn btn-primary">
+                                            Add Measurand
+                                        </div>
+                                    </div>
+                                    <div class="col-1" >
+                                        <div class="row mb-1">
+                                            <div class="col-4">
+                                                <div class="btn btn-info">
+                                                    <i class="fa fa-copy"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="btn btn-success">
+                                                    <i class="fa fa-save"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="btn btn-danger">
+                                                    <i class="fa fa-remove" aria-hidden="true"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                        
+                                    </div>
+                                </div>
+                            </div>
+                
                         </div>
                     </div>
-    
                 </div>
             </div>
         </div>
     </content>
     <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="./js/tabSelect.js"></script>
 </body>
 </html>
