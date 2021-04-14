@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<HTML lang='en'>
+    <HEAD>
+        <TITLE>CalRun V12</TITLE>
+        <LINK rel='SHORTCUT ICON' HREF='images/favicon.ico'>
+        <META http-equiv='X-UA-Compatible' content='IE=edge'>
+        <META charset='utf-8'>
+        <META name='viewport' content='width=device-width, initial-scale=1.0'>
+        <LINK rel='stylesheet' type='text/css' href='css/calRun.css'>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="http://localhost:8080/socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="../sbGlobal/sbGlobalFunctions.js"></script>
+        <script type="text/javascript" src="js/calRunFrontEnd.js"></script>
+        <script type="text/javascript">
+            //This is how we get the program working
+            //Load global files and then initialize the calRun system
+            initializeGlobals(initializeCalRun);
+        </script>
+    
+    </HEAD>
+    <!--This ensures the body of the page takes up all the viewable area-->
+    <BODY style='height:100vh;'>
+        <!--Navigation bar-->
+        <nav role="navigation" class=" pt-4 container-fluid navBar navbar navbar-expand-lg navbar-light bg-light">
+            <div class='row' id="main-menu">
+				<div class="col-1 col-lg-6">
+					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#calMenu" aria-controls="calMenu" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+	
+					<div id="calMenu" class='inline collapse navbar-collapse'>
+						<div id="btnStart" class='navElement navButton btn btn-info'>
+							<img src="images/start.png">Start
+						</div>
+						<div id="btnStop" class='navElement navButton btn btn-info'>
+							<img src="images/stop.png">Start
+						</div>
+						<div id="btnNext" class='navElement navButton btn btn-info'>
+							<img src="images/nextcal.png">Start
+						</div>
+						<div id="btnNext" class='navElement navButton btn btn-info'>
+							<img src="images/nextcal.png">Start
+						</div>
+						<div id="btnTerminal" class='navElement navButton btn btn-info'>
+							<img src="images/terminal.png">Start
+						</div>
+						<div id="btnAction" class='navElement navButton btn btn-info'>
+							<img src="images/control.png">Start
+						</div>
+						<div id="btnNext" class='navElement navButton btn btn-info'>
+							<img src="images/setup.png">Start
+						</div>
+						<div id="btnCalCert" class='navElement navButton btn btn-info'>
+							<img src="images/graph.png">Start
+						</div>
+						<div id="btnBug" class='navElement navButton btn btn-info'>
+							<img src="images/bug.png">Start
+						</div>
+	
+					</div>
+				</div>
+				<div class="col-11 col-lg-6 float-right">
+					<div class='systemName' contenteditable='true'>Not Set</div>
+					<div class='systemName'>System Name:</div>
+
+				</div>
+
+            </div>
+        </nav>
+
+        <!-- System status information-->
+        <div id='systemStatusDiv'>
+            Nothing for now
+        </div>
+
+        <!-- Device Selector -->
+        <div id='deviceDiv'>
+            Nothing for now
+        </div>
+
+        <!-- running tally of all things going on -->
+        <div id='notifyStatus'>
+            Status goes in here
+        </div>
+
+    </BODY>
+</HTML>

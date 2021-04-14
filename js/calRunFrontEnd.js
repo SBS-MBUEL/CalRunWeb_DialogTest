@@ -139,7 +139,7 @@ function addListeners()
 function showConfigurationDialog()
 {
 	let popUp = showPopUpDialog('Calibration Configuration', '75%', '75%');
-	let configurationDialog = new sbConfigurationDialog();
+	// let configurationDialog = new sbConfigurationDialog();
 	configurationDialog.setup(getConfigurationSetup());
 
 	popUp.setContent(configurationDialog.mainContent);
@@ -182,7 +182,7 @@ function getConfigurationSetup()
 	'{"configurationNodeID":"8","displayIndex":"-1","parentNodeID":null,"configurationArea":"device","userCanAddMultiple":"1","displayValue":"Devices","quantity":"1","controls":[],"nodeSubIndex":1,"childNodes":[]}'+
 	']';
 	let returnValues = JSON.parse(configurationSettings);
-
+		console.log(returnValues);
 	return returnValues;
 	// let configurationSettings = 
 	// {

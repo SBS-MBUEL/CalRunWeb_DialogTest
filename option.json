@@ -1,0 +1,14 @@
+{
+    "header" : {
+        "element": "h1",
+        "textContent": "Instrument Configuration",
+        "class": "bd"
+    },
+    "content" : {
+        "setup" : {
+            "element" : "form",
+            "textContent": ""
+        }
+    }
+
+}
