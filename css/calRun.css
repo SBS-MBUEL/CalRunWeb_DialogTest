@@ -58,11 +58,12 @@ body
 	margin-right: auto;
 }
 
-#btnStart {
-	background-image: url("../images/start.png");
-	background-repeat: no-repeat;
-	width: 100%;
-	height: auto;
-	
+.controlLink {
+	text-decoration: underline; 
+	color: blue; 
+	cursor: pointer;
 }
 
+input {
+	width: 20%;
+}

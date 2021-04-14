@@ -139,7 +139,7 @@ function addListeners()
 function showConfigurationDialog()
 {
 	let popUp = showPopUpDialog('Calibration Configuration', '75%', '75%');
-	// let configurationDialog = new sbConfigurationDialog();
+	let configurationDialog = new sbConfigurationDialog();
 	configurationDialog.setup(getConfigurationSetup());
 
 	popUp.setContent(configurationDialog.mainContent);
