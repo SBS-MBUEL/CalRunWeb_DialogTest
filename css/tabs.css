@@ -2,7 +2,7 @@
 div.tab-pane>div>div.row {
     border-bottom: 1px solid black;
 }
-.row:nth-child(even) {
+.row .content:nth-child(odd) {
     background-color: #fafbfb;
 }
 

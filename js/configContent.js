@@ -105,7 +105,7 @@ var ConfigContainer = function (_React$Component2) {
                                             { className: 'header ' },
                                             React.createElement(
                                                 'div',
-                                                { className: 'pl-1 row font-weight-bold' },
+                                                { className: 'pl-1 row heading font-weight-bold' },
                                                 content.header.length > 0 ? content.header.map(function (header, i) {
                                                     return React.createElement(
                                                         'div',
@@ -124,7 +124,7 @@ var ConfigContainer = function (_React$Component2) {
                                             { className: 'input ' + content.id },
                                             React.createElement(
                                                 'div',
-                                                { className: 'pl-1 row mb-1' },
+                                                { className: 'pl-1 row mb-1 content' },
                                                 content.inputRow.length > 0 ? content.inputRow.map(function (input, i) {
                                                     return React.createElement(
                                                         'div',

@@ -35,7 +35,7 @@ class ConfigContainer extends React.Component {
                                             <h1 className="pl-1 text-center">{content.title}</h1>
                                             <div className="header ">
                                                 {/* {content.header.length} */}
-                                                <div className="pl-1 row font-weight-bold">
+                                                <div className="pl-1 row heading font-weight-bold">
                                                     {content.header.length > 0 ? content.header.map((header, i) => {
                                                         return (<div key={i} className={`col-${header.colSize}`}>
                                                             {header.textContent}
@@ -44,10 +44,10 @@ class ConfigContainer extends React.Component {
                                                 </div>
                                             </div>
                                             <div className={`input ${content.id}`}>
-                                                <div className="pl-1 row mb-1">
+                                                <div className="pl-1 row mb-1 content">
                                                     {content.inputRow.length > 0 ? content.inputRow.map((input, i) => {
                                                         return (<div key={i} className={`col-${input.colSize}`}>
-                                                            <span class="controlLink">{input.textContent}</span>
+                                                            <span className="controlLink">{input.textContent}</span>
                                                         </div>);
                                                     }) : <p>no header rows</p>}
                                                 </div>
