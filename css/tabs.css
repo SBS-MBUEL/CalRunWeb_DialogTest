@@ -1,4 +1,11 @@
 
+div.tab-pane>div>div.row {
+    border-bottom: 1px solid black;
+}
+.row:nth-child(even) {
+    background-color: #fafbfb;
+}
+
 a:hover,a:focus{
     outline: none;
     text-decoration: none;
@@ -36,7 +43,7 @@ a:hover,a:focus{
 .tab .nav-tabs li.active a:hover{
     background: #11195c;
     color: #fff;
-    border: 1px solid transparent;
+    border: 1px solid #00ADDD;
 }
 .tab .tab-content{
     font-size: 14px;

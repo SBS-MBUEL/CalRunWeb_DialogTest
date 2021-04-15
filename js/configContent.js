@@ -8,320 +8,584 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Portfolio = function (_React$Component) {
-  _inherits(Portfolio, _React$Component);
+var ListMenu = function (_React$Component) {
+    _inherits(ListMenu, _React$Component);
 
-  function Portfolio(props) {
-    _classCallCheck(this, Portfolio);
+    function ListMenu() {
+        _classCallCheck(this, ListMenu);
 
-    var _this = _possibleConstructorReturn(this, (Portfolio.__proto__ || Object.getPrototypeOf(Portfolio)).call(this, props));
-
-    _this.state = {
-      portfolio: [{
-        name: 'Feetbook',
-        shares_owned: 20,
-        cost_per_share: 50,
-        market_price: 130
-      }, {
-        name: 'Yamazon',
-        shares_owned: 5,
-        cost_per_share: 200,
-        market_price: 500
-      }, {
-        name: 'Snoozechat',
-        shares_owned: 100,
-        cost_per_share: 20,
-        market_price: 3
-      }],
-      form: {
-        stock_name: '',
-        shares_owned: 0,
-        cost_per_share: 0,
-        market_price: 0
-      }
-    };
-
-    // Note: api JSON data often come in underscore_styled like above
-    _this.addStock = _this.addStock.bind(_this);
-    _this.removeStock = _this.removeStock.bind(_this);
-    _this.handleChange = _this.handleChange.bind(_this);
-    _this.handleFormChange = _this.handleFormChange.bind(_this);
-    return _this;
-  }
-
-  _createClass(Portfolio, [{
-    key: 'handleChange',
-    value: function handleChange(event, index) {
-      if (index < this.state.portfolio.length) {
-        var portfolio = this.state.portfolio.slice(); // shallow copy
-        var _event$target = event.target,
-            name = _event$target.name,
-            value = _event$target.value;
-
-        portfolio[index][name] = value;
-        this.setState({ portfolio: portfolio });
-      } else {
-        // event.preventDefault();
-      }
+        return _possibleConstructorReturn(this, (ListMenu.__proto__ || Object.getPrototypeOf(ListMenu)).apply(this, arguments));
     }
-  }, {
-    key: 'handleFormChange',
-    value: function handleFormChange(event) {
-      var _event$target2 = event.target,
-          name = _event$target2.name,
-          value = _event$target2.value;
-      var form = this.state.form;
 
-      form[name] = value;
-      this.setState({ form: form });
-    }
-  }, {
-    key: 'addStock',
-    value: function addStock(event) {
-      console.log(event);
-      event.preventDefault();
-      var portfolio = this.state.portfolio.slice();
-      portfolio.push(this.state.form);
-
-      // reset form to empty 
-      this.setState({
-        portfolio: portfolio,
-        form: {
-          stock_name: '',
-          shares_owned: 0,
-          cost_per_share: 0,
-          market_price: 0
-        }
-      });
-    }
-  }, {
-    key: 'removeStock',
-    value: function removeStock(index) {
-      var portfolio = this.state.portfolio.slice(); // shallow copy
-      portfolio.splice(index, 1); // remove value at index
-      this.setState({ portfolio: portfolio });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this2 = this;
-
-      var _state = this.state,
-          portfolio = _state.portfolio,
-          form = _state.form;
+    _createClass(ListMenu, [{
+        key: 'render',
+        value: function render() {
+            var _props = this.props,
+                tab = _props.tab,
+                index = _props.index;
 
 
-      var portfolio_market_value = portfolio.reduce(function (sum, stock) {
-        return stock.shares_owned * stock.market_price + sum;
-      }, 0);
-      var portfolio_cost = portfolio.reduce(function (sum, stock) {
-        return stock.shares_owned * stock.cost_per_share + sum;
-      }, 0);
-      var portfolio_gain_loss = portfolio_market_value - portfolio_cost;
-
-      return React.createElement(
-        'div',
-        { className: ' container' },
-        React.createElement(
-          'h1',
-          { className: 'text-white text-center my-4' },
-          'Stock Portfolio'
-        ),
-        React.createElement(
-          'div',
-          { className: 'row' },
-          React.createElement(
-            'div',
-            { className: 'col-12' },
-            React.createElement(
-              'table',
-              { className: 'text-white table table-responsive' },
-              React.createElement(
-                'thead',
-                null,
+            return React.createElement(
+                'li',
+                { key: index, className: index === 0 ? 'tab-select active' : 'tab-select', role: 'presentation' },
                 React.createElement(
-                  'tr',
-                  null,
-                  React.createElement(
-                    'th',
-                    { scope: 'col' },
-                    'Name'
-                  ),
-                  React.createElement(
-                    'th',
-                    { scope: 'col' },
-                    'Shares Owned'
-                  ),
-                  React.createElement(
-                    'th',
-                    { scope: 'col' },
-                    'Cost per share ($)'
-                  ),
-                  React.createElement(
-                    'th',
-                    { scope: 'col' },
-                    'Market Price ($)'
-                  ),
-                  React.createElement(
-                    'th',
-                    { scope: 'col' },
-                    'Market Value ($)'
-                  ),
-                  React.createElement(
-                    'th',
-                    { scope: 'col' },
-                    'Unrealized Gain/Loss ($)'
-                  ),
-                  React.createElement('th', { scope: 'col' })
+                    'a',
+                    { href: '#' + tab.id, 'aria-controls': 'home', role: 'tab', 'data-toggle': 'tab', 'aria-expanded': 'true' },
+                    React.createElement('i', { className: '' + tab.classIcon }),
+                    ' ',
+                    tab.name
                 )
-              ),
-              React.createElement(
-                'tbody',
-                null,
-                React.createElement(
-                  'tr',
-                  null,
-                  React.createElement(
-                    'td',
-                    { colspan: '6' },
-                    React.createElement(
-                      'form',
-                      { className: 'pl-5 col-12 mt-2 mb-4', onSubmit: this.addStock },
-                      React.createElement('input', {
-                        className: 'mx-2 col-3',
-                        name: 'name',
-                        type: 'text',
-                        placeholder: 'Name',
-                        onChange: this.handleFormChange,
-                        value: form.name,
-                        required: true
-                      }),
-                      React.createElement('input', {
-                        className: 'mx-2 col-2',
-                        name: 'shares_owned',
-                        type: 'number',
-                        placeholder: 'Shares',
-                        value: form.shares_owned,
-                        onChange: this.handleFormChange
-                      }),
-                      React.createElement('input', {
-                        className: 'mx-2 col-2',
-                        name: 'cost_per_share',
-                        type: 'number',
-                        placeholder: 'Cost',
-                        value: form.cost_per_share,
-                        onChange: this.handleFormChange
-                      }),
-                      React.createElement('input', {
-                        className: 'mx-2 col-2',
-                        name: 'market_price',
-                        type: 'number',
-                        placeholder: 'Price',
-                        value: form.market_price,
-                        onChange: this.handleFormChange
-                      }),
-                      React.createElement(
-                        'button',
-                        { className: 'btn btn-primary btn-sm col-2' },
-                        'add'
-                      )
-                    )
-                  )
-                ),
-                portfolio.map(function (stock, index) {
-                  var name = stock.name,
-                      shares_owned = stock.shares_owned,
-                      cost_per_share = stock.cost_per_share,
-                      market_price = stock.market_price;
+            );
+        }
+    }]);
 
-
-                  var market_value = shares_owned * market_price;
-                  var unrealized_gain_loss = market_value - shares_owned * cost_per_share;
-                  // Adopting the underscore_style for consistency
-
-                  return React.createElement(
-                    'tr',
-                    { key: index },
-                    React.createElement(
-                      'td',
-                      null,
-                      name
-                    ),
-                    React.createElement(
-                      'td',
-                      null,
-                      React.createElement('input', { onChange: function onChange(e) {
-                          return _this2.handleChange(e, index);
-                        }, type: 'number', name: 'market_price', value: market_price })
-                    ),
-                    React.createElement(
-                      'td',
-                      null,
-                      React.createElement('input', { onChange: function onChange(e) {
-                          return _this2.handleChange(e, index);
-                        }, type: 'number', name: 'shares_owned', value: shares_owned })
-                    ),
-                    React.createElement(
-                      'td',
-                      null,
-                      React.createElement('input', { onChange: function onChange(e) {
-                          return _this2.handleChange(e, index);
-                        }, type: 'number', name: 'cost_per_share', value: cost_per_share })
-                    ),
-                    React.createElement(
-                      'td',
-                      null,
-                      market_value
-                    ),
-                    React.createElement(
-                      'td',
-                      null,
-                      unrealized_gain_loss
-                    ),
-                    React.createElement(
-                      'td',
-                      null,
-                      React.createElement(
-                        'button',
-                        { onClick: function onClick() {
-                            return _this2.removeStock(index);
-                          }, className: 'btn btn-light btn-sm' },
-                        'remove'
-                      )
-                    )
-                  );
-                })
-              )
-            )
-          ),
-          React.createElement(
-            'div',
-            { className: 'text-white col-12 col-md-6' },
-            React.createElement(
-              'h4',
-              { className: 'mb-3' },
-              'Portfolio value: $ ',
-              portfolio_market_value
-            )
-          ),
-          React.createElement(
-            'div',
-            { className: 'text-white col-12 col-md-6' },
-            React.createElement(
-              'h4',
-              { className: 'mb-3' },
-              'Portfolio gain/loss: $ ',
-              portfolio_gain_loss
-            )
-          )
-        )
-      );
-    }
-  }]);
-
-  return Portfolio;
+    return ListMenu;
 }(React.Component);
 
+var ConfigContainer = function (_React$Component2) {
+    _inherits(ConfigContainer, _React$Component2);
+
+    function ConfigContainer(props) {
+        _classCallCheck(this, ConfigContainer);
+
+        var _this2 = _possibleConstructorReturn(this, (ConfigContainer.__proto__ || Object.getPrototypeOf(ConfigContainer)).call(this, props));
+
+        _this2.state = {
+            tabs: props.tabs,
+            tabContent: props.tabContent
+        };
+        return _this2;
+    }
+
+    _createClass(ConfigContainer, [{
+        key: 'render',
+        value: function render() {
+            var _state = this.state,
+                tabs = _state.tabs,
+                tabContent = _state.tabContent;
+
+            console.log(tabContent);
+            return React.createElement(
+                'div',
+                { className: 'container-fluid text-center' },
+                React.createElement(
+                    'div',
+                    { className: 'row' },
+                    React.createElement(
+                        'div',
+                        { className: 'pt-4 col-12' },
+                        React.createElement(
+                            'div',
+                            { className: 'tab', role: 'tabpanel' },
+                            React.createElement(
+                                'ul',
+                                { className: 'nav nav-tabs', role: 'tablist' },
+                                tabs.length > 0 ? tabs.map(function (tab, i) {
+                                    return React.createElement(ListMenu, { index: i, tab: tab });
+                                }) : React.createElement(
+                                    'p',
+                                    null,
+                                    'no tabs to select'
+                                )
+                            ),
+                            React.createElement(
+                                'div',
+                                { className: 'tab-content tabs' },
+                                tabContent.length > 0 ? tabContent.map(function (content, i) {
+                                    return React.createElement(
+                                        'div',
+                                        { key: i, role: 'tabpanel', className: 'tab-pane active fade in ' + (i === 0 ? 'show' : ''), id: '' + content.id },
+                                        React.createElement(
+                                            'h1',
+                                            { className: 'pl-1 text-center' },
+                                            content.title
+                                        ),
+                                        React.createElement(
+                                            'div',
+                                            { className: 'header ' },
+                                            React.createElement(
+                                                'div',
+                                                { className: 'pl-1 row font-weight-bold' },
+                                                content.header.length > 0 ? content.header.map(function (header, i) {
+                                                    return React.createElement(
+                                                        'div',
+                                                        { key: i, className: 'col-' + header.colSize },
+                                                        header.textContent
+                                                    );
+                                                }) : React.createElement(
+                                                    'p',
+                                                    null,
+                                                    'no header rows'
+                                                )
+                                            )
+                                        ),
+                                        React.createElement(
+                                            'div',
+                                            { className: 'input ' + content.id },
+                                            React.createElement(
+                                                'div',
+                                                { className: 'pl-1 row mb-1' },
+                                                content.inputRow.length > 0 ? content.inputRow.map(function (input, i) {
+                                                    return React.createElement(
+                                                        'div',
+                                                        { key: i, className: 'col-' + input.colSize },
+                                                        React.createElement(
+                                                            'span',
+                                                            { 'class': 'controlLink' },
+                                                            input.textContent
+                                                        )
+                                                    );
+                                                }) : React.createElement(
+                                                    'p',
+                                                    null,
+                                                    'no header rows'
+                                                )
+                                            )
+                                        )
+                                    );
+                                }) : React.createElement(
+                                    'p',
+                                    null,
+                                    'no content to display'
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return ConfigContainer;
+}(React.Component);
+
+var tabContent = [{
+    "id": "controlDevices",
+    "title": "Control Devices",
+    "header": [{
+        "colSize": "1",
+        "textContent": "Device"
+    }, {
+        "colSize": "1",
+        "textContent": "SN"
+    }, {
+        "colSize": "1",
+        "textContent": "Baud"
+    }, {
+        "colSize": "1",
+        "textContent": "Format"
+    }, {
+        "colSize": "1",
+        "textContent": "Delay"
+    }, {
+        "colSize": "1",
+        "textContent": "Commands to Configure"
+    }, {
+        "colSize": "1",
+        "textContent": "Sample Commands"
+    }, {
+        "colSize": "1",
+        "textContent": "Measurands"
+    }, {
+        "colSize": "1",
+        "textContent": "Update"
+    }],
+    "inputRow": [{
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Device"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "SN"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Port"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Baud"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Format"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Delay"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Set"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Set"
+    }, {
+        "colSize": "3",
+        "element": "div",
+        "className": "btn btn-primary",
+        "textContent": "Add Measurand"
+    }, {
+        "colSize": "1",
+        "element": "div",
+        "className": "row",
+        "textContent": "",
+        "subContent": [{
+            "colSize": "4",
+            "element": "div",
+            "textContent": "&npsb;"
+        }, {
+            "colSize": "4",
+            "element": "div",
+            "textContent": "&npsb;"
+        }, {
+            "colSize": "4",
+            "element": "div",
+            "className": "btn btn success",
+            "textContent": "<i class=\"fa fa-plus\" aria-hidden=\"true\"></i>"
+        }]
+    }]
+
+}, {
+    "id": "instrumentConfiguration",
+    "title": "Instrument Config",
+    "header": [{
+        "colSize": "1",
+        "textContent": "Device Type"
+    }, {
+        "colSize": "1",
+        "textContent": "Model"
+    }, {
+        "colSize": "1",
+        "textContent": "SN"
+    }, {
+        "colSize": "1",
+        "textContent": "Measurand"
+    }, {
+        "colSize": "1",
+        "textContent": "Measurand Sub-Type"
+    }, {
+        "colSize": "1",
+        "textContent": "Peristaltic Pump Delay"
+    }, {
+        "colSize": "1",
+        "textContent": "Injection Volume"
+    }, {
+        "colSize": "1",
+        "textContent": "Pump Rate"
+    }, {
+        "colSize": "1",
+        "textContent": "Drain"
+    }, {
+        "colSize": "1",
+        "textContent": "Fill"
+    }, {
+        "colSize": "1",
+        "textContent": "Calulate After"
+    }, {
+        "colSize": "1",
+        "textContent": "Update"
+    }],
+    "inputRow": [{
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Device"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "SN"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Port"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Baud"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Format"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Delay"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Set"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Set"
+    }, {
+        "colSize": "3",
+        "element": "div",
+        "className": "btn btn-primary",
+        "textContent": "Add Measurand"
+    }, {
+        "colSize": "1",
+        "element": "div",
+        "className": "row",
+        "textContent": "",
+        "subContent": [{
+            "colSize": "4",
+            "element": "div",
+            "textContent": "&npsb;"
+        }, {
+            "colSize": "4",
+            "element": "div",
+            "textContent": "&npsb;"
+        }, {
+            "colSize": "4",
+            "element": "div",
+            "className": "btn btn success",
+            "textContent": "<i class=\"fa fa-plus\" aria-hidden=\"true\"></i>"
+        }]
+    }]
+
+}, {
+    "id": "setPoints",
+    "title": "Set Points",
+    "header": [{
+        "colSize": "1",
+        "textContent": "Device"
+    }, {
+        "colSize": "1",
+        "textContent": "SN"
+    }, {
+        "colSize": "1",
+        "textContent": "Baud"
+    }, {
+        "colSize": "1",
+        "textContent": "Format"
+    }, {
+        "colSize": "1",
+        "textContent": "Delay"
+    }, {
+        "colSize": "1",
+        "textContent": "Commands to Configure"
+    }, {
+        "colSize": "1",
+        "textContent": "Sample Commands"
+    }, {
+        "colSize": "1",
+        "textContent": "Measurands"
+    }, {
+        "colSize": "1",
+        "textContent": "Update"
+    }],
+    "inputRow": [{
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Device"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "SN"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Port"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Baud"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Format"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Delay"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Set"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Set"
+    }, {
+        "colSize": "3",
+        "element": "div",
+        "className": "btn btn-primary",
+        "textContent": "Add Measurand"
+    }, {
+        "colSize": "1",
+        "element": "div",
+        "className": "row",
+        "textContent": "",
+        "subContent": [{
+            "colSize": "4",
+            "element": "div",
+            "textContent": "&npsb;"
+        }, {
+            "colSize": "4",
+            "element": "div",
+            "textContent": "&npsb;"
+        }, {
+            "colSize": "4",
+            "element": "div",
+            "className": "btn btn success",
+            "textContent": "<i class=\"fa fa-plus\" aria-hidden=\"true\"></i>"
+        }]
+    }]
+
+}, {
+    "id": "references",
+    "title": "References",
+    "header": [{
+        "colSize": "1",
+        "textContent": "Device"
+    }, {
+        "colSize": "1",
+        "textContent": "SN"
+    }, {
+        "colSize": "1",
+        "textContent": "Baud"
+    }, {
+        "colSize": "1",
+        "textContent": "Format"
+    }, {
+        "colSize": "1",
+        "textContent": "Delay"
+    }, {
+        "colSize": "1",
+        "textContent": "Commands to Configure"
+    }, {
+        "colSize": "1",
+        "textContent": "Sample Commands"
+    }, {
+        "colSize": "1",
+        "textContent": "Measurands"
+    }, {
+        "colSize": "1",
+        "textContent": "Update"
+    }],
+    "inputRow": [{
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Device"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "SN"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Port"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Baud"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Format"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Delay"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Set"
+    }, {
+        "colSize": "1",
+        "element": "span",
+        "className": "controlLink",
+        "textContent": "Set"
+    }, {
+        "colSize": "3",
+        "element": "div",
+        "className": "btn btn-primary",
+        "textContent": "Add Measurand"
+    }, {
+        "colSize": "1",
+        "element": "div",
+        "className": "row",
+        "textContent": "",
+        "subContent": [{
+            "colSize": "4",
+            "element": "div",
+            "textContent": "&npsb;"
+        }, {
+            "colSize": "4",
+            "element": "div",
+            "textContent": "&npsb;"
+        }, {
+            "colSize": "4",
+            "element": "div",
+            "className": "btn btn success",
+            "textContent": "<i class=\"fa fa-plus\" aria-hidden=\"true\"></i>"
+        }]
+    }]
+
+}];
+
 function renderConfig(root) {
-  ReactDOM.render(React.createElement(Portfolio, null), document.getElementById(root));
+    ReactDOM.render(React.createElement(ConfigContainer, { tabs: [{
+            'id': 'controlDevices',
+            'name': 'Control Devices',
+            'classIcon': 'fa fa-desktop'
+        }, {
+            'id': 'instrumentConfiguration',
+            'name': 'Instrument Configs',
+            'classIcon': 'fa fa-cube'
+        }, {
+            'id': 'setPoints',
+            'name': 'Set Points',
+            'classIcon': 'fa fa-circle-o'
+        }, {
+            'id': 'references',
+            'name': 'References',
+            'classIcon': 'fa fa-thermometer-half'
+        }], tabContent: tabContent }), document.getElementById(root));
+
+    $('.tab-select').on('click', function (e) {
+        var _this3 = this;
+
+        $('.tab-select').map(function (i, el) {
+            if (el === _this3) {
+                el.classList && el.classList.add('active');
+            } else {
+                el.classList && el.classList.remove('active');
+            }
+        });
+    });
 }

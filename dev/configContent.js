@@ -1,192 +1,615 @@
-class Portfolio extends React.Component {
+class ListMenu extends React.Component {
+    render() {
+        const {tab, index} = this.props;
+
+        return (<li key={index} className={(index === 0 ? 'tab-select active' : 'tab-select')} role="presentation"><a href={`#${tab.id}`} aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true"><i className={`${tab.classIcon}`}></i> {tab.name}</a></li>);
+    }
+}
+class ConfigContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          portfolio: [
-            {
-              name: 'Feetbook',
-              shares_owned: 20,
-              cost_per_share: 50,
-              market_price: 130
-            },{
-              name: 'Yamazon',
-              shares_owned: 5,
-              cost_per_share: 200,
-              market_price: 500
-            },{
-              name: 'Snoozechat',
-              shares_owned: 100,
-              cost_per_share: 20,
-              market_price: 3
-            },
-            
-          ],
-          form: {
-            stock_name: '',
-            shares_owned: 0,
-            cost_per_share: 0,
-            market_price: 0
-          }
-        };
-      
-        // Note: api JSON data often come in underscore_styled like above
-        this.addStock = this.addStock.bind(this);
-        this.removeStock = this.removeStock.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleFormChange = this.handleFormChange.bind(this);
-    }
-
-    handleChange(event, index) {
-      if (index < this.state.portfolio.length) {
-        const portfolio = this.state.portfolio.slice(); // shallow copy
-        const { name, value } = event.target;
-        portfolio[index][name] = value;
-        this.setState({ portfolio });
-      } else {
-        // event.preventDefault();
-      }
-    }
-
-    handleFormChange(event) {
-      const { name, value } = event.target;
-      const { form } = this.state;
-      form[name] = value;
-      this.setState({ form });
-    }
-
-    addStock(event) {
-      console.log(event);
-      event.preventDefault();
-      const portfolio = this.state.portfolio.slice();
-      portfolio.push(this.state.form);
-      
-      // reset form to empty 
-      this.setState({
-        portfolio,
-        form: {
-          stock_name: '',
-          shares_owned: 0,
-          cost_per_share: 0,
-          market_price: 0
+            tabs : props.tabs,
+            tabContent : props.tabContent
         }
-      });
     }
 
-    removeStock(index) {
-      const portfolio = this.state.portfolio.slice(); // shallow copy
-      portfolio.splice(index, 1); // remove value at index
-      this.setState({ portfolio });
-    }
-  
     render() {
-        const { portfolio, form } = this.state;
-      
-        const portfolio_market_value = portfolio.reduce((sum, stock) => stock.shares_owned * stock.market_price + sum, 0);
-        const portfolio_cost = portfolio.reduce((sum, stock) => stock.shares_owned * stock.cost_per_share + sum, 0);
-        const portfolio_gain_loss = portfolio_market_value - portfolio_cost;
-      
+        const { tabs, tabContent } = this.state;
+        console.log(tabContent);
         return (
-          <div className=" container">
-            <h1 className="text-white text-center my-4">Stock Portfolio</h1>
-            <div className="row">
-              <div className="col-12">
-                <table className="text-white table table-responsive">
-                  <thead>
-                    <tr>
-                      <th scope="col">Name</th>
-                      <th scope="col">Shares Owned</th>
-                      <th scope="col">Cost per share ($)</th>
-                      <th scope="col">Market Price ($)</th>
-                      <th scope="col">Market Value ($)</th>
-                      <th scope="col">Unrealized Gain/Loss ($)</th>
-                      <th scope="col"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                      <tr>
-                        <td colspan="6">
-                          <form className="pl-5 col-12 mt-2 mb-4" onSubmit={this.addStock}>
-                            <input
-                              className="mx-2 col-3"
-                              name="name"
-                              type="text"
-                              placeholder="Name"
-                              onChange={this.handleFormChange}
-                              value={form.name}
-                              required
-                            />
-                            <input
-                              className="mx-2 col-2"
-                              name="shares_owned"
-                              type="number"
-                              placeholder="Shares"
-                              value={form.shares_owned}
-                              onChange={this.handleFormChange}
-                            />
-                            <input
-                              className="mx-2 col-2"
-                              name="cost_per_share"
-                              type="number"
-                              placeholder="Cost"
-                              value={form.cost_per_share}
-                              onChange={this.handleFormChange}
-                            />
-                            <input
-                              className="mx-2 col-2"
-                              name="market_price"
-                              type="number"
-                              placeholder="Price"
-                              value={form.market_price}
-                              onChange={this.handleFormChange}
-                            />
-                            <button className="btn btn-primary btn-sm col-2">add</button>
-                          </form>
-
-                        </td>
-                      </tr>
-                  {portfolio.map((stock, index) => {
-                        const {
-                            name,
-                            shares_owned,
-                            cost_per_share,
-                            market_price,
-                        } = stock;
-
-                        const market_value = shares_owned * market_price;
-                        const unrealized_gain_loss = market_value - shares_owned * cost_per_share;
-                        // Adopting the underscore_style for consistency
-
-                        return (
-                            <tr key={index}>
-                              <td>{name}</td>
-                              <td><input onChange={e => this.handleChange(e, index)} type="number" name="market_price" value={market_price} /></td>
-                              <td><input onChange={e => this.handleChange(e, index)} type="number" name="shares_owned" value={shares_owned} /></td>
-                              <td><input onChange={e => this.handleChange(e, index)} type="number" name="cost_per_share" value={cost_per_share} /></td>
-                              <td>{market_value}</td>
-                              <td>{unrealized_gain_loss}</td>
-                              <td><button onClick={() => this.removeStock(index)} className="btn btn-light btn-sm">remove</button></td>
-                            </tr>
-                        )
-                        })}
-                  </tbody>
-                </table>
-              </div>
-            <div className="text-white col-12 col-md-6">
-                <h4 className="mb-3">Portfolio value: $ {portfolio_market_value}</h4>
+            <div className="container-fluid text-center">
+                <div className="row">
+                    <div className="pt-4 col-12">
+                        <div className="tab" role="tabpanel">
+                            <ul className="nav nav-tabs" role="tablist">
+                                {tabs.length > 0 ? tabs.map((tab, i) => {
+                                    return <ListMenu index={i} tab={tab} />
+                                }) : <p>no tabs to select</p>}
+                            </ul>
+                            <div className="tab-content tabs">
+                                {/* this is where we wiil map the data */}
+                                {tabContent.length > 0 ? tabContent.map((content, i) => {
+                                    return (
+                                        <div key={i} role="tabpanel" className={`tab-pane active fade in ${i === 0 ? 'show' : ''}`}  id={`${content.id}`}>
+                                            <h1 className="pl-1 text-center">{content.title}</h1>
+                                            <div className="header ">
+                                                {/* {content.header.length} */}
+                                                <div className="pl-1 row font-weight-bold">
+                                                    {content.header.length > 0 ? content.header.map((header, i) => {
+                                                        return (<div key={i} className={`col-${header.colSize}`}>
+                                                            {header.textContent}
+                                                        </div>);
+                                                    }) : <p>no header rows</p>}
+                                                </div>
+                                            </div>
+                                            <div className={`input ${content.id}`}>
+                                                <div className="pl-1 row mb-1">
+                                                    {content.inputRow.length > 0 ? content.inputRow.map((input, i) => {
+                                                        return (<div key={i} className={`col-${input.colSize}`}>
+                                                            <span class="controlLink">{input.textContent}</span>
+                                                        </div>);
+                                                    }) : <p>no header rows</p>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                }) : <p>no content to display</p>}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div className="text-white col-12 col-md-6">
-                <h4 className="mb-3">Portfolio gain/loss: $ {portfolio_gain_loss}</h4>
-            </div>
-            </div>
-          </div>
         );
-      }
-  }
+    }
 
-  function renderConfig(root) {
-      ReactDOM.render(
-        <Portfolio />,
+}
+const tabContent = [
+    {
+        "id":"controlDevices",
+        "title":"Control Devices",
+        "header": [
+            {
+                "colSize":"1",
+                "textContent":"Device",
+            },
+            {
+                "colSize":"1",
+                "textContent":"SN",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Baud",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Format",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Delay",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Commands to Configure",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Sample Commands",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Measurands",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Update",
+            },
+
+        ],
+        "inputRow": [
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Device",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"SN",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Port",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Baud",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Format",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Delay",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Set",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Set",
+            },
+            {
+                "colSize":"3",
+                "element":"div",
+                "className":"btn btn-primary",
+                "textContent":"Add Measurand",
+            },
+            {
+                "colSize":"1",
+                "element":"div",
+                "className":"row",
+                "textContent":"",
+                "subContent":[
+                    {
+                        "colSize":"4",
+                        "element":"div",
+                        "textContent":"&npsb;"
+                    },
+                    {
+                        "colSize":"4",
+                        "element":"div",
+                        "textContent":"&npsb;"
+                    },
+                    {
+                        "colSize":"4",
+                        "element":"div",
+                        "className":"btn btn success",
+                        "textContent":"<i class=\"fa fa-plus\" aria-hidden=\"true\"></i>"
+                    },
+                ]
+            },
+        ]
+    
+    },
+    {
+        "id":"instrumentConfiguration",
+        "title":"Instrument Config",
+        "header": [
+            {
+                "colSize":"1",
+                "textContent":"Device Type",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Model",
+            },
+            {
+                "colSize":"1",
+                "textContent":"SN",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Measurand",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Measurand Sub-Type",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Peristaltic Pump Delay",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Injection Volume",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Pump Rate",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Drain",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Fill",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Calulate After",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Update",
+            },
+
+        ],
+        "inputRow": [
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Device",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"SN",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Port",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Baud",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Format",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Delay",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Set",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Set",
+            },
+            {
+                "colSize":"3",
+                "element":"div",
+                "className":"btn btn-primary",
+                "textContent":"Add Measurand",
+            },
+            {
+                "colSize":"1",
+                "element":"div",
+                "className":"row",
+                "textContent":"",
+                "subContent":[
+                    {
+                        "colSize":"4",
+                        "element":"div",
+                        "textContent":"&npsb;"
+                    },
+                    {
+                        "colSize":"4",
+                        "element":"div",
+                        "textContent":"&npsb;"
+                    },
+                    {
+                        "colSize":"4",
+                        "element":"div",
+                        "className":"btn btn success",
+                        "textContent":"<i class=\"fa fa-plus\" aria-hidden=\"true\"></i>"
+                    },
+                ]
+            },
+        ]
+    
+    },
+    {
+        "id":"setPoints",
+        "title":"Set Points",
+        "header": [
+            {
+                "colSize":"1",
+                "textContent":"Device",
+            },
+            {
+                "colSize":"1",
+                "textContent":"SN",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Baud",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Format",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Delay",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Commands to Configure",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Sample Commands",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Measurands",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Update",
+            },
+
+        ],
+        "inputRow": [
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Device",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"SN",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Port",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Baud",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Format",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Delay",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Set",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Set",
+            },
+            {
+                "colSize":"3",
+                "element":"div",
+                "className":"btn btn-primary",
+                "textContent":"Add Measurand",
+            },
+            {
+                "colSize":"1",
+                "element":"div",
+                "className":"row",
+                "textContent":"",
+                "subContent":[
+                    {
+                        "colSize":"4",
+                        "element":"div",
+                        "textContent":"&npsb;"
+                    },
+                    {
+                        "colSize":"4",
+                        "element":"div",
+                        "textContent":"&npsb;"
+                    },
+                    {
+                        "colSize":"4",
+                        "element":"div",
+                        "className":"btn btn success",
+                        "textContent":"<i class=\"fa fa-plus\" aria-hidden=\"true\"></i>"
+                    },
+                ]
+            },
+        ]
+    
+    },
+    {
+        "id":"references",
+        "title":"References",
+        "header": [
+            {
+                "colSize":"1",
+                "textContent":"Device",
+            },
+            {
+                "colSize":"1",
+                "textContent":"SN",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Baud",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Format",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Delay",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Commands to Configure",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Sample Commands",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Measurands",
+            },
+            {
+                "colSize":"1",
+                "textContent":"Update",
+            },
+
+        ],
+        "inputRow": [
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Device",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"SN",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Port",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Baud",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Format",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Delay",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Set",
+            },
+            {
+                "colSize":"1",
+                "element":"span",
+                "className":"controlLink",
+                "textContent":"Set",
+            },
+            {
+                "colSize":"3",
+                "element":"div",
+                "className":"btn btn-primary",
+                "textContent":"Add Measurand",
+            },
+            {
+                "colSize":"1",
+                "element":"div",
+                "className":"row",
+                "textContent":"",
+                "subContent":[
+                    {
+                        "colSize":"4",
+                        "element":"div",
+                        "textContent":"&npsb;"
+                    },
+                    {
+                        "colSize":"4",
+                        "element":"div",
+                        "textContent":"&npsb;"
+                    },
+                    {
+                        "colSize":"4",
+                        "element":"div",
+                        "className":"btn btn success",
+                        "textContent":"<i class=\"fa fa-plus\" aria-hidden=\"true\"></i>"
+                    },
+                ]
+            },
+        ]
+    
+    },
+]
+
+    function renderConfig(root) {
+        ReactDOM.render(
+        <ConfigContainer tabs={[
+            {
+                'id': 'controlDevices',
+                'name': 'Control Devices',
+                'classIcon':'fa fa-desktop'
+            },
+            {
+                'id': 'instrumentConfiguration',
+                'name': 'Instrument Configs',
+                'classIcon':'fa fa-cube'
+            },
+            {
+                'id':'setPoints',
+                'name':'Set Points',
+                'classIcon':'fa fa-circle-o'
+            },
+            {
+                'id':'references',
+                'name':'References',
+                'classIcon':'fa fa-thermometer-half'
+            }
+        ]} tabContent={tabContent}/>,
         document.getElementById(root)
-      );
-  }
+        );
+      
+        $('.tab-select').on('click', function(e) {
+            $('.tab-select').map((i, el) => {
+                if (el === this) {
+                    el.classList && el.classList.add('active');
+                } else {
+                    el.classList && el.classList.remove('active');
+                }
+            });
+        });
+    }
   
