@@ -139,10 +139,13 @@ function addListeners()
 function showConfigurationDialog()
 {
 	let popUp = showPopUpDialog('Calibration Configuration', '75%', '75%');
-	let configurationDialog = new sbConfigurationDialog();
-	configurationDialog.setup(getConfigurationSetup());
+	// let configurationDialog = new sbConfigurationDialog();
+	// configurationDialog.setup(getConfigurationSetup());
 
-	popUp.setContent(configurationDialog.mainContent);
+	// confir
+
+	// popUp.setContent();
+	renderConfig(popUp.contentArea.id);
 }
 
 /**
@@ -437,12 +440,13 @@ function showPopUpDialog(title, width, height)
 	{
 		enableButtons(false);
 		let pu = new sbPopUp(title, width, height);
+		console.log(pu);
 		pu.on('closed', function()
 		{
 			enableButtons(true);
 		});
 		pu.show();
-
+		pu.id = title.split(' ').join('-');
 		return pu;
 	}
 	catch(err)
