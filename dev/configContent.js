@@ -2,7 +2,95 @@ class ListMenu extends React.Component {
     render() {
         const {tab, index} = this.props;
 
-        return (<li key={index} className={(index === 0 ? 'tab-select active' : 'tab-select')} role="presentation"><a href={`#${tab.id}`} aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true"><i className={`${tab.classIcon}`}></i> {tab.name}</a></li>);
+        return (
+            <li 
+                key={index} 
+                className={(index === 0 ? 'tab-select active' : 'tab-select')} 
+                role="presentation">
+                <a href={`#${tab.id}`} aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true">
+                    <i className={`${tab.classIcon}`}></i> 
+                    {tab.name}
+                </a>
+            </li>
+            );
+    }
+}
+
+const popUpSelection = function(domElement) {
+    console.log($(domElement).parent());
+    // TODO: Implement listener
+    // TODO: Propagate selection back to state of React object 
+    // TODO: Make inserted pop up customizable
+    return $(domElement).parent().append('<div class="miniPopUp">test</div>');
+    
+}
+
+class HeaderRow extends React.Component {
+    render() {
+        const {content, index} = this.props;
+
+        return (
+            <React.Fragment>
+                <h1 key={index} className="pl-1 text-center">{content.title}</h1>
+                <div className="header ">
+                    {/* {content.header.length} */}
+                    <div className="pl-1 row heading font-weight-bold">
+                        {(content.header.length > 0 ? content.header.map((header, index) => {
+                            return (<div key={index} className={`col-${header.colSize}`}>
+                                {header.textContent}
+                            </div>);
+                        }) : <p>no header cols</p>)}
+                    </div>
+                </div>
+            </React.Fragment>
+        );
+    }
+}
+
+class InputRow extends React.Component {
+
+    render() {
+        const {content, index} = this.props;
+
+        return (
+            <div key={index} className={`input ${content.id}`}>
+                <div className="pl-1 row mb-1 content">
+                    {content.inputRow.length > 0 ? content.inputRow.map((input, index) => {
+                        return (
+                            <div key={index} className={`col-${input.colSize}`}>
+                                {(!input.subContent ? 
+                                    React.createElement(input.element, {
+                                        onClick: this.props.handler,
+                                        key: index + 10,
+                                        className: input.className,
+                                    }, 
+                                    input.textContent ) : 
+                                    input.subContent.length > 0 ?
+                                    <div 
+                                        className={input.className}>
+                                            {input.subContent.map((sub, index) => {
+                                                return (
+                                                    <div
+                                                        key={index}
+                                                        className={`col-${input.colSize}`}>
+                                                            <div
+                                                                onClick={this.props.addRow} 
+                                                                className={sub.className}>
+                                                                    <i
+                                                                        className={sub.subClassName}
+                                                                        aria-hidden="true">{sub.textContent}</i>
+                                                            </div>
+                                                    </div>
+                                                )
+                                            })}
+                                    </div>
+                                    : <p>no sub cols</p>)}
+                            </div>
+                        );
+                    }) : <p>no header rows</p>}
+                </div>
+            </div>
+        );
     }
 }
 class ConfigContainer extends React.Component {
@@ -12,6 +100,25 @@ class ConfigContainer extends React.Component {
             tabs : props.tabs,
             tabContent : props.tabContent
         }
+
+        this.changeHandler = this.changeHandler.bind(this);
+        this.insertRow = this.insertRow.bind(this);
+    }
+
+    /**
+     * deals with changes to UI to make sure they are saved to the state
+     * @param {Event} e 
+     */
+    changeHandler(e) {
+        console.log('changeHandler');
+        console.log(e);
+        popUpSelection(e.currentTarget);
+
+    }
+
+    insertRow(e) {
+        console.log('insertRow');
+        console.log(e.currentTarget);
     }
 
     render() {
@@ -31,27 +138,14 @@ class ConfigContainer extends React.Component {
                                 {/* this is where we wiil map the data */}
                                 {tabContent.length > 0 ? tabContent.map((content, i) => {
                                     return (
-                                        <div key={i} role="tabpanel" className={`tab-pane active fade in ${i === 0 ? 'show' : ''}`}  id={`${content.id}`}>
-                                            <h1 className="pl-1 text-center">{content.title}</h1>
-                                            <div className="header ">
-                                                {/* {content.header.length} */}
-                                                <div className="pl-1 row heading font-weight-bold">
-                                                    {content.header.length > 0 ? content.header.map((header, i) => {
-                                                        return (<div key={i} className={`col-${header.colSize}`}>
-                                                            {header.textContent}
-                                                        </div>);
-                                                    }) : <p>no header rows</p>}
-                                                </div>
-                                            </div>
-                                            <div className={`input ${content.id}`}>
-                                                <div className="pl-1 row mb-1 content">
-                                                    {content.inputRow.length > 0 ? content.inputRow.map((input, i) => {
-                                                        return (<div key={i} className={`col-${input.colSize}`}>
-                                                            <span className="controlLink">{input.textContent}</span>
-                                                        </div>);
-                                                    }) : <p>no header rows</p>}
-                                                </div>
-                                            </div>
+                                        <div 
+                                            key={i} 
+                                            role="tabpanel" 
+                                            className={`tab-pane active fade in ${i === 0 ? 'show' : ''}`}  
+                                            id={`${content.id}`}
+                                        >
+                                            <HeaderRow index={i} content={content} />
+                                            <InputRow handler={this.changeHandler} addRow={this.insertRow} index={i} content={content} />
                                         </div>
                                     );
                                 }) : <p>no content to display</p>}
@@ -64,552 +158,37 @@ class ConfigContainer extends React.Component {
     }
 
 }
-const tabContent = [
-    {
-        "id":"controlDevices",
-        "title":"Control Devices",
-        "header": [
-            {
-                "colSize":"1",
-                "textContent":"Device",
-            },
-            {
-                "colSize":"1",
-                "textContent":"SN",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Baud",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Format",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Delay",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Commands to Configure",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Sample Commands",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Measurands",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Update",
-            },
 
-        ],
-        "inputRow": [
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Device",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"SN",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Port",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Baud",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Format",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Delay",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Set",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Set",
-            },
-            {
-                "colSize":"3",
-                "element":"div",
-                "className":"btn btn-primary",
-                "textContent":"Add Measurand",
-            },
-            {
-                "colSize":"1",
-                "element":"div",
-                "className":"row",
-                "textContent":"",
-                "subContent":[
-                    {
-                        "colSize":"4",
-                        "element":"div",
-                        "textContent":"&npsb;"
-                    },
-                    {
-                        "colSize":"4",
-                        "element":"div",
-                        "textContent":"&npsb;"
-                    },
-                    {
-                        "colSize":"4",
-                        "element":"div",
-                        "className":"btn btn success",
-                        "textContent":"<i class=\"fa fa-plus\" aria-hidden=\"true\"></i>"
-                    },
-                ]
-            },
-        ]
+
+/**
+ * Renders configuration from React classes declared above.
+ * tabNames is a global located in tabConfig.js (edit ./dev version)
+ * tabContent is a global located in tabContent.js (edit in ./dev version)
+ * 
+ * //TODO: load settings from LocalStorage (after they are saved) and then run background task to retrieve from database.
+ * after creating tab config, it creates an event listener (used Jquery for speed of deploy) to listen to appropriate tab click and active/deactivate tabs.
+ * 
+ * //TODO: listen to config page closure to save settings to local storage and when avaialable the database.
+ * @param {DOM} root element to render content to
+ */
+function renderConfig(root) {
+
+    ReactDOM.render(
+    <ConfigContainer 
+        tabs={tabNames} 
+        tabContent={tabContent}/>,
+    document.getElementById(root)
+    );
     
-    },
-    {
-        "id":"instrumentConfiguration",
-        "title":"Instrument Config",
-        "header": [
-            {
-                "colSize":"1",
-                "textContent":"Device Type",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Model",
-            },
-            {
-                "colSize":"1",
-                "textContent":"SN",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Measurand",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Measurand Sub-Type",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Peristaltic Pump Delay",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Injection Volume",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Pump Rate",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Drain",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Fill",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Calulate After",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Update",
-            },
-
-        ],
-        "inputRow": [
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Device",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"SN",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Port",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Baud",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Format",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Delay",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Set",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Set",
-            },
-            {
-                "colSize":"3",
-                "element":"div",
-                "className":"btn btn-primary",
-                "textContent":"Add Measurand",
-            },
-            {
-                "colSize":"1",
-                "element":"div",
-                "className":"row",
-                "textContent":"",
-                "subContent":[
-                    {
-                        "colSize":"4",
-                        "element":"div",
-                        "textContent":"&npsb;"
-                    },
-                    {
-                        "colSize":"4",
-                        "element":"div",
-                        "textContent":"&npsb;"
-                    },
-                    {
-                        "colSize":"4",
-                        "element":"div",
-                        "className":"btn btn success",
-                        "textContent":"<i class=\"fa fa-plus\" aria-hidden=\"true\"></i>"
-                    },
-                ]
-            },
-        ]
-    
-    },
-    {
-        "id":"setPoints",
-        "title":"Set Points",
-        "header": [
-            {
-                "colSize":"1",
-                "textContent":"Device",
-            },
-            {
-                "colSize":"1",
-                "textContent":"SN",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Baud",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Format",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Delay",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Commands to Configure",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Sample Commands",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Measurands",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Update",
-            },
-
-        ],
-        "inputRow": [
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Device",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"SN",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Port",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Baud",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Format",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Delay",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Set",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Set",
-            },
-            {
-                "colSize":"3",
-                "element":"div",
-                "className":"btn btn-primary",
-                "textContent":"Add Measurand",
-            },
-            {
-                "colSize":"1",
-                "element":"div",
-                "className":"row",
-                "textContent":"",
-                "subContent":[
-                    {
-                        "colSize":"4",
-                        "element":"div",
-                        "textContent":"&npsb;"
-                    },
-                    {
-                        "colSize":"4",
-                        "element":"div",
-                        "textContent":"&npsb;"
-                    },
-                    {
-                        "colSize":"4",
-                        "element":"div",
-                        "className":"btn btn success",
-                        "textContent":"<i class=\"fa fa-plus\" aria-hidden=\"true\"></i>"
-                    },
-                ]
-            },
-        ]
-    
-    },
-    {
-        "id":"references",
-        "title":"References",
-        "header": [
-            {
-                "colSize":"1",
-                "textContent":"Device",
-            },
-            {
-                "colSize":"1",
-                "textContent":"SN",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Baud",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Format",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Delay",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Commands to Configure",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Sample Commands",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Measurands",
-            },
-            {
-                "colSize":"1",
-                "textContent":"Update",
-            },
-
-        ],
-        "inputRow": [
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Device",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"SN",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Port",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Baud",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Format",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Delay",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Set",
-            },
-            {
-                "colSize":"1",
-                "element":"span",
-                "className":"controlLink",
-                "textContent":"Set",
-            },
-            {
-                "colSize":"3",
-                "element":"div",
-                "className":"btn btn-primary",
-                "textContent":"Add Measurand",
-            },
-            {
-                "colSize":"1",
-                "element":"div",
-                "className":"row",
-                "textContent":"",
-                "subContent":[
-                    {
-                        "colSize":"4",
-                        "element":"div",
-                        "textContent":"&npsb;"
-                    },
-                    {
-                        "colSize":"4",
-                        "element":"div",
-                        "textContent":"&npsb;"
-                    },
-                    {
-                        "colSize":"4",
-                        "element":"div",
-                        "className":"btn btn success",
-                        "textContent":"<i class=\"fa fa-plus\" aria-hidden=\"true\"></i>"
-                    },
-                ]
-            },
-        ]
-    
-    },
-]
-
-    function renderConfig(root) {
-        ReactDOM.render(
-        <ConfigContainer tabs={[
-            {
-                'id': 'controlDevices',
-                'name': 'Control Devices',
-                'classIcon':'fa fa-desktop'
-            },
-            {
-                'id': 'instrumentConfiguration',
-                'name': 'Instrument Configs',
-                'classIcon':'fa fa-cube'
-            },
-            {
-                'id':'setPoints',
-                'name':'Set Points',
-                'classIcon':'fa fa-circle-o'
-            },
-            {
-                'id':'references',
-                'name':'References',
-                'classIcon':'fa fa-thermometer-half'
+    $('.tab-select').on('click', function(e) {
+        $('.tab-select').map((i, el) => {
+            if (el === this) {
+                el.classList && el.classList.add('active');
+            } else {
+                el.classList && el.classList.remove('active');
             }
-        ]} tabContent={tabContent}/>,
-        document.getElementById(root)
-        );
-      
-        $('.tab-select').on('click', function(e) {
-            $('.tab-select').map((i, el) => {
-                if (el === this) {
-                    el.classList && el.classList.add('active');
-                } else {
-                    el.classList && el.classList.remove('active');
-                }
-            });
         });
-    }
+    });
+
+}
   

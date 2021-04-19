@@ -136,6 +136,7 @@ function addListeners()
 	}
 }
 
+// BUG: this doesn't disable the menu bar, allowing the background pop up to be displayed again over the config screen
 function showConfigurationDialog()
 {
 	let popUp = showPopUpDialog('Calibration Configuration', '75%', '75%');
@@ -149,6 +150,7 @@ function showConfigurationDialog()
 }
 
 /**
+ * TODO: test
  * Temporary function!
  */
 function getConfigurationSetup()
