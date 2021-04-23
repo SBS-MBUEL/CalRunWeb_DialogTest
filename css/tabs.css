@@ -2,27 +2,30 @@
 div.tab-pane>div>div.row {
     border-bottom: 1px solid black;
 }
-.row .content:nth-child(odd) {
+.content:nth-child(odd) {
     background-color: #fafbfb;
 }
 
-a:hover,a:focus{
+a:hover, a:focus {
     outline: none;
     text-decoration: none;
     
 }
-.tab .nav-tabs{
+.tab-content {
+    width: 100%;
+}
+.tab .nav-tabs {
     background: #dde2e0;
     padding: 5px 0;
     text-align: center;
 }
-.tab .nav-tabs li{
+.tab .nav-tabs li {
     margin-bottom: 0;
     margin-right: 0;
     float: none;
     display: inline-block;
 }
-.tab .nav-tabs li a{
+.tab .nav-tabs li a {
     font-size: 14px;
     color: #11195c;
     background: #fafbfb;
@@ -31,22 +34,23 @@ a:hover,a:focus{
     border-radius: 0;
     text-transform: uppercase;
 }
-.tab .nav-tabs li a:hover{
+.tab .nav-tabs li a:hover {
     background-color: #00ADDD;
     border-color: transparent;
 }
-.tab .nav-tabs li a i{
+.tab .nav-tabs li a i {
     font-size: 25px;
     margin-right: 10px;
 }
 .tab .nav-tabs li.active a,
-.tab .nav-tabs li.active a:hover{
+.tab .nav-tabs li.active a:hover {
     background: #11195c;
     color: #fff;
     border: 1px solid #00ADDD;
 }
-.tab .tab-content{
-    font-size: 14px;
+.tab-pane {
+    width: 100%;
+    font-size: 12px;
     color: #11195c;
     line-height: 30px;
     background: #e7ecea;
@@ -56,14 +60,14 @@ a:hover,a:focus{
     font-size: 0.9em;
 }
 
-@media only screen and (max-width: 990px){
+@media only screen and (max-width: 990px) {
     .tab .nav-tabs li a{ padding: 15px 10px; }
     .tab .tab-content{ padding: 20px 25px; }
 }
-@media only screen and (max-width: 767px){
+@media only screen and (max-width: 767px) {
     .tab .nav-tabs li a{ padding: 15px 5px; }
 }
-@media only screen and (max-width: 480px){
+@media only screen and (max-width: 480px) {
     .tab .nav-tabs li{ width:100%; }
 }
 

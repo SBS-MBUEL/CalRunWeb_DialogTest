@@ -44,14 +44,6 @@ var ListMenu = function (_React$Component) {
     return ListMenu;
 }(React.Component);
 
-var popUpSelection = function popUpSelection(domElement) {
-    console.log($(domElement).parent());
-    // TODO: Implement listener
-    // TODO: Propagate selection back to state of React object 
-    // TODO: Make inserted pop up customizable
-    return $(domElement).parent().append('<div class="miniPopUp">test</div>');
-};
-
 var HeaderRow = function (_React$Component2) {
     _inherits(HeaderRow, _React$Component2);
 
@@ -103,8 +95,95 @@ var HeaderRow = function (_React$Component2) {
     return HeaderRow;
 }(React.Component);
 
-var InputRow = function (_React$Component3) {
-    _inherits(InputRow, _React$Component3);
+/**
+ * OptionRow restores the previously saved options per tab
+ */
+
+
+var OptionRow = function (_React$Component3) {
+    _inherits(OptionRow, _React$Component3);
+
+    function OptionRow() {
+        _classCallCheck(this, OptionRow);
+
+        return _possibleConstructorReturn(this, (OptionRow.__proto__ || Object.getPrototypeOf(OptionRow)).apply(this, arguments));
+    }
+
+    _createClass(OptionRow, [{
+        key: 'render',
+        value: function render() {
+            var _this4 = this;
+
+            var _props3 = this.props,
+                row = _props3.row,
+                index = _props3.index,
+                id = _props3.id;
+
+            console.log(row, index, id);
+            return React.createElement(
+                'div',
+                { key: index, className: 'input ' + id },
+                React.createElement(
+                    'div',
+                    { className: 'pl-1 row mb-1 content' },
+                    row.length > 0 ? row.map(function (col, index) {
+                        return React.createElement(
+                            'div',
+                            { key: index, className: 'col-' + col.colSize },
+                            !col.subContent ? React.createElement(col.element, {
+                                onClick: _this4.props.handler,
+                                key: index + 10,
+                                className: col.className
+                            }, col.textContent) : col.subContent.length > 0 ? React.createElement(
+                                'div',
+                                {
+                                    className: col.className
+                                },
+                                col.subContent.map(function (sub, index) {
+                                    return React.createElement(
+                                        'div',
+                                        {
+                                            key: index,
+                                            className: 'col-' + sub.colSize + '  pr-1'
+                                        },
+                                        React.createElement(
+                                            'div',
+                                            {
+                                                onClick: _this4.props.handler,
+                                                className: '' + sub.className
+                                            },
+                                            React.createElement(
+                                                'i',
+                                                {
+                                                    className: sub.subClassName,
+                                                    'aria-hidden': 'true'
+                                                },
+                                                sub.textContent
+                                            )
+                                        )
+                                    );
+                                })
+                            ) : React.createElement(
+                                'p',
+                                null,
+                                'no sub cols'
+                            )
+                        );
+                    }) : React.createElement(
+                        'p',
+                        null,
+                        'no header rows'
+                    )
+                )
+            );
+        }
+    }]);
+
+    return OptionRow;
+}(React.Component);
+
+var InputRow = function (_React$Component4) {
+    _inherits(InputRow, _React$Component4);
 
     function InputRow() {
         _classCallCheck(this, InputRow);
@@ -115,11 +194,11 @@ var InputRow = function (_React$Component3) {
     _createClass(InputRow, [{
         key: 'render',
         value: function render() {
-            var _this4 = this;
+            var _this6 = this;
 
-            var _props3 = this.props,
-                content = _props3.content,
-                index = _props3.index;
+            var _props4 = this.props,
+                content = _props4.content,
+                index = _props4.index;
 
 
             return React.createElement(
@@ -133,29 +212,31 @@ var InputRow = function (_React$Component3) {
                             'div',
                             { key: index, className: 'col-' + input.colSize },
                             !input.subContent ? React.createElement(input.element, {
-                                onClick: _this4.props.handler,
+                                onClick: _this6.props.handler,
                                 key: index + 10,
                                 className: input.className
                             }, input.textContent) : input.subContent.length > 0 ? React.createElement(
                                 'div',
-                                {
-                                    className: input.className },
+                                { className: input.className },
                                 input.subContent.map(function (sub, index) {
                                     return React.createElement(
                                         'div',
                                         {
                                             key: index,
-                                            className: 'col-' + input.colSize },
+                                            className: 'col-' + sub.colSize
+                                        },
                                         React.createElement(
                                             'div',
                                             {
-                                                onClick: _this4.props.addRow,
-                                                className: sub.className },
+                                                onClick: _this6.props.handler,
+                                                className: sub.className
+                                            },
                                             React.createElement(
                                                 'i',
                                                 {
                                                     className: sub.subClassName,
-                                                    'aria-hidden': 'true' },
+                                                    'aria-hidden': 'true'
+                                                },
                                                 sub.textContent
                                             )
                                         )
@@ -180,47 +261,147 @@ var InputRow = function (_React$Component3) {
     return InputRow;
 }(React.Component);
 
-var ConfigContainer = function (_React$Component4) {
-    _inherits(ConfigContainer, _React$Component4);
+/**
+ * ConfigContainer is the main launching point to construct the tabbed configuration screen
+ */
+
+
+var ConfigContainer = function (_React$Component5) {
+    _inherits(ConfigContainer, _React$Component5);
 
     function ConfigContainer(props) {
         _classCallCheck(this, ConfigContainer);
 
-        var _this5 = _possibleConstructorReturn(this, (ConfigContainer.__proto__ || Object.getPrototypeOf(ConfigContainer)).call(this, props));
+        var _this7 = _possibleConstructorReturn(this, (ConfigContainer.__proto__ || Object.getPrototypeOf(ConfigContainer)).call(this, props));
 
-        _this5.state = {
+        _this7.state = {
             tabs: props.tabs,
-            tabContent: props.tabContent
+            tabContent: props.tabContent,
+            dataRows: props.tabContent,
+            newRowContent: []
         };
 
-        _this5.changeHandler = _this5.changeHandler.bind(_this5);
-        _this5.insertRow = _this5.insertRow.bind(_this5);
-        return _this5;
+        _this7.changeHandler = _this7.changeHandler.bind(_this7);
+        _this7.insertRow = _this7.insertRow.bind(_this7);
+        _this7.copyRow = _this7.copyRow.bind(_this7);
+        _this7.updateRow = _this7.updateRow.bind(_this7);
+        _this7.removeRow = _this7.removeRow.bind(_this7);
+        _this7.clickRouter = _this7.clickRouter.bind(_this7);
+        return _this7;
     }
 
     /**
-     * deals with changes to UI to make sure they are saved to the state
-     * @param {Event} e 
+     * renders mini pop up option list - on change change calling div
+     * @param {DOM} domElement Where the pop up dialog will appear
+     * @param {string} id the DOM element to manipulate after selection is made
+     * @returns 
      */
 
 
     _createClass(ConfigContainer, [{
+        key: 'popUpSelection',
+        value: function popUpSelection(domElement, id) {
+            console.log($(domElement).parent());
+            // TODO: Implement listener
+            // TODO: Propagate selection back to state of React object 
+            // TODO: Make inserted pop up customizable
+            return $(domElement).parent().append('<div class="miniPopUp">test</div>');
+        }
+
+        /**
+         * deals with changes to UI to make sure they are saved to the state
+         * //TODO: need to implement code here to deal with changes to selected item
+         * @param {Event} e 
+         */
+
+    }, {
         key: 'changeHandler',
         value: function changeHandler(e) {
             console.log('changeHandler');
             console.log(e);
-            popUpSelection(e.currentTarget);
+            this.popUpSelection(e.currentTarget);
         }
+
+        /**
+        * copy current config row to a new row
+        * //TODO: code needs implemented
+        * @param {Event} e 
+        */
+
+    }, {
+        key: 'copyRow',
+        value: function copyRow(e) {
+            console.log('copy Row');
+            console.log(e.currentTarget);
+        }
+
+        /**
+        * update row of current config row to database and local configs
+        * //TODO: code needs implemented
+        * @param {Event} e 
+        */
+
+    }, {
+        key: 'updateRow',
+        value: function updateRow(e) {
+            console.log('update Row');
+            console.log(e.currentTarget);
+        }
+
+        /**
+         * insert new config row to table
+         * //TODO: code needs implemented
+         * @param {Event} e 
+         */
+
+    }, {
+        key: 'removeRow',
+        value: function removeRow(e) {
+            console.log('remove row');
+            console.log(e.currentTarget);
+        }
+
+        /**
+         * insert new config row to table
+         * //TODO: code needs implemented
+         * @param {Event} e 
+         */
+
     }, {
         key: 'insertRow',
         value: function insertRow(e) {
-            console.log('insertRow');
+            console.log('insert Row');
             console.log(e.currentTarget);
+        }
+    }, {
+        key: 'clickRouter',
+        value: function clickRouter(e) {
+            console.log('modify row - add / remove / update / copy');
+            console.log($(e.currentTarget)[0]);
+
+            if ($(e.currentTarget)[0].className.includes('controlLink')) {
+                this.changeHandler(e);
+            }
+            if ($(e.currentTarget)[0].className.includes('success')) {
+                this.insertRow(e);
+            }
+            if ($(e.currentTarget)[0].className.includes('danger')) {
+                this.removeRow(e);
+            }
+            if ($(e.currentTarget)[0].className.includes('info')) {
+                this.updateRow(e);
+            }
+            if ($(e.currentTarget)[0].className.includes('warning')) {
+                this.copyRow(e);
+            }
+            if ($(e.currentTarget)[0].className.includes('primary')) {
+                this.changeHandler(e);
+            }
         }
     }, {
         key: 'render',
         value: function render() {
-            var _this6 = this;
+            var _this8 = this;
 
             var _state = this.state,
                 tabs = _state.tabs,
@@ -263,7 +444,10 @@ var ConfigContainer = function (_React$Component4) {
                                             id: '' + content.id
                                         },
                                         React.createElement(HeaderRow, { index: i, content: content }),
-                                        React.createElement(InputRow, { handler: _this6.changeHandler, addRow: _this6.insertRow, index: i, content: content })
+                                        React.createElement(InputRow, { handler: _this8.clickRouter, index: i, content: content }),
+                                        content && content.dataRows.length > 0 && content.dataRows.map(function (row, i) {
+                                            return React.createElement(OptionRow, { handler: _this8.clickRouter, index: i, id: content.id, row: row });
+                                        })
                                     );
                                 }) : React.createElement(
                                     'p',
@@ -301,10 +485,10 @@ function renderConfig(root) {
         tabContent: tabContent }), document.getElementById(root));
 
     $('.tab-select').on('click', function (e) {
-        var _this7 = this;
+        var _this9 = this;
 
         $('.tab-select').map(function (i, el) {
-            if (el === _this7) {
+            if (el === _this9) {
                 el.classList && el.classList.add('active');
             } else {
                 el.classList && el.classList.remove('active');

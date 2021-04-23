@@ -4,13 +4,11 @@
 	"description": "Calibration Software for sea-Bird Scientific",
 	"main": "index.html",
 	"scripts": {
+		"babble": "npx babel dev/configContent.js --out-file js/configContent.js && npx babel dev/tabConfigs.js --out-file js/tabConfigs.js",
 		"test": "npm test"
 	},
 	"author": "Sea-Bird Scientific",
 	"license": "ISC",
-	"script": {
-		"babble": "npx babel dev/configContent.js --out-file js/configContent.js"
-	},
 	"dependencies": {
 		"jest": "^25.5.3",
 		"npm": "^6.10.3",
