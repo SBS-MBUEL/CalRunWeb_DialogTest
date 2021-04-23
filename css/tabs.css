@@ -1,7 +1,13 @@
+/* The animation code */
+@keyframes swipe {
+    from {width: 50%;}
+    to {width: 100%;}
+  }
 
 div.tab-pane>div>div.row {
     border-bottom: 1px solid black;
 }
+
 .content:nth-child(odd) {
     background-color: #fafbfb;
 }
@@ -9,22 +15,27 @@ div.tab-pane>div>div.row {
 a:hover, a:focus {
     outline: none;
     text-decoration: none;
-    
 }
-.tab-content {
+
+.tab-content .active {
     width: 100%;
+    animation-name: swipe;
+    animation-duration: 400ms;
 }
+
 .tab .nav-tabs {
     background: #dde2e0;
     padding: 5px 0;
     text-align: center;
 }
+
 .tab .nav-tabs li {
     margin-bottom: 0;
     margin-right: 0;
     float: none;
     display: inline-block;
 }
+
 .tab .nav-tabs li a {
     font-size: 14px;
     color: #11195c;
