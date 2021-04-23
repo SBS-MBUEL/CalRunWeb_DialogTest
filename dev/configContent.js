@@ -280,7 +280,7 @@ class ConfigContainer extends React.Component {
                                         <div 
                                             key={i} 
                                             role="tabpanel" 
-                                            className={`tab-pane active fade in ${i === 0 ? 'show' : ''}`}  
+                                            className={`tab-pane ${i === 0 ? 'fade in active show' : 'fade out inactive'}`}  
                                             id={`${content.id}`}
                                         >
                                             <HeaderRow index={i} content={content} />
@@ -329,8 +329,10 @@ function renderConfig(root) {
         $('.tab-select').map((i, el) => {
             if (el === this) {
                 el.classList && el.classList.add('active');
+                el.classList && el.classList.remove('inactive');
             } else {
                 el.classList && el.classList.remove('active');
+                el.classList && el.classList.add('inactive');
             }
         });
     });

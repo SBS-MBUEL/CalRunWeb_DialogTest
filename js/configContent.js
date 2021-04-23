@@ -440,7 +440,7 @@ var ConfigContainer = function (_React$Component5) {
                                         {
                                             key: i,
                                             role: 'tabpanel',
-                                            className: 'tab-pane active fade in ' + (i === 0 ? 'show' : ''),
+                                            className: 'tab-pane ' + (i === 0 ? 'fade in active show' : 'fade out inactive'),
                                             id: '' + content.id
                                         },
                                         React.createElement(HeaderRow, { index: i, content: content }),
@@ -490,8 +490,10 @@ function renderConfig(root) {
         $('.tab-select').map(function (i, el) {
             if (el === _this9) {
                 el.classList && el.classList.add('active');
+                el.classList && el.classList.remove('inactive');
             } else {
                 el.classList && el.classList.remove('active');
+                el.classList && el.classList.add('inactive');
             }
         });
     });
