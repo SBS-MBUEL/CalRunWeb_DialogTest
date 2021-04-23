@@ -3,18 +3,18 @@
 const tabNames = [
     {
         'id': 'controlDevices',
-        'name': 'Control Devices',
-        'classIcon':'fa fa-desktop'
+        'name': 'Controller Configuration',
+        'classIcon':'fa fa-gamepad'
     },
     {
         'id': 'systemConfiguration',
         'name': 'System Config',
-        'classIcon':'fa fa-cube'
+        'classIcon':'fa fa-wrench'
     },
     {
         'id':'setPoints',
         'name':'Set Points',
-        'classIcon':'fa fa-circle-o'
+        'classIcon':'fa fa-map-marker'
     },
     {
         'id':'references',
