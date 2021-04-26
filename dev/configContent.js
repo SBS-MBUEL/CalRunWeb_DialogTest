@@ -40,71 +40,15 @@ class HeaderRow extends React.Component {
     }
 }
 
-/**
- * OptionRow restores the previously saved options per tab
- */
-class OptionRow extends React.Component {
-
-    render() {
-        const {row, index, id} = this.props;
-        console.log(row, index, id);
-        return (
-            <div key={index} className={`input ${id}`}>
-                <div className="pl-1 row mb-1 content">
-                    {row.length > 0 ? row.map((col, index) => {
-                        return (
-                            <div key={index} className={`col-${col.colSize}`}>
-                                {(!col.subContent ? 
-                                    React.createElement(col.element, {
-                                        onClick: this.props.handler,
-                                        key: index + 10,
-                                        className: col.className,
-                                    }, 
-                                    col.textContent ) : 
-                                    col.subContent.length > 0 ?
-                                    <div 
-                                        className={col.className}
-                                    >
-                                        {col.subContent.map((sub, index) => {
-                                            return (
-                                                <div
-                                                    key={index}
-                                                    className={`col-${sub.colSize}  pr-1`}
-                                                >
-                                                    <div
-                                                        onClick={this.props.handler} 
-                                                        className={`${sub.className}`}
-                                                    >
-                                                        <i
-                                                            className={sub.subClassName}
-                                                            aria-hidden="true"
-                                                        >
-                                                            {sub.textContent}
-                                                        </i>
-                                                    </div>
-                                                </div>
-                                            )
-                                        })}
-                                    </div>
-                                    : <p>no sub cols</p>)}
-                            </div>
-                        );
-                    }) : <p>no header rows</p>}
-                </div>
-            </div>
-        );
-    }
-}
-
-class InputRow extends React.Component {
+class ConfigRow extends React.Component {
 
     render() {
         const {content, index} = this.props;
-
+        console.warn(content);
         return (
             <div key={index} className={`input ${content.id}`}>
                 <div className="pl-1 row mb-1 content">
-                    {content.inputRow.length > 0 ? content.inputRow.map((input, index) => {
+                    {content.length > 0 ? content.map((input, index) => {
                         return (
                             <div key={index} className={`col-${input.colSize}`}>
                                 {(!input.subContent ? 
@@ -116,21 +60,21 @@ class InputRow extends React.Component {
                                     input.textContent ) : 
                                     input.subContent.length > 0 ?
                                     <div className={input.className}>
-                                        {input.subContent.map((sub, index) => {
+                                        {input.subContent.map((col, index) => {
                                             return (
                                                 <div
                                                     key={index}
-                                                    className={`col-${sub.colSize}`}
+                                                    className={`col-${col.colSize}`}
                                                 >
                                                     <div
                                                         onClick={this.props.handler} 
-                                                        className={sub.className}
+                                                        className={col.className}
                                                     >
                                                         <i
-                                                            className={sub.subClassName}
+                                                            className={col.subClassName}
                                                             aria-hidden="true"
                                                         >
-                                                            {sub.textContent}
+                                                            {col.textContent}
                                                         </i>
                                                     </div>
                                                 </div>
@@ -158,7 +102,7 @@ class ConfigContainer extends React.Component {
             tabContent : props.tabContent,
             dataRows: props.tabContent,
             newRowContent : []
-        }
+        };
 
         this.changeHandler = this.changeHandler.bind(this);
         this.insertRow = this.insertRow.bind(this);
@@ -179,7 +123,10 @@ class ConfigContainer extends React.Component {
         // TODO: Implement listener
         // TODO: Propagate selection back to state of React object 
         // TODO: Make inserted pop up customizable
-        return $(domElement).parent().append('<div class="miniPopUp">test</div>');
+        // return $(domElement).parent().append('<div class="miniPopUp">test</div>').on('click', function(e) {
+        //     console.log(e);
+        // });
+        renderPopUp(this.changeHandler, 'test', id)
     }
 
     /**
@@ -190,7 +137,7 @@ class ConfigContainer extends React.Component {
     changeHandler(e) {
         console.log('changeHandler');
         console.log(e);
-        this.popUpSelection(e.currentTarget);
+        this.popUpSelection(e.currentTarget, e.currentTarget.id);
 
     }
 
@@ -284,11 +231,11 @@ class ConfigContainer extends React.Component {
                                             id={`${content.id}`}
                                         >
                                             <HeaderRow index={i} content={content} />
-                                            <InputRow handler={this.clickRouter} index={i} content={content} />
+                                            <ConfigRow handler={this.clickRouter} index={i} content={content.inputRow} />
                                             {/* DONE: need to resolve what this data object will look like and change config data to appropriate value */}
                                             {/* DONE: Will need to iterate through configs for multiple rows, an additional map will need to be inserted here */}
                                             {content && content.dataRows.length > 0 && content.dataRows.map((row, i) => {
-                                                return <OptionRow handler={this.clickRouter} index={i} id={content.id} row={row} />
+                                                return <ConfigRow handler={this.clickRouter} index={i} id={content.id} content={row} />
                                             })}
                                             
                                         </div>

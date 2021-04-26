@@ -4,7 +4,7 @@
 	"description": "Calibration Software for sea-Bird Scientific",
 	"main": "index.html",
 	"scripts": {
-		"babble": "npx babel dev/configContent.js --out-file js/configContent.js && npx babel dev/tabConfigs.js --out-file js/tabConfigs.js",
+		"babble": "npx babel dev --out-dir js",
 		"test": "npm test"
 	},
 	"author": "Sea-Bird Scientific",
