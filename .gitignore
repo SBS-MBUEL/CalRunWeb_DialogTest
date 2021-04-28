@@ -1,8 +1,8 @@
 node_modules
 sbGlobal
 yarn.lock
-./js/configContent.js
-./js/databaseMockContent.js
-./js/popUpConfig.js
-./js/popUpContent.js
-./js/tabConfig.js
+js/configContent.js
+js/databaseMockContent.js
+js/popUpConfig.js
+js/popUpContent.js
+js/tabConfigs.js
