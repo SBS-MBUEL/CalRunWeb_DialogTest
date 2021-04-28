@@ -65,7 +65,7 @@ function continueCalRunInitialization()
  * @param {boolean} enable
  * @param {boolean} allButtons 
  */
-function enableButtons(enable, allButtons)
+function enableButtons(enable, allButtons = false)
 {
 	try
 	{

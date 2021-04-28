@@ -88,3 +88,9 @@ a:hover, a:focus {
     border: 1px solid  #00ADDD;
     background-color: white;
 }
+
+.heading {
+    font-weight: bold;
+    font-size: 1.1em;
+    border-right: 2px #11195c solid;
+}

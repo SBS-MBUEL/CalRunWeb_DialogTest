@@ -21,20 +21,44 @@ class TabMenu extends React.Component {
 class HeaderRow extends React.Component {
     render() {
         const {content, index} = this.props;
+        console.log(content, index);
 
+        let display = <p>no content</p>;
+        display = display && content[0] &&  content[0].ConfigurationArea && (<React.Fragment>
+            <h1 key={content[0].ConfigurationArea + index} className="pl-1 text-center">{content[0].ConfigurationArea.toUpperCase()}</h1>
+                <div className="header ">
+                {/* {content.header.length} */}
+                    {content.map((col, index) => {
+                        if (col.OptionIndex === '0')
+                        return (
+                            <div className="pl-1 content row font-weight-bold">
+                                <div key={col.ItemName + index} className={`heading col-6`}>
+                                    {col.ItemName}
+                                </div>
+                                <div key={col.ItemName + index} className={`col-6`}>
+                                    <div className="dropdown">
+                                        <span className={`dropdown-toggle btn btn-primary`} data-toggle="dropdown">{col.ItemValue}</span>
+                                        <ul className="miniPopUp dropdown-menu">
+                                            <div className="drop-container">
+                                                {/* Need to figure out how to populate this with actual data */}
+                                                {['test1', 'test2', 'test3', 'test4'].map((item, i) => {
+                                                    return (
+                                                        <li key={col.ItemValue + (i * Math.random())} onClick={this.props.handler} className="btn btn-outline-primary controlLink text-center">{item}</li>
+                                                    );
+                                                })}
+                                            </div>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>  
+                        )
+                    })}
+            </div>
+
+        </React.Fragment>)
         return (
             <React.Fragment>
-                <h1 key={index} className="pl-1 text-center">{content.title}</h1>
-                <div className="header ">
-                    {/* {content.header.length} */}
-                    <div className="pl-1 row heading font-weight-bold">
-                        {(content.header.length > 0 ? content.header.map((header, index) => {
-                            return (<div key={index} className={`col-${header.colSize}`}>
-                                {header.textContent}
-                            </div>);
-                        }) : <p>no header cols</p>)}
-                    </div>
-                </div>
+                {display}
             </React.Fragment>
         );
     }
@@ -121,12 +145,18 @@ class ConfigContainer extends React.Component {
         super(props);
         // TODO: state variable needs to contain settings object to be manipulated when an option is changed.
         this.state = {
-            tabs : props.tabs,
-            tabContent : props.settings.map(cur => {
-                if (props.tabs.reduce((acc, tab) => tab.ConfigurationArea.toLowerCase() === cur.ConfigurationArea.toLowerCase() ? acc + 1 : acc, 0) > 0) {
-                    return cur;
-                }
-            }).filter(el => el != undefined),
+            tabs : props.tabs
+            .filter(el => el != undefined),
+            // .filter(el => el.ConfigurationArea === 'system')
+            content : props.settings.map(cur => {
+                    if (props.tabs.reduce((acc, tab) => tab.ConfigurationArea.toLowerCase() === cur.ConfigurationArea.toLowerCase() ? acc + 1 : acc, 0) > 0) {
+                        return cur;
+                    }
+                })
+                .filter(el => el != undefined)
+                // .filter(el => el.ConfigurationArea === 'system')
+                // .filter(el => Number(el.ParameterIndex) >= 0)
+                .filter(el => el.ConfigurationID > 0),
             settings: props.settings
         };
         console.log(this.state);
@@ -233,40 +263,52 @@ class ConfigContainer extends React.Component {
     }
 
     render() {
-        const { tabs, tabContent } = this.state;
-        console.log(tabContent);
+        const { tabs, content } = this.state;
+
         return (
             <div className="container-fluid text-center">
                 <div className="row">
                     <div className="pt-4 col-12">
                         <div className="tab" role="tabpanel">
                             <ul className="nav nav-tabs" role="tablist">
-                                {tabs.length > 0 ? tabs.map((tab, i) => {
-                                    return <TabMenu index={i} tab={tab} />
-                                }) : <p>no tabs to select</p>}
-                            </ul>
-                            {/* <div className="tab-content tabs">
-                                {/* this is where we wiil map the data
-                                {tabContent.length > 0 ? tabContent.map((content, i) => {
-                                    return (
-                                        <div 
-                                            key={i} 
-                                            role="tabpanel" 
-                                            className={`tab-pane ${i === 0 ? 'fade in active show' : 'fade out inactive'}`}  
-                                            id={`${content.id}`}
-                                        >
-                                            <HeaderRow index={i} content={content} />
-                                            <ConfigRow handler={this.clickRouter} index={i} content={content.inputRow} />
-                                            {/* DONE: need to resolve what this data object will look like and change config data to appropriate value 
-                                            {/* DONE: Will need to iterate through configs for multiple rows, an additional map will need to be inserted here
-                                            {content && content.dataRows.length > 0 && content.dataRows.map((row, i) => {
-                                                return <ConfigRow handler={this.clickRouter} index={i} id={content.id} content={row} />
-                                            })}
-                                            
-                                        </div>
-                                    );
-                                }) : <p>no content to display</p>}
-                            </div> */}
+                                {
+                                    tabs.length > 0 ? 
+                                        tabs.map((tab, i) => {
+                                            return <TabMenu index={i} tab={tab} />
+                                        }) : 
+                                            <p>no tabs to select</p>
+                                }
+                            </ul>   
+                            <div className="tab-content tabs">
+                                { /* TODO: this is where we will map the data */ }
+                                { 
+                                    tabs.length > 0 ? 
+                                        tabs.map((tab, i) => {
+                                            return (
+                                                <div 
+                                                    key={tab.ConfigurationArea + i} 
+                                                    role="tabpanel" 
+                                                    className={`tab-pane ${i === 0 ? 'fade in active show' : 'fade out inactive'}`}  
+                                                    id={`${tab.ConfigurationArea}`}
+                                                >
+                                                    <HeaderRow 
+                                                        index={i} 
+                                                        content={content.filter(cnt => {
+                                                            if (!cnt && !cnt.ConfigurationArea) {
+                                                                return -1;
+                                                            }
+                                                            return cnt.ConfigurationArea.toUpperCase() === tab.ConfigurationArea.toUpperCase()
+                                                        })}
+                                                        handler={this.clickRouter}
+                                                    />
+                                                </div>
+                                            )
+                                        }) 
+                                    : 
+                                        <p>no inner to display!</p>
+                                }
+                                        
+                            </div>
                         </div>
                     </div>
                 </div>
