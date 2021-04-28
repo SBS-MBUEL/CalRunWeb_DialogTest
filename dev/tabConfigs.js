@@ -1,5 +1,24 @@
 'use strict';
 
+const icons = [
+    'gamepad',
+    'gamepad',
+    'gamepad',
+    'wrench',
+    'map-marker',
+    'thermometer-half'
+];
+
+const tabNames2 = [...new Set(databaseContent
+    .map((el, i) => el.ConfigurationArea))]
+    .map((el,  i) => {
+        return {
+            id : el,
+            name: el.toUpperCase(),
+            'classIcon': 'fa fa-' + icons[i]
+    }
+});
+
 const tabNames = [
     {
         'id': 'controlDevices',
@@ -14,7 +33,7 @@ const tabNames = [
     {
         'id':'setPoints',
         'name':'Set Points',
-        'classIcon':'fa fa-map-marker'
+        'classIcon':'fa fac'
     },
     {
         'id':'references',
@@ -772,3 +791,4 @@ const tabContent = [
     setPointTabContent, 
     referenceTabContent
 ];
+

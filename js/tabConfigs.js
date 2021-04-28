@@ -1,5 +1,19 @@
 'use strict';
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var icons = ['gamepad', 'gamepad', 'gamepad', 'wrench', 'map-marker', 'thermometer-half'];
+
+var tabNames2 = [].concat(_toConsumableArray(new Set(databaseContent.map(function (el, i) {
+    return el.ConfigurationArea;
+})))).map(function (el, i) {
+    return {
+        id: el,
+        name: el.toUpperCase(),
+        'classIcon': 'fa fa-' + icons[i]
+    };
+});
+
 var tabNames = [{
     'id': 'controlDevices',
     'name': 'Controller Configuration',
@@ -11,7 +25,7 @@ var tabNames = [{
 }, {
     'id': 'setPoints',
     'name': 'Set Points',
-    'classIcon': 'fa fa-map-marker'
+    'classIcon': 'fa fac'
 }, {
     'id': 'references',
     'name': 'References',

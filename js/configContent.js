@@ -8,16 +8,16 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var ListMenu = function (_React$Component) {
-    _inherits(ListMenu, _React$Component);
+var TabMenu = function (_React$Component) {
+    _inherits(TabMenu, _React$Component);
 
-    function ListMenu() {
-        _classCallCheck(this, ListMenu);
+    function TabMenu() {
+        _classCallCheck(this, TabMenu);
 
-        return _possibleConstructorReturn(this, (ListMenu.__proto__ || Object.getPrototypeOf(ListMenu)).apply(this, arguments));
+        return _possibleConstructorReturn(this, (TabMenu.__proto__ || Object.getPrototypeOf(TabMenu)).apply(this, arguments));
     }
 
-    _createClass(ListMenu, [{
+    _createClass(TabMenu, [{
         key: 'render',
         value: function render() {
             var _props = this.props,
@@ -28,20 +28,20 @@ var ListMenu = function (_React$Component) {
             return React.createElement(
                 'li',
                 {
-                    key: index,
+                    key: tab.ConfigurationArea,
                     className: index === 0 ? 'tab-select active' : 'tab-select',
                     role: 'presentation' },
                 React.createElement(
                     'a',
-                    { href: '#' + tab.id, 'aria-controls': 'home', role: 'tab', 'data-toggle': 'tab', 'aria-expanded': 'true' },
-                    React.createElement('i', { className: '' + tab.classIcon }),
-                    tab.name
+                    { href: '#' + tab.ConfigurationArea, 'aria-controls': 'home', role: 'tab', 'data-toggle': 'tab', 'aria-expanded': 'true' },
+                    React.createElement('i', { className: '' + tab.Icon }),
+                    tab.ConfigurationArea
                 )
             );
         }
     }]);
 
-    return ListMenu;
+    return TabMenu;
 }(React.Component);
 
 var HeaderRow = function (_React$Component2) {
@@ -95,91 +95,24 @@ var HeaderRow = function (_React$Component2) {
     return HeaderRow;
 }(React.Component);
 
-/**
- * OptionRow restores the previously saved options per tab
- */
+var DropDownList = function (_React$Component3) {
+    _inherits(DropDownList, _React$Component3);
 
+    function DropDownList() {
+        _classCallCheck(this, DropDownList);
 
-var OptionRow = function (_React$Component3) {
-    _inherits(OptionRow, _React$Component3);
-
-    function OptionRow() {
-        _classCallCheck(this, OptionRow);
-
-        return _possibleConstructorReturn(this, (OptionRow.__proto__ || Object.getPrototypeOf(OptionRow)).apply(this, arguments));
+        return _possibleConstructorReturn(this, (DropDownList.__proto__ || Object.getPrototypeOf(DropDownList)).apply(this, arguments));
     }
 
-    _createClass(OptionRow, [{
+    _createClass(DropDownList, [{
         key: 'render',
         value: function render() {
-            var _this4 = this;
-
-            var _props3 = this.props,
-                row = _props3.row,
-                index = _props3.index,
-                id = _props3.id;
-
-            console.log(row, index, id);
-            return React.createElement(
-                'div',
-                { key: index, className: 'input ' + id },
-                React.createElement(
-                    'div',
-                    { className: 'pl-1 row mb-1 content' },
-                    row.length > 0 ? row.map(function (col, index) {
-                        return React.createElement(
-                            'div',
-                            { key: index, className: 'col-' + col.colSize },
-                            !col.subContent ? React.createElement(col.element, {
-                                onClick: _this4.props.handler,
-                                key: index + 10,
-                                className: col.className
-                            }, col.textContent) : col.subContent.length > 0 ? React.createElement(
-                                'div',
-                                {
-                                    className: col.className
-                                },
-                                col.subContent.map(function (sub, index) {
-                                    return React.createElement(
-                                        'div',
-                                        {
-                                            key: index,
-                                            className: 'col-' + sub.colSize + '  pr-1'
-                                        },
-                                        React.createElement(
-                                            'div',
-                                            {
-                                                onClick: _this4.props.handler,
-                                                className: '' + sub.className
-                                            },
-                                            React.createElement(
-                                                'i',
-                                                {
-                                                    className: sub.subClassName,
-                                                    'aria-hidden': 'true'
-                                                },
-                                                sub.textContent
-                                            )
-                                        )
-                                    );
-                                })
-                            ) : React.createElement(
-                                'p',
-                                null,
-                                'no sub cols'
-                            )
-                        );
-                    }) : React.createElement(
-                        'p',
-                        null,
-                        'no header rows'
-                    )
-                )
-            );
+            console.log('hello', this.props.ddContent);
+            return React.createElement(React.Fragment, null);
         }
     }]);
 
-    return OptionRow;
+    return DropDownList;
 }(React.Component);
 
 var ConfigRow = function (_React$Component4) {
@@ -194,65 +127,49 @@ var ConfigRow = function (_React$Component4) {
     _createClass(ConfigRow, [{
         key: 'render',
         value: function render() {
-            var _this6 = this;
+            var _this5 = this;
 
-            var _props4 = this.props,
-                content = _props4.content,
-                index = _props4.index;
+            var _props3 = this.props,
+                content = _props3.content,
+                index = _props3.index;
 
             console.warn(content);
             return React.createElement(
                 'div',
-                { key: index, className: 'input ' + content.id },
-                React.createElement(
-                    'div',
-                    { className: 'pl-1 row mb-1 content' },
-                    content.length > 0 ? content.map(function (input, index) {
-                        return React.createElement(
+                { key: index, className: 'pl-1 row mb-1 content ${content.id}' },
+                content.length > 0 ? content.map(function (column, index) {
+                    return React.createElement(
+                        'div',
+                        { key: index, className: 'col-' + column.colSize },
+                        React.createElement(
                             'div',
-                            { key: index, className: 'col-' + input.colSize },
-                            !input.subContent ? React.createElement(input.element, {
-                                onClick: _this6.props.handler,
-                                key: index + 10,
-                                className: input.className
-                            }, input.textContent) : input.subContent.length > 0 ? React.createElement(
-                                'div',
-                                { className: input.className },
-                                input.subContent.map(function (col, index) {
-                                    return React.createElement(
-                                        'div',
-                                        {
-                                            key: index,
-                                            className: 'col-' + col.colSize
-                                        },
-                                        React.createElement(
-                                            'div',
-                                            {
-                                                onClick: _this6.props.handler,
-                                                className: col.className
-                                            },
-                                            React.createElement(
-                                                'i',
-                                                {
-                                                    className: col.subClassName,
-                                                    'aria-hidden': 'true'
-                                                },
-                                                col.textContent
-                                            )
-                                        )
-                                    );
-                                })
-                            ) : React.createElement(
-                                'p',
-                                null,
-                                'no sub cols'
+                            { className: 'dropdown' },
+                            React.createElement(
+                                'span',
+                                { className: column.className + ' dropdown-toggle', 'data-toggle': 'dropdown' },
+                                'test'
+                            ),
+                            React.createElement(
+                                'ul',
+                                { className: 'miniPopUp dropdown-menu' },
+                                React.createElement(
+                                    'div',
+                                    { className: 'drop-container' },
+                                    ['test1', 'test2', 'test3', 'test4'].map(function (item, i) {
+                                        return React.createElement(
+                                            'li',
+                                            { key: i * Math.random(), onClick: _this5.props.handler, className: 'btn btn-outline-primary controlLink text-center' },
+                                            item
+                                        );
+                                    })
+                                )
                             )
-                        );
-                    }) : React.createElement(
-                        'p',
-                        null,
-                        'no header rows'
-                    )
+                        )
+                    );
+                }) : React.createElement(
+                    'p',
+                    null,
+                    'no header rows'
                 )
             );
         }
@@ -272,22 +189,30 @@ var ConfigContainer = function (_React$Component5) {
     function ConfigContainer(props) {
         _classCallCheck(this, ConfigContainer);
 
-        var _this7 = _possibleConstructorReturn(this, (ConfigContainer.__proto__ || Object.getPrototypeOf(ConfigContainer)).call(this, props));
+        // TODO: state variable needs to contain settings object to be manipulated when an option is changed.
+        var _this6 = _possibleConstructorReturn(this, (ConfigContainer.__proto__ || Object.getPrototypeOf(ConfigContainer)).call(this, props));
 
-        _this7.state = {
+        _this6.state = {
             tabs: props.tabs,
-            tabContent: props.tabContent,
-            dataRows: props.tabContent,
-            newRowContent: []
+            tabContent: props.settings.map(function (cur) {
+                if (props.tabs.reduce(function (acc, tab) {
+                    return tab.ConfigurationArea.toLowerCase() === cur.ConfigurationArea.toLowerCase() ? acc + 1 : acc;
+                }, 0) > 0) {
+                    return cur;
+                }
+            }).filter(function (el) {
+                return el != undefined;
+            }),
+            settings: props.settings
         };
-
-        _this7.changeHandler = _this7.changeHandler.bind(_this7);
-        _this7.insertRow = _this7.insertRow.bind(_this7);
-        _this7.copyRow = _this7.copyRow.bind(_this7);
-        _this7.updateRow = _this7.updateRow.bind(_this7);
-        _this7.removeRow = _this7.removeRow.bind(_this7);
-        _this7.clickRouter = _this7.clickRouter.bind(_this7);
-        return _this7;
+        console.log(_this6.state);
+        _this6.changeHandler = _this6.changeHandler.bind(_this6);
+        _this6.insertRow = _this6.insertRow.bind(_this6);
+        _this6.copyRow = _this6.copyRow.bind(_this6);
+        _this6.updateRow = _this6.updateRow.bind(_this6);
+        _this6.removeRow = _this6.removeRow.bind(_this6);
+        _this6.clickRouter = _this6.clickRouter.bind(_this6);
+        return _this6;
     }
 
     /**
@@ -305,10 +230,10 @@ var ConfigContainer = function (_React$Component5) {
             // TODO: Implement listener
             // TODO: Propagate selection back to state of React object 
             // TODO: Make inserted pop up customizable
-            // return $(domElement).parent().append('<div class="miniPopUp">test</div>').on('click', function(e) {
+            // return $(domElement).parent().append('<div className="miniPopUp">test</div>').on('click', function(e) {
             //     console.log(e);
             // });
-            renderPopUp(this.changeHandler, 'test', id);
+            // renderPopUp(this.changeHandler, 'test', id)
         }
 
         /**
@@ -321,8 +246,7 @@ var ConfigContainer = function (_React$Component5) {
         key: 'changeHandler',
         value: function changeHandler(e) {
             console.log('changeHandler');
-            console.log(e);
-            this.popUpSelection(e.currentTarget, e.currentTarget.id);
+            console.log(e.currentTarget.textContent);
         }
 
         /**
@@ -384,28 +308,21 @@ var ConfigContainer = function (_React$Component5) {
 
             if ($(e.currentTarget)[0].className.includes('controlLink')) {
                 this.changeHandler(e);
-            }
-            if ($(e.currentTarget)[0].className.includes('success')) {
+            } else if ($(e.currentTarget)[0].className.includes('success')) {
                 this.insertRow(e);
-            }
-            if ($(e.currentTarget)[0].className.includes('danger')) {
+            } else if ($(e.currentTarget)[0].className.includes('danger')) {
                 this.removeRow(e);
-            }
-            if ($(e.currentTarget)[0].className.includes('info')) {
+            } else if ($(e.currentTarget)[0].className.includes('info')) {
                 this.updateRow(e);
-            }
-            if ($(e.currentTarget)[0].className.includes('warning')) {
+            } else if ($(e.currentTarget)[0].className.includes('warning')) {
                 this.copyRow(e);
-            }
-            if ($(e.currentTarget)[0].className.includes('primary')) {
+            } else if ($(e.currentTarget)[0].className.includes('primary')) {
                 this.changeHandler(e);
             }
         }
     }, {
         key: 'render',
         value: function render() {
-            var _this8 = this;
-
             var _state = this.state,
                 tabs = _state.tabs,
                 tabContent = _state.tabContent;
@@ -427,35 +344,11 @@ var ConfigContainer = function (_React$Component5) {
                                 'ul',
                                 { className: 'nav nav-tabs', role: 'tablist' },
                                 tabs.length > 0 ? tabs.map(function (tab, i) {
-                                    return React.createElement(ListMenu, { index: i, tab: tab });
+                                    return React.createElement(TabMenu, { index: i, tab: tab });
                                 }) : React.createElement(
                                     'p',
                                     null,
                                     'no tabs to select'
-                                )
-                            ),
-                            React.createElement(
-                                'div',
-                                { className: 'tab-content tabs' },
-                                tabContent.length > 0 ? tabContent.map(function (content, i) {
-                                    return React.createElement(
-                                        'div',
-                                        {
-                                            key: i,
-                                            role: 'tabpanel',
-                                            className: 'tab-pane ' + (i === 0 ? 'fade in active show' : 'fade out inactive'),
-                                            id: '' + content.id
-                                        },
-                                        React.createElement(HeaderRow, { index: i, content: content }),
-                                        React.createElement(ConfigRow, { handler: _this8.clickRouter, index: i, content: content.inputRow }),
-                                        content && content.dataRows.length > 0 && content.dataRows.map(function (row, i) {
-                                            return React.createElement(ConfigRow, { handler: _this8.clickRouter, index: i, id: content.id, content: row });
-                                        })
-                                    );
-                                }) : React.createElement(
-                                    'p',
-                                    null,
-                                    'no content to display'
                                 )
                             )
                         )
@@ -481,17 +374,17 @@ var ConfigContainer = function (_React$Component5) {
  */
 
 
-function renderConfig(root) {
+function renderConfig(root, tabNames, configuration) {
 
     ReactDOM.render(React.createElement(ConfigContainer, {
         tabs: tabNames,
-        tabContent: tabContent }), document.getElementById(root));
+        settings: configuration }), document.getElementById(root));
 
     $('.tab-select').on('click', function (e) {
-        var _this9 = this;
+        var _this7 = this;
 
         $('.tab-select').map(function (i, el) {
-            if (el === _this9) {
+            if (el === _this7) {
                 el.classList && el.classList.add('active');
                 el.classList && el.classList.remove('inactive');
             } else {

@@ -13,18 +13,28 @@
 			<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
 			<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
 
+			<!-- CDN Imports required for project -->
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 			<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script>
 			<script type="text/javascript" src="http://localhost:8080/socket.io/socket.io.js"></script>
+
+			<!-- Local Import required -->
 			<script type="text/javascript" src="../sbGlobal/sbGlobalFunctions.js"></script>
+
+			<!-- Local JS files -->
+			<script type="text/javascript" src="js/databaseMockContent.js"></script>
 			<script type="text/javascript" src="js/calRunFrontEnd.js"></script>
 			<script type="text/javascript" src="js/tabConfigs.js"></script>
 			<script type="text/javascript" src="js/configContent.js"></script>
 			<script type="text/javascript" src="js/popUpContent.js"></script>
-			<!-- <script src="./js/tabSelect.js"></script> -->
+			
 			<script type="text/javascript">
-            //This is how we get the program working
-            //Load global files and then initialize the calRun system
-            initializeGlobals(initializeCalRun);
+            	//This is how we get the program working
+            	//Load global files and then initialize the calRun system
+				$(document).ready(function() {
+					initializeGlobals(initializeCalRun);
+
+				});
 			</script>
 			<LINK rel='stylesheet' href='css/calRun.css'>
 			<link rel='stylesheet' href='./css/tabs.css'>

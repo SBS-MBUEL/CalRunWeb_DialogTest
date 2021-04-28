@@ -1,15 +1,15 @@
-class ListMenu extends React.Component {
+class TabMenu extends React.Component {
     render() {
         const {tab, index} = this.props;
 
         return (
             <li 
-                key={index} 
+                key={tab.ConfigurationArea} 
                 className={(index === 0 ? 'tab-select active' : 'tab-select')} 
                 role="presentation">
-                <a href={`#${tab.id}`} aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true">
-                    <i className={`${tab.classIcon}`}></i> 
-                    {tab.name}
+                <a href={`#${tab.ConfigurationArea}`} aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true">
+                    <i className={`${tab.Icon}`}></i> 
+                    {tab.ConfigurationArea}
                 </a>
             </li>
             );
@@ -40,52 +40,74 @@ class HeaderRow extends React.Component {
     }
 }
 
+class DropDownList extends React.Component {
+    render() {
+        console.log('hello', this.props.ddContent);
+        return (
+            <React.Fragment>
+
+            </React.Fragment>
+        )
+    }
+}
+
 class ConfigRow extends React.Component {
 
     render() {
         const {content, index} = this.props;
         console.warn(content);
         return (
-            <div key={index} className={`input ${content.id}`}>
-                <div className="pl-1 row mb-1 content">
-                    {content.length > 0 ? content.map((input, index) => {
-                        return (
-                            <div key={index} className={`col-${input.colSize}`}>
-                                {(!input.subContent ? 
-                                    React.createElement(input.element, {
-                                        onClick: this.props.handler,
-                                        key: index + 10,
-                                        className: input.className,
-                                    }, 
-                                    input.textContent ) : 
-                                    input.subContent.length > 0 ?
-                                    <div className={input.className}>
-                                        {input.subContent.map((col, index) => {
-                                            return (
+            <div key={index} className="pl-1 row mb-1 content ${content.id}">
+                {content.length > 0 ? content.map((column, index) => {
+                    return (
+                        <div key={index} className={`col-${column.colSize}`}>
+                            {/* {(!column.subContent ? 
+                                React.createElement(column.element, {
+                                    key: index + 10,
+                                    className: column.className + ' dropdown-toggle',
+                                    "data-toggle":"dropdown"
+                                }, 
+                                column.textContent ) : 
+                                column.subContent.length > 0 ?
+                                <div className={column.className}>
+                                    {column.subContent.map((subCol, index) => {
+                                        return (
+                                            <div
+                                                key={index}
+                                                className={`col-${subCol.colSize}`}
+                                            >
                                                 <div
-                                                    key={index}
-                                                    className={`col-${col.colSize}`}
+                                                    onClick={this.props.handler} 
+                                                    className={subCol.className}
                                                 >
-                                                    <div
-                                                        onClick={this.props.handler} 
-                                                        className={col.className}
+                                                    <i
+                                                        className={subCol.subClassName}
+                                                        aria-hidden="true"
                                                     >
-                                                        <i
-                                                            className={col.subClassName}
-                                                            aria-hidden="true"
-                                                        >
-                                                            {col.textContent}
-                                                        </i>
-                                                    </div>
+                                                        {subCol.textContent}
+                                                    </i>
                                                 </div>
-                                            )
-                                        })}
+                                            </div>
+                                        )
+                                    })}
+                                    {// TODO: need dropdown object defined 
+                                    } */}
+                                    <div className="dropdown">
+                                        <span className={`${column.className} dropdown-toggle`} data-toggle="dropdown">test</span>
+                                        <ul className="miniPopUp dropdown-menu">
+                                            <div className="drop-container">
+                                                {['test1', 'test2', 'test3', 'test4'].map((item, i) => {
+                                                    return (
+                                                        <li key={i * Math.random()} onClick={this.props.handler} className="btn btn-outline-primary controlLink text-center">{item}</li>
+                                                    );
+                                                })}
+                                            </div>
+                                        </ul>
                                     </div>
-                                    : <p>no sub cols</p>)}
-                            </div>
-                        );
-                    }) : <p>no header rows</p>}
-                </div>
+                                {/* : <p>no sub cols</p>)} */}
+                        </div>
+                    );
+                }) : <p>no header rows</p>}
             </div>
         );
     }
@@ -97,13 +119,17 @@ class ConfigRow extends React.Component {
 class ConfigContainer extends React.Component {
     constructor(props) {
         super(props);
+        // TODO: state variable needs to contain settings object to be manipulated when an option is changed.
         this.state = {
             tabs : props.tabs,
-            tabContent : props.tabContent,
-            dataRows: props.tabContent,
-            newRowContent : []
+            tabContent : props.settings.map(cur => {
+                if (props.tabs.reduce((acc, tab) => tab.ConfigurationArea.toLowerCase() === cur.ConfigurationArea.toLowerCase() ? acc + 1 : acc, 0) > 0) {
+                    return cur;
+                }
+            }).filter(el => el != undefined),
+            settings: props.settings
         };
-
+        console.log(this.state);
         this.changeHandler = this.changeHandler.bind(this);
         this.insertRow = this.insertRow.bind(this);
         this.copyRow = this.copyRow.bind(this);
@@ -123,10 +149,10 @@ class ConfigContainer extends React.Component {
         // TODO: Implement listener
         // TODO: Propagate selection back to state of React object 
         // TODO: Make inserted pop up customizable
-        // return $(domElement).parent().append('<div class="miniPopUp">test</div>').on('click', function(e) {
+        // return $(domElement).parent().append('<div className="miniPopUp">test</div>').on('click', function(e) {
         //     console.log(e);
         // });
-        renderPopUp(this.changeHandler, 'test', id)
+        // renderPopUp(this.changeHandler, 'test', id)
     }
 
     /**
@@ -136,8 +162,7 @@ class ConfigContainer extends React.Component {
      */
     changeHandler(e) {
         console.log('changeHandler');
-        console.log(e);
-        this.popUpSelection(e.currentTarget, e.currentTarget.id);
+        console.log(e.currentTarget.textContent);
 
     }
 
@@ -190,19 +215,19 @@ class ConfigContainer extends React.Component {
         if ($(e.currentTarget)[0].className.includes('controlLink')) {
             this.changeHandler(e);
         }
-        if ($(e.currentTarget)[0].className.includes('success')) {
+        else if ($(e.currentTarget)[0].className.includes('success')) {
             this.insertRow(e);
         }
-        if ($(e.currentTarget)[0].className.includes('danger')) {
+        else if ($(e.currentTarget)[0].className.includes('danger')) {
             this.removeRow(e);
         }
-        if ($(e.currentTarget)[0].className.includes('info')) {
+        else if ($(e.currentTarget)[0].className.includes('info')) {
             this.updateRow(e);
         }
-        if ($(e.currentTarget)[0].className.includes('warning')) {
+        else if ($(e.currentTarget)[0].className.includes('warning')) {
             this.copyRow(e);
         }
-        if ($(e.currentTarget)[0].className.includes('primary')) {
+        else if ($(e.currentTarget)[0].className.includes('primary')) {
             this.changeHandler(e);
         }
     }
@@ -217,11 +242,11 @@ class ConfigContainer extends React.Component {
                         <div className="tab" role="tabpanel">
                             <ul className="nav nav-tabs" role="tablist">
                                 {tabs.length > 0 ? tabs.map((tab, i) => {
-                                    return <ListMenu index={i} tab={tab} />
+                                    return <TabMenu index={i} tab={tab} />
                                 }) : <p>no tabs to select</p>}
                             </ul>
-                            <div className="tab-content tabs">
-                                {/* this is where we wiil map the data */}
+                            {/* <div className="tab-content tabs">
+                                {/* this is where we wiil map the data
                                 {tabContent.length > 0 ? tabContent.map((content, i) => {
                                     return (
                                         <div 
@@ -232,8 +257,8 @@ class ConfigContainer extends React.Component {
                                         >
                                             <HeaderRow index={i} content={content} />
                                             <ConfigRow handler={this.clickRouter} index={i} content={content.inputRow} />
-                                            {/* DONE: need to resolve what this data object will look like and change config data to appropriate value */}
-                                            {/* DONE: Will need to iterate through configs for multiple rows, an additional map will need to be inserted here */}
+                                            {/* DONE: need to resolve what this data object will look like and change config data to appropriate value 
+                                            {/* DONE: Will need to iterate through configs for multiple rows, an additional map will need to be inserted here
                                             {content && content.dataRows.length > 0 && content.dataRows.map((row, i) => {
                                                 return <ConfigRow handler={this.clickRouter} index={i} id={content.id} content={row} />
                                             })}
@@ -241,7 +266,7 @@ class ConfigContainer extends React.Component {
                                         </div>
                                     );
                                 }) : <p>no content to display</p>}
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>
@@ -263,12 +288,12 @@ class ConfigContainer extends React.Component {
  * //TODO: listen to config page closure to save settings to local storage and when avaialable the database.
  * @param {DOM} root element to render content to
  */
-function renderConfig(root) {
+function renderConfig(root, tabNames, configuration) {
 
     ReactDOM.render(
     <ConfigContainer 
         tabs={tabNames} 
-        tabContent={tabContent}/>,
+        settings={configuration}/>,
     document.getElementById(root)
     );
     
