@@ -4,7 +4,7 @@ class TabMenu extends React.Component {
 
         return (
             <li 
-                key={tab.ConfigurationArea} 
+                key={createGUID()} 
                 className={(index === 0 ? 'tab-select active' : 'tab-select')} 
                 role="presentation">
                 <a href={`#${tab.ConfigurationArea}`} aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true">
@@ -16,46 +16,261 @@ class TabMenu extends React.Component {
     }
 }
 
-
-
-class HeaderRow extends React.Component {
+class ConfigScreen extends React.Component {
     render() {
-        const {content, index} = this.props;
-        console.log(content, index);
+        const { col, index } = this.props;
+        return (
+            <div key={createGUID()} className="pl-1 content row font-weight-bold">
+                <div key={createGUID()} className={`heading col-6 text-right`}>
+                    {col.ItemName}
+                </div>
+                <div key={createGUID()} className={`col-6 text-left`}>
+                    <div className="dropright">
+                        <span className={`dropdown-toggle`} data-toggle="dropdown">{col.ItemValue}</span>
+                        <ul className="miniPopUp dropdown-menu">
+                            <div className="drop-container">
+                                {/* Need to figure out how to populate this with actual data */}
+                                {['test1', 'test2', 'test3', 'test4'].map((item, i) => {
+                                    return (
+                                        <li 
+                                            key={createGUID()} 
+                                            onClick={this.props.handler} 
+                                            className={`btn btn-outline-primary controlLink`}>
+                                                {item}
+                                        </li>
+                                    );
+                                })}
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </div>  
+        );
+    }
+}
+
+class ConfigurationDisplayHeading extends React.Component {
+
+
+    render() {
+        const { heading, handler } = this.props;
+
+        return (
+            <React.Fragment>
+                <div className="row">
+                    <div className="col-12">
+                        <h1 key={createGUID()} className="pl-1 text-center">{heading}</h1>
+                    </div>
+                </div>
+                <div className="row pb-1">
+                    <div className={`col-3`}>
+                        <div
+                            onClick={handler} 
+                            className="btn btn-success fa fa-plus"
+                        >
+                            &nbsp;ADD
+                        </div>
+                    </div>
+                    <div className={`col-3`}>
+                        <div
+                            onClick={handler} 
+                            className="btn btn-warning fa fa-copy"
+                        >
+                            &nbsp;COPY
+                        </div>
+                    </div>
+                    <div className={`col-3`}>
+                        <div
+                            onClick={handler} 
+                            className="btn btn-info fa fa-save"
+                        >
+                            &nbsp;SAVE
+                        </div>
+                    </div>
+                    <div className={`col-3`}>
+                        <div
+                            onClick={handler} 
+                            className="btn btn-danger fa fa-remove"
+                        >
+                            &nbsp;REMOVE
+                        </div>
+                    </div>
+                </div>
+
+            </React.Fragment>
+
+        )
+    }
+}
+
+class SubOptions extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.setDots = this.setDots.bind(this);
+    }
+
+    slideRight(page) {
+        let currentSlide = 0;
+        const maxSlides = $(`#${page} .slide`).length;
+        $(`#${page} .slide`).each((i, el) => {
+            let currentPosition = $(el).attr('style');
+            currentPosition = Number(currentPosition.match(/\d/));
+            
+            if (currentPosition < maxSlides - 1) {
+                currentPosition *= -1;
+                currentPosition -= 1;
+            } else {
+                currentPosition = 0;
+            }
+            currentSlide = currentPosition * -1;
+            currentPosition *= 100
+            $(el).attr('style', `transform: translateX(${currentPosition}%)`);
+
+        });
+        this.setDots(page, currentSlide);
+    }
+
+    slideLeft(page) {
+        console.log($(`#${page} > .slide`).length);
+        let currentSlide = 0;
+        const maxSlides = $(`#${page} .slide`).length;
+        $(`#${page} .slide`).each((i, el) => {
+            let currentPosition = $(el).attr('style');
+            currentPosition = Number(currentPosition.match(/\d/));
+            
+            if (currentPosition > 0) {
+                currentPosition *= -1;
+                currentPosition += 1;
+            } else {
+                currentPosition = maxSlides - 1;
+                currentPosition *= -1;
+            }
+            currentSlide = currentPosition * -1;
+            currentPosition *= 100;
+            $(el).attr('style', `transform: translateX(${currentPosition}%`);
+        });
+        this.setDots(page, currentSlide);
+    }
+
+    setDots(page, slide) {
+        console.log(page, slide);
+        
+        document.querySelectorAll(`#${page} .fa-circle`).forEach(el => {
+            console.log(el);
+            el.classList.remove('active--dot');
+            el.classList.add('inactive--dot');
+        })
+
+        document.querySelectorAll(`#${page} .fa-circle`)[slide].classList.remove('inactive--dot');
+        document.querySelectorAll(`#${page} .fa-circle`)[slide].classList.add('active--dot');
+    }
+
+    render() {
+        const { page } = this.props;
+
+        return (
+            <React.Fragment>
+                <div id={page} className="container-fluid">
+
+                    <div className="row flex-nowrap pt-2 no-gutters">
+                        <div className="slide col-11 position-relative col-overflow" style={{"transform": "translateX(-100%)"}}>
+                            <div className="row">
+                                <div className="col-6">
+                                    Key in tab 1
+                                </div>
+                                <div className="col-6">
+                                    Value in tab 1
+                                </div>
+                            </div>
+                        </div>
+                        <div className="slide col-11 position-relative col-overflow" style={{"transform": "translateX(-100%)"}}>
+                            <div className="row">
+                                <div className="col-6">
+                                    Key in tab 2
+                                </div>
+                                <div className="col-6">
+                                    Value in tab 2
+                                </div>
+                            </div>
+                        </div>
+                        <div className="slide col-11 position-relative col-overflow" style={{"transform": "translateX(-100%)"}}>
+                            <div className="row">
+                                <div className="col-6">
+                                    Key in tab 3
+                                </div>
+                                <div className="col-6">
+                                    Value in tab 3
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/* TODO: Don't like styling of these  */}
+                    {/* TODO: Make sure they only display if the instrument has sub configs - makes a tab confusing */}
+                    <button onClick={this.slideLeft.bind(this, page)} className="slider__btn slider__btn--left"><span className="fa fa-arrow-left"></span></button>
+                    <button onClick={this.slideRight.bind(this, page)} className="slider__btn slider__btn--right"><span className="fa fa-arrow-right"></span></button>
+                    <div className="dots">
+                        <span className="active--dot fa fa-circle"></span>
+                        <span className="inactive--dot fa fa-circle"></span>
+                        <span className="inactive--dot fa fa-circle"></span>
+                    </div>
+
+                </div>
+            </React.Fragment>
+        );
+    }
+}
+
+class ConfigurationSetup extends React.Component {
+    render() {
+        const {content, index, handler} = this.props;
+
+        console.table(content);
+
+        const staticSettings = content.slice().filter((a,b) => a.ParameterIndex === '-1' && a.OptionIndex === '0').filter((a, b) => a !== undefined);   
+
+        
+        let rows = [];
+        let rowCount = 0;
+        let moreRows = true
+
+        // extract settings "rows" (needs a better term) to display
+        while(moreRows) {
+            let currentRow = content.map((el) => {
+                if(el.OptionIndex == rowCount) {
+
+                    return el;
+                }
+            }).filter((a,b) => a !== undefined);
+            if (currentRow.length === 0) {
+                moreRows = false;
+            } else {
+                rows.push(currentRow);
+            }
+            rowCount++;
+
+        }
+        console.dir(rows);
 
         let display = <p>no content</p>;
-        display = display && content[0] &&  content[0].ConfigurationArea && (<React.Fragment>
-            <h1 key={content[0].ConfigurationArea + index} className="pl-1 text-center">{content[0].ConfigurationArea.toUpperCase()}</h1>
-                <div className="header ">
-                {/* {content.header.length} */}
-                    {content.map((col, index) => {
-                        if (col.OptionIndex === '0')
+        display = display && content[0] &&  content[0].ConfigurationArea && (
+            <React.Fragment>
+
+                <div className="container-fluid">
+                    <ConfigurationDisplayHeading handler={handler} heading={content[0].ConfigurationArea.toUpperCase()}/>
+                    {staticSettings.map((col, index) => {
+
                         return (
-                            <div className="pl-1 content row font-weight-bold">
-                                <div key={col.ItemName + index} className={`heading col-6`}>
-                                    {col.ItemName}
-                                </div>
-                                <div key={col.ItemName + index} className={`col-6`}>
-                                    <div className="dropdown">
-                                        <span className={`dropdown-toggle btn btn-primary`} data-toggle="dropdown">{col.ItemValue}</span>
-                                        <ul className="miniPopUp dropdown-menu">
-                                            <div className="drop-container">
-                                                {/* Need to figure out how to populate this with actual data */}
-                                                {['test1', 'test2', 'test3', 'test4'].map((item, i) => {
-                                                    return (
-                                                        <li key={col.ItemValue + (i * Math.random())} onClick={this.props.handler} className="btn btn-outline-primary controlLink text-center">{item}</li>
-                                                    );
-                                                })}
-                                            </div>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>  
+                            <ConfigScreen col={col} index={index} />
                         )
                     })}
-            </div>
+                    <hr />
+                    <SubOptions page={content[0].ConfigurationArea}/>
+                    {/* {rows.length > 0 ? rows.map((col, index) => <SubOptions />) : <p>No configs below this.</p>} */}
+                </div>
+                
 
-        </React.Fragment>)
+            </React.Fragment>);
         return (
             <React.Fragment>
                 {display}
@@ -81,10 +296,10 @@ class ConfigRow extends React.Component {
         const {content, index} = this.props;
         console.warn(content);
         return (
-            <div key={index} className="pl-1 row mb-1 content ${content.id}">
+            <div key={createGUID()} className="pl-1 row mb-1 content ${content.id}">
                 {content.length > 0 ? content.map((column, index) => {
                     return (
-                        <div key={index} className={`col-${column.colSize}`}>
+                        <div key={createGUID()} className={`col-${column.colSize}`}>
                             {/* {(!column.subContent ? 
                                 React.createElement(column.element, {
                                     key: index + 10,
@@ -122,7 +337,7 @@ class ConfigRow extends React.Component {
                                             <div className="drop-container">
                                                 {['test1', 'test2', 'test3', 'test4'].map((item, i) => {
                                                     return (
-                                                        <li key={i * Math.random()} onClick={this.props.handler} className="btn btn-outline-primary controlLink text-center">{item}</li>
+                                                        <li key={createGUID()} onClick={this.props.handler} className="btn btn-outline-primary controlLink text-center">{item}</li>
                                                     );
                                                 })}
                                             </div>
@@ -153,10 +368,9 @@ class ConfigContainer extends React.Component {
                         return cur;
                     }
                 })
-                .filter(el => el != undefined)
+                .filter(el => el != undefined),
                 // .filter(el => el.ConfigurationArea === 'system')
                 // .filter(el => Number(el.ParameterIndex) >= 0)
-                .filter(el => el.ConfigurationID > 0),
             settings: props.settings
         };
         console.log(this.state);
@@ -286,12 +500,12 @@ class ConfigContainer extends React.Component {
                                         tabs.map((tab, i) => {
                                             return (
                                                 <div 
-                                                    key={tab.ConfigurationArea + i} 
+                                                    key={createGUID()} 
                                                     role="tabpanel" 
                                                     className={`tab-pane ${i === 0 ? 'fade in active show' : 'fade out inactive'}`}  
                                                     id={`${tab.ConfigurationArea}`}
                                                 >
-                                                    <HeaderRow 
+                                                    <ConfigurationSetup 
                                                         index={i} 
                                                         content={content.filter(cnt => {
                                                             if (!cnt && !cnt.ConfigurationArea) {

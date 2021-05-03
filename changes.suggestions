@@ -1,2 +1,14 @@
 TODO: make pop up container different - styling and CSS is inconsistent
 TODO: Measurand buttons are different sizes
+TODO: make button size fixed to some set value - varying sizes is not a clean look
+TODO: work on System Tab - copy / update / delete / add config buttons and their placement
+TODO: change dropdown to drop right, adjust for proper fit
+TODO: propagate selected change back down to clicked item.
+TODO: save change to setting object, on detect - save to local storage and database (should use external functions)
+TODO: figure out how to display option that has sub option panels. More tabs? sliders? collapsing?
+TODO: deal with knowing the appropriate input for each drop down - text / list / numeric / etc
+TODO: Differentiate varying devices in setpoints - may need to reflow layout
+TODO: Object is not filtering correctly - everything gone, when I filter external from function it works as expected
+TODO: mock tab slider not working (may need to look at prior projects for examples)
+TODO: tab background not behind new content
+TODO: tab sub content, should have a relevant heading
