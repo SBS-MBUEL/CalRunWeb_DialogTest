@@ -1,6 +1,7 @@
+//TODO: move import to this file
 import { render, screen } from '@testing-library/react';
 
-import {ConfigContainer} from '../configContent';
+import { ConfigContainer } from '../configContent';
 
 test('renders config', () => {
     const application = 'TEST';
@@ -58,7 +59,7 @@ test('renders config', () => {
             "ItemValue": "N,8"
         }
     ];
-    render(<ConfigContainer tabs={tabNames} settings={settings}/> );
+    render(<ConfigContainer tabs={tabNames} settings={settings} /> );
     const linkElement = screen.findByText(/TEST/);
     // const linkElement = screen.getByText(/TEST/i);
     expect(linkElement).toBeDefined();

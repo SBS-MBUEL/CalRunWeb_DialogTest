@@ -1,11 +1,14 @@
 // Production version of code needs this remarked out
-/*
+
+// TODO: try traditional require?
+// TODO: check if React module is loaded before importing?
 import React from 'react';
 import createGUID from './utils/createGUID';
-*/
+
 
 /**
  * renders TabMenu - this is the tab menu bar across top of setup (configuration) page
+ * //TODO: on click events implemented here
  */
 class TabMenu extends React.Component {
     render() {
@@ -281,7 +284,7 @@ class ConfigurationSetup extends React.Component {
             rowCount++;
 
         }
-        
+
         console.warn('extra config:');
         console.dir(extraConfig);
 
@@ -519,6 +522,8 @@ class ConfigContainer extends React.Component {
  * after creating tab config, it creates an event listener (used Jquery for speed of deploy) to listen to appropriate tab click and active/deactivate tabs.
  * 
  * //TODO: listen to config page closure to save settings to local storage and when avaialable the database.
+ * // TODO: need other params listed here
+ * // TODO can tab control be moved inside of react object?
  * @param {DOM} root element to render content to
  */
 function renderConfig(root, tabNames, configuration) {
