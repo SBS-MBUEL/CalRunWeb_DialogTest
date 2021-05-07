@@ -7,40 +7,36 @@
         <META charset='utf-8'>
         <META name='viewport' content='width=device-width, initial-scale=1.0'>
 			<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script></script>
-			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">
 			
 			<!-- Note: when deploying, replace "development.js" with "production.min.js". -->
 			<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
 			<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
-
+			
 			<!-- CDN Imports required for project -->
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 			<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script>
+			
+			<!-- SB Serial Widget -->
 			<script type="text/javascript" src="http://localhost:8080/socket.io/socket.io.js"></script>
-
+			
 			<!-- Local Import required -->
 			<script type="text/javascript" src="../sbGlobal/sbGlobalFunctions.js"></script>
-
-			<!-- Local JS files -->
-			<script type="text/javascript" src="js/calRunFrontEnd.js"></script>
-			<script type="text/javascript" src="js/databaseMockContent.js"></script>
-			<script type="text/javascript" src="js/tabConfigs.js"></script>
-			<script type="text/javascript" src="js/configContent.js"></script>
-			<script type="text/javascript" src="js/popUpContent.js"></script>
+			
+			
 			
 			<script type="text/javascript">
-            	//This is how we get the program working
-            	//Load global files and then initialize the calRun system
-				$(document).ready(function() {
-					initializeGlobals(initializeCalRun);
-
-				});
+			//This is how we get the program working
+			//Load global files and then initialize the calRun system
+			$(document).ready(function() {
+				initializeGlobals(initializeCalRun);
+				
+			});
 			</script>
-			<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/fontawesome.min.css" integrity="sha384-wESLQ85D6gbsF459vf1CiZ2+rr+CsxRY0RpiF1tLlQpDnAgg6rwdsUF1+Ics2bni" crossorigin="anonymous"> -->
+			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">
 			<LINK rel='stylesheet' href='css/calRun.css'>
 			<link rel='stylesheet' href='./css/tabs.css'>
 			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    
+				
     </HEAD>
     <!--This ensures the body of the page takes up all the viewable area-->
     <BODY style='height:100vh;'>
@@ -117,5 +113,11 @@
             Status goes in here
         </div>
 
+		<!-- Local JS files -->
+		<script type="text/javascript" src="js/calRunFrontEnd.js"></script>
+		<script type="text/javascript" src="js/databaseMockContent.js"></script>
+		<script type="text/javascript" src="js/tabConfigs.js"></script>
+		<script type="text/javascript" src="js/configContent.js"></script>
+		<script type="text/javascript" src="js/popUpContent.js"></script>
     </BODY>
 </HTML>

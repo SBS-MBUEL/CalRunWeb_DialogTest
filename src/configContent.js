@@ -1,3 +1,12 @@
+// Production version of code needs this remarked out
+/*
+import React from 'react';
+import createGUID from './utils/createGUID';
+*/
+
+/**
+ * renders TabMenu - this is the tab menu bar across top of setup (configuration) page
+ */
 class TabMenu extends React.Component {
     render() {
         const {tab, index} = this.props;
@@ -16,17 +25,21 @@ class TabMenu extends React.Component {
     }
 }
 
-class ConfigScreen extends React.Component {
+/**
+ * ConfigPageRow - renders each row of the config page
+ * setup in a "key/value" pair arrangement - pop ups are still generic, need to be mapped to an object
+ */
+class ConfigPageRow extends React.Component {
     render() {
-        const { col, index } = this.props;
+        const { row, index } = this.props;
         return (
             <div key={createGUID()} className="pl-1 content row font-weight-bold">
                 <div key={createGUID()} className={`heading col-6 text-right`}>
-                    {col.ItemName}
+                    {row.ItemName}
                 </div>
                 <div key={createGUID()} className={`col-6 text-left`}>
                     <div className="dropright">
-                        <span className={`dropdown-toggle`} data-toggle="dropdown">{col.ItemValue}</span>
+                        <span className={`dropdown-toggle`} data-toggle="dropdown">{row.ItemValue}</span>
                         <ul className="miniPopUp dropdown-menu">
                             <div className="drop-container">
                                 {/* Need to figure out how to populate this with actual data */}
@@ -35,7 +48,7 @@ class ConfigScreen extends React.Component {
                                         <li 
                                             key={createGUID()} 
                                             onClick={this.props.handler} 
-                                            className={`btn btn-outline-primary controlLink`}>
+                                            className={`btn btn-outline-primary popup-link`}>
                                                 {item}
                                         </li>
                                     );
@@ -49,60 +62,68 @@ class ConfigScreen extends React.Component {
     }
 }
 
+/**
+ * ConfigurationDisplayHeading - renders title heading of each tab and the control buttons
+ */
 class ConfigurationDisplayHeading extends React.Component {
 
-
+    
     render() {
         const { heading, handler } = this.props;
 
+        // this should likely come from an external source
+        const buttonMap = [
+            {
+                type: "success",
+                icon: "plus",
+                text: "ADD"
+            },
+            {
+                type: "warning",
+                icon: "copy",
+                text: "COPY"
+            },
+            {
+                type: "info",
+                icon: "save",
+                text: "SAVE"
+            },
+            {
+                type: "danger",
+                icon: "remove",
+                text: "REMOVE"
+            },
+        ]
+
         return (
             <React.Fragment>
-                <div className="row">
+                <div key={createGUID()} className="row">
                     <div className="col-12">
-                        <h1 key={createGUID()} className="pl-1 text-center">{heading}</h1>
+                        <h1  className="pl-1 text-center">{heading}</h1>
                     </div>
                 </div>
-                <div className="row pb-1">
-                    <div className={`col-3`}>
-                        <div
-                            onClick={handler} 
-                            className="btn btn-success fa fa-plus"
-                        >
-                            &nbsp;ADD
-                        </div>
-                    </div>
-                    <div className={`col-3`}>
-                        <div
-                            onClick={handler} 
-                            className="btn btn-warning fa fa-copy"
-                        >
-                            &nbsp;COPY
-                        </div>
-                    </div>
-                    <div className={`col-3`}>
-                        <div
-                            onClick={handler} 
-                            className="btn btn-info fa fa-save"
-                        >
-                            &nbsp;SAVE
-                        </div>
-                    </div>
-                    <div className={`col-3`}>
-                        <div
-                            onClick={handler} 
-                            className="btn btn-danger fa fa-remove"
-                        >
-                            &nbsp;REMOVE
-                        </div>
-                    </div>
+                <div key={createGUID()} className="row pb-1">
+                    {buttonMap.map((el, index) => {
+                        return (
+                            <div key={createGUID()} className={`col-3`}>
+                                <div
+                                    onClick={handler} 
+                                    className={`btn btn-${el.type} fa fa-${el.icon}`}
+                                >
+                                    &nbsp;{el.text}
+                                </div>
+                            </div>
+                        )
+                    })}
                 </div>
-
             </React.Fragment>
-
         )
     }
 }
 
+/**
+ * SubOptions - this is the inner panel that displays a sliding tab for those options
+ */
 class SubOptions extends React.Component {
 
     constructor(props) {
@@ -110,10 +131,14 @@ class SubOptions extends React.Component {
         this.setDots = this.setDots.bind(this);
     }
 
+    /**
+     * slides the sub panel to the right
+     * @param {string} page name of current page to be manipulated
+     */
     slideRight(page) {
         let currentSlide = 0;
-        const maxSlides = $(`#${page} .slide`).length;
-        $(`#${page} .slide`).each((i, el) => {
+        const maxSlides = $(`#sub-${page} .slide`).length;
+        $(`#sub-${page} .slide`).each((i, el) => {
             let currentPosition = $(el).attr('style');
             currentPosition = Number(currentPosition.match(/\d/));
             
@@ -131,11 +156,14 @@ class SubOptions extends React.Component {
         this.setDots(page, currentSlide);
     }
 
+    /**
+     * slides current pane to the left
+     * @param {string} page 
+     */
     slideLeft(page) {
-        console.log($(`#${page} > .slide`).length);
         let currentSlide = 0;
-        const maxSlides = $(`#${page} .slide`).length;
-        $(`#${page} .slide`).each((i, el) => {
+        const maxSlides = $(`#sub-${page} .slide`).length;
+        $(`#sub-${page} .slide`).each((i, el) => {
             let currentPosition = $(el).attr('style');
             currentPosition = Number(currentPosition.match(/\d/));
             
@@ -153,67 +181,68 @@ class SubOptions extends React.Component {
         this.setDots(page, currentSlide);
     }
 
+    /**
+     * sets the active dot to the matching slide
+     * @param {string} page name
+     * @param {number} slide index of currently displayed slide
+     */
     setDots(page, slide) {
-        console.log(page, slide);
-        
-        document.querySelectorAll(`#${page} .fa-circle`).forEach(el => {
-            console.log(el);
+        document.querySelectorAll(`#sub-${page} .fa-circle`).forEach(el => {
             el.classList.remove('active--dot');
             el.classList.add('inactive--dot');
         })
 
-        document.querySelectorAll(`#${page} .fa-circle`)[slide].classList.remove('inactive--dot');
-        document.querySelectorAll(`#${page} .fa-circle`)[slide].classList.add('active--dot');
+        document.querySelectorAll(`#sub-${page} .fa-circle`)[slide].classList.remove('inactive--dot');
+        document.querySelectorAll(`#sub-${page} .fa-circle`)[slide].classList.add('active--dot');
     }
 
     render() {
-        const { page } = this.props;
+        const { subOption, page } = this.props;
+
+        let currentRow = 0
 
         return (
             <React.Fragment>
-                <div id={page} className="container-fluid">
-
-                    <div className="row flex-nowrap pt-2 no-gutters">
-                        <div className="slide col-11 position-relative col-overflow" style={{"transform": "translateX(-100%)"}}>
-                            <div className="row">
-                                <div className="col-6">
-                                    Key in tab 1
-                                </div>
-                                <div className="col-6">
-                                    Value in tab 1
-                                </div>
-                            </div>
+                <div id={`sub-${page}`} className="container-fluid">
+                        {/* increment through options */}
+                        <div key={createGUID()} className="row flex-nowrap pt-2 pr-3">
+                        {subOption.map((optionTab, index) => {
+                            return (
+                                <React.Fragment>
+                                    <div  className="slide col-12 position-relative col-overflow" style={{"transform": "translateX(0%)"}}>
+                                        {optionTab.map((row, index) => {
+                                            return <ConfigPageRow row={row} index={index} />;
+                                        })}
+                                    </div>
+                                </React.Fragment>
+                            );
+                        })}
                         </div>
-                        <div className="slide col-11 position-relative col-overflow" style={{"transform": "translateX(-100%)"}}>
-                            <div className="row">
-                                <div className="col-6">
-                                    Key in tab 2
-                                </div>
-                                <div className="col-6">
-                                    Value in tab 2
-                                </div>
-                            </div>
-                        </div>
-                        <div className="slide col-11 position-relative col-overflow" style={{"transform": "translateX(-100%)"}}>
-                            <div className="row">
-                                <div className="col-6">
-                                    Key in tab 3
-                                </div>
-                                <div className="col-6">
-                                    Value in tab 3
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     {/* TODO: Don't like styling of these  */}
                     {/* TODO: Make sure they only display if the instrument has sub configs - makes a tab confusing */}
-                    <button onClick={this.slideLeft.bind(this, page)} className="slider__btn slider__btn--left"><span className="fa fa-arrow-left"></span></button>
-                    <button onClick={this.slideRight.bind(this, page)} className="slider__btn slider__btn--right"><span className="fa fa-arrow-right"></span></button>
-                    <div className="dots">
-                        <span className="active--dot fa fa-circle"></span>
-                        <span className="inactive--dot fa fa-circle"></span>
-                        <span className="inactive--dot fa fa-circle"></span>
-                    </div>
+                    {(subOption.length > 1 ? 
+                        <React.Fragment>
+                            <button onClick={this.slideLeft.bind(this, page)} className="slider__btn slider__btn--left"><span className="fa fa-arrow-left"></span></button>
+                            <button onClick={this.slideRight.bind(this, page)} className="slider__btn slider__btn--right"><span className="fa fa-arrow-right"></span></button>
+                            <div className="dots">
+                                {subOption.map((pane, index) => {
+                                    return (
+                                        <span className={`${(index === 0) ? 'active' : 'inactive'}--dot fa fa-circle`}></span>
+                                    );
+
+                                })}
+                            </div>
+                        </React.Fragment>
+                    :
+                        <React.Fragment>
+                            {subOption.map((_, index) => {
+                                return (
+                                    <span className={`${(index === 0) ? 'active' : 'inactive'}--dot fa fa-circle`}></span>
+                                );
+
+                            })}
+                        </React.Fragment>
+                    )}
 
                 </div>
             </React.Fragment>
@@ -224,53 +253,58 @@ class SubOptions extends React.Component {
 class ConfigurationSetup extends React.Component {
     render() {
         const {content, index, handler} = this.props;
-
+        console.warn('content');
         console.table(content);
 
         const staticSettings = content.slice().filter((a,b) => a.ParameterIndex === '-1' && a.OptionIndex === '0').filter((a, b) => a !== undefined);   
 
         
-        let rows = [];
+        let extraConfig = [];
         let rowCount = 0;
         let moreRows = true
 
         // extract settings "rows" (needs a better term) to display
         while(moreRows) {
+
             let currentRow = content.map((el) => {
-                if(el.OptionIndex == rowCount) {
+                if(el.OptionIndex == rowCount && !(el.ParameterIndex === '-1' && el.OptionIndex === '0')) {
 
                     return el;
                 }
             }).filter((a,b) => a !== undefined);
+
             if (currentRow.length === 0) {
                 moreRows = false;
             } else {
-                rows.push(currentRow);
+                extraConfig.push(currentRow);
             }
             rowCount++;
 
         }
-        console.dir(rows);
+        
+        console.warn('extra config:');
+        console.dir(extraConfig);
 
         let display = <p>no content</p>;
         display = display && content[0] &&  content[0].ConfigurationArea && (
-            <React.Fragment>
-
-                <div className="container-fluid">
+                <div key={createGUID()} className="container-fluid">
                     <ConfigurationDisplayHeading handler={handler} heading={content[0].ConfigurationArea.toUpperCase()}/>
-                    {staticSettings.map((col, index) => {
+                    {staticSettings.map((row, index) => {
 
                         return (
-                            <ConfigScreen col={col} index={index} />
+                            <ConfigPageRow row={row} index={index} />
                         )
                     })}
                     <hr />
-                    <SubOptions page={content[0].ConfigurationArea}/>
+                    {extraConfig.length > 0 ?
+                        <SubOptions subOption={extraConfig} page={content[0].ConfigurationArea}/>
+                        :
+                        <React.Fragment>
+                            {/* Empty div to display nothing */}
+                        </React.Fragment>
+                    }
                     {/* {rows.length > 0 ? rows.map((col, index) => <SubOptions />) : <p>No configs below this.</p>} */}
-                </div>
-                
-
-            </React.Fragment>);
+                </div>);
         return (
             <React.Fragment>
                 {display}
@@ -290,68 +324,6 @@ class DropDownList extends React.Component {
     }
 }
 
-class ConfigRow extends React.Component {
-
-    render() {
-        const {content, index} = this.props;
-        console.warn(content);
-        return (
-            <div key={createGUID()} className="pl-1 row mb-1 content ${content.id}">
-                {content.length > 0 ? content.map((column, index) => {
-                    return (
-                        <div key={createGUID()} className={`col-${column.colSize}`}>
-                            {/* {(!column.subContent ? 
-                                React.createElement(column.element, {
-                                    key: index + 10,
-                                    className: column.className + ' dropdown-toggle',
-                                    "data-toggle":"dropdown"
-                                }, 
-                                column.textContent ) : 
-                                column.subContent.length > 0 ?
-                                <div className={column.className}>
-                                    {column.subContent.map((subCol, index) => {
-                                        return (
-                                            <div
-                                                key={index}
-                                                className={`col-${subCol.colSize}`}
-                                            >
-                                                <div
-                                                    onClick={this.props.handler} 
-                                                    className={subCol.className}
-                                                >
-                                                    <i
-                                                        className={subCol.subClassName}
-                                                        aria-hidden="true"
-                                                    >
-                                                        {subCol.textContent}
-                                                    </i>
-                                                </div>
-                                            </div>
-                                        )
-                                    })}
-                                    {// TODO: need dropdown object defined 
-                                    } */}
-                                    <div className="dropdown">
-                                        <span className={`${column.className} dropdown-toggle`} data-toggle="dropdown">test</span>
-                                        <ul className="miniPopUp dropdown-menu">
-                                            <div className="drop-container">
-                                                {['test1', 'test2', 'test3', 'test4'].map((item, i) => {
-                                                    return (
-                                                        <li key={createGUID()} onClick={this.props.handler} className="btn btn-outline-primary controlLink text-center">{item}</li>
-                                                    );
-                                                })}
-                                            </div>
-                                        </ul>
-                                    </div>
-                                {/* : <p>no sub cols</p>)} */}
-                        </div>
-                    );
-                }) : <p>no header rows</p>}
-            </div>
-        );
-    }
-}
-
 /**
  * ConfigContainer is the main launching point to construct the tabbed configuration screen
  */
@@ -359,20 +331,28 @@ class ConfigContainer extends React.Component {
     constructor(props) {
         super(props);
         // TODO: state variable needs to contain settings object to be manipulated when an option is changed.
-        this.state = {
-            tabs : props.tabs
-            .filter(el => el != undefined),
-            // .filter(el => el.ConfigurationArea === 'system')
-            content : props.settings.map(cur => {
-                    if (props.tabs.reduce((acc, tab) => tab.ConfigurationArea.toLowerCase() === cur.ConfigurationArea.toLowerCase() ? acc + 1 : acc, 0) > 0) {
-                        return cur;
-                    }
-                })
+        if(props.tabs && props.tabs.length > 0) {
+            this.state = {
+                tabs : props.tabs
                 .filter(el => el != undefined),
                 // .filter(el => el.ConfigurationArea === 'system')
-                // .filter(el => Number(el.ParameterIndex) >= 0)
-            settings: props.settings
-        };
+                content : props.settings.map(cur => {
+                        if (props.tabs.reduce((acc, tab) => tab.ConfigurationArea.toLowerCase() === cur.ConfigurationArea.toLowerCase() ? acc + 1 : acc, 0) > 0) {
+                            return cur;
+                        }
+                    })
+                    .filter(el => el != undefined),
+                    // .filter(el => el.ConfigurationArea === 'system')
+                    // .filter(el => Number(el.ParameterIndex) >= 0)
+                settings: props.settings
+            };
+        } else {
+            console.error('no config tabs defined');
+            this.state = {
+                tabs : [],
+                settings: props.settings
+            };
+        }
         console.log(this.state);
         this.changeHandler = this.changeHandler.bind(this);
         this.insertRow = this.insertRow.bind(this);
@@ -393,10 +373,7 @@ class ConfigContainer extends React.Component {
         // TODO: Implement listener
         // TODO: Propagate selection back to state of React object 
         // TODO: Make inserted pop up customizable
-        // return $(domElement).parent().append('<div className="miniPopUp">test</div>').on('click', function(e) {
-        //     console.log(e);
-        // });
-        // renderPopUp(this.changeHandler, 'test', id)
+
     }
 
     /**
@@ -456,7 +433,7 @@ class ConfigContainer extends React.Component {
         console.log('modify row - add / remove / update / copy');
         console.log($(e.currentTarget)[0]);
 
-        if ($(e.currentTarget)[0].className.includes('controlLink')) {
+        if ($(e.currentTarget)[0].className.includes('popup-link')) {
             this.changeHandler(e);
         }
         else if ($(e.currentTarget)[0].className.includes('success')) {
@@ -566,4 +543,17 @@ function renderConfig(root, tabNames, configuration) {
     });
 
 }
-  
+
+
+/**
+ * Code to make these functions visible in NODE.JS for testing
+ * module.exports is Node specific so we need to test for it's existence
+ */
+ if(typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+ {
+     module.exports = 
+     {
+         ConfigContainer: ConfigContainer
+
+     };
+ }
