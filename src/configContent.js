@@ -2,8 +2,8 @@
 
 // TODO: try traditional require?
 // TODO: check if React module is loaded before importing?
-import React from 'react';
-import createGUID from './utils/createGUID';
+// import React from 'react';
+// import createGUID from './utils/createGUID';
 
 
 /**

@@ -4,6 +4,7 @@ var _react = require('@testing-library/react');
 
 var _configContent = require('../configContent');
 
+//TODO: move import to this file
 test('renders config', function () {
     var application = 'TEST';
     var tabNames = [{
