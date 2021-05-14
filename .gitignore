@@ -6,3 +6,9 @@ js/databaseMockContent.js
 js/popUpConfig.js
 js/popUpContent.js
 js/tabConfigs.js
+js/App.js
+js/ConfigContainer.js
+js/utils
+js/tests
+js/mocks/*
+js/components/*
