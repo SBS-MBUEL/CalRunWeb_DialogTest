@@ -1,3 +1,7 @@
+import React from 'react';
+import {ConfigurationDisplayHeading} from './ConfigurationDisplayHeading';
+import {ConfigPageRow} from './ConfigPageRow';
+import {SubOptions} from './SubOptions';
 class ConfigurationSetup extends React.Component {
     render() {
         const {content, index, tabName, handler} = this.props;

@@ -1,3 +1,4 @@
+import React from 'React';
 class PopUpContainer extends React.Component {
 
     constructor(props) {

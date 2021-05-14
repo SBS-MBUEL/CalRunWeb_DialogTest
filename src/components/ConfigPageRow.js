@@ -1,3 +1,6 @@
+import React from 'react';
+import createGUID from '../utils/createGUID';
+
 /**
  * ConfigPageRow - renders each row of the config page
  * setup in a "key/value" pair arrangement - pop ups are still generic, need to be mapped to an object
@@ -24,7 +27,7 @@
         const { row, index } = this.props;
         
         return (
-            <div key={row.ItemValue + row.ItemName} className="columns content font-weight-bold is-vcentered">
+            <div key={row.label + row.value} className="columns content font-weight-bold is-vcentered">
                 <div key={createGUID()} className={`column pr-1 heading is-half text-right`}>
                     {row.label}
                 </div>
@@ -60,3 +63,17 @@
         );
     }
 }
+
+
+/**
+ * Code to make these functions visible in NODE.JS for testing
+ * module.exports is Node specific so we need to test for it's existence
+ */
+ if(typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+ {
+     module.exports = 
+     {
+         ConfigPageRow: ConfigPageRow
+
+     };
+ }

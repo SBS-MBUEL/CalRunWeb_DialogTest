@@ -1,3 +1,5 @@
+import React from 'react';
+import createGUID from '../utils/createGUID';
 /**
  * ConfigurationDisplayHeading - renders title heading of each tab and the control buttons
  */
@@ -65,3 +67,16 @@
         )
     }
 }
+
+/**
+ * Code to make these functions visible in NODE.JS for testing
+ * module.exports is Node specific so we need to test for it's existence
+ */
+ if(typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+ {
+     module.exports = 
+     {
+         ConfigurationDisplayHeading: ConfigurationDisplayHeading
+
+     };
+ }
