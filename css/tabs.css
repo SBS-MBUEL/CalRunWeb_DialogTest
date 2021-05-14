@@ -2,12 +2,27 @@
 @keyframes swipe {
     from {width: 50%;}
     to {width: 100%;}
-  }
+}
+.columns {
+    margin:0 !important
+}
 
-div.tab-pane>div>div.row {
+.column {
+    padding-top: 0.15em !important;
+    padding-bottom: 0.15em !important;
+}
+
+div.tab-pane>div>div.column {
     border-bottom: 1px solid black;
 }
 
+.button {
+    height: 85% !important;
+}
+
+.content {
+    margin: 0 auto !important;
+}
 .content:nth-child(odd) {
     background-color: #fafbfb;
 }
@@ -17,26 +32,34 @@ a:hover, a:focus {
     text-decoration: none;
 }
 
-.tab-content .active {
+.tab-pane.is-active {
     width: 100%;
     animation-name: swipe;
     animation-duration: 400ms;
 }
 
-.tab .nav-tabs {
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.is-active {
+    display: inline;
+}
+
+.panel-tabs li.tab-select {
     background: #dde2e0;
     padding: 5px 0;
     text-align: center;
 }
 
-.tab .nav-tabs li {
+.panel-tabs li.tab-select {
     margin-bottom: 0;
     margin-right: 0;
     float: none;
     display: inline-block;
 }
 
-.tab .nav-tabs li a {
+.panel-tabs li.tab-select a {
     font-size: 14px;
     color: #11195c;
     background: #fafbfb;
@@ -45,21 +68,21 @@ a:hover, a:focus {
     border-radius: 0;
     text-transform: uppercase;
 }
-.tab .nav-tabs li a:hover {
+.panel-tabs li.tab-select a:hover {
     background-color: #00ADDD;
     border-color: transparent;
 }
-.tab .nav-tabs li a i {
+.panel-tabs li.tab-select a i {
     font-size: 25px;
     margin-right: 10px;
 }
-.tab .nav-tabs li.active a,
-.tab .nav-tabs li.active a:hover {
+.panel-tabs li.tab-select.is-active a,
+.panel-tabs li.tab-select.is-active a:hover {
     background: #11195c;
     color: #fff;
     border: 1px solid #00ADDD;
 }
-.tab-pane {
+.panel-tabs {
     width: 100%;
     font-size: 12px;
     color: #11195c;
@@ -67,8 +90,8 @@ a:hover, a:focus {
     background: #e7ecea;
     padding: 20px 85px;
 }
-.btn {
-    font-size: 0.9em;
+.button {
+    font-size: 0.8em;
 }
 
 @media only screen and (max-width: 990px) {
@@ -83,8 +106,73 @@ a:hover, a:focus {
 }
 
 .miniPopUp {
+    display: none !important;
     position: relative;
+    padding-left: 10px;
+    padding-right: 10px;
     top: -25px;
     border: 1px solid  #00ADDD;
     background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.heading {
+    font-weight: bold;
+    text-align: right;
+    font-size: 0.8em;
+    border-right: 2px #11195c solid;
+}
+
+.overflow {
+    border: 1px solid black; 
+    height: 600px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* overflow-y: none; */
+}
+
+.slider__btn {
+    position: absolute;
+    top: 90%;
+    z-index: 10;
+    border: none;
+    background: rgba(5, 189, 235, 0.705);
+    font-family: inherit;
+    color: #333;
+    height: 3.5rem;
+    width: 3.5rem;
+    font-size: 3.25rem;
+    cursor: pointer;
+    padding-bottom: 20px;
+    border: 1px solid #00ADDD;
+}
+
+.slider__btn:hover {
+    background: rgba(23, 219, 219, 0.836);
+}
+
+.slider__btn--left {
+    left: 6%;
+    transform: translate(-50%, -50%);
+    border-radius: 50% 0 0 50%;
+  }
+  
+  .slider__btn--right {
+    right: 6%;
+    transform: translate(50%, -50%);
+    border-radius: 0 50% 50% 0;
+  }
+
+.active--dot {
+    color: yellow;
+}
+
+.slide {
+    transition: transform 1s;
+}
+
+.popup-link {
+      overflow-inline: initial;
+      padding: 5px;
+      margin: 3px;
 }

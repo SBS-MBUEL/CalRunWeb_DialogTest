@@ -1,3 +1,5 @@
+@import "https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css";
+
 .systemName
 {
 	font-weight: bold;
@@ -13,6 +15,7 @@
 
 .navBar
 {
+	margin-top: 1%;
 	vertical-align: top;
 	height: 70px;
 	width: calc(100% - 4px);
@@ -43,11 +46,6 @@
 	font-weight: bold;		
 }
 
-/* .navButton:hover
-{
-	background-color:#ADD8E6 !important;
-} */
-
 .navButton img 
 {
 	display: block;
@@ -70,10 +68,10 @@
 	cursor: pointer;
 }
 
-.btn-primary {
+.navButton.is-primary {
 	background-color: #11195c;
 }
 
-.btn-primary:hover {
+.navButton.is-primary:hover {
 	background-color: #00ADDD; 
 }
