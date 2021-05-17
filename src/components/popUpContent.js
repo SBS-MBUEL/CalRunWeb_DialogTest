@@ -12,7 +12,7 @@ class PopUpContainer extends React.Component {
     render() {
         console.log(this.state.handler);
         return (
-            <div class="miniPopUp" onClick={this.state.handler}>
+            <div className="miniPopUp" onClick={this.state.handler}>
                 {this.state.content}
             </div>
         )

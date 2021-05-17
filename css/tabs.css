@@ -105,12 +105,12 @@ a:hover, a:focus {
     .tab .nav-tabs li{ width:100%; }
 }
 
-.miniPopUp {
-    display: none !important;
-    position: relative;
-    padding-left: 10px;
-    padding-right: 10px;
-    top: -25px;
+.modalPopUp {
+    /* display: none !important; */
+    /* position: relative; */
+    /* padding-left: 10px; */
+    /* padding-right: 10px; */
+    /* top: -25px; */
     border: 1px solid  #00ADDD;
     background-color: white;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);

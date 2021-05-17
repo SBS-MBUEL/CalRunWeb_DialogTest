@@ -30,7 +30,6 @@ class ConfigContainer extends React.Component {
                 settings: props.settings
             };
         }
-        console.log(this.state);
         this.changeHandler = this.changeHandler.bind(this);
         this.insertRow = this.insertRow.bind(this);
         this.copyRow = this.copyRow.bind(this);
@@ -108,8 +107,6 @@ class ConfigContainer extends React.Component {
     }
 
     changeActiveTab(e) {
-        console.log("CLICKED ON");
-        console.log(e.currentTarget.getAttribute('data-tab'));
         const tab = e.currentTarget.getAttribute('data-tab');
         this.setState({activeTab:tab});
     }
