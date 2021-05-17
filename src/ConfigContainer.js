@@ -2,11 +2,11 @@
 
 // TODO: try traditional require?
 // TODO: check if React module is loaded before importing?
-/*
+
 import React from 'react';
 import {TabLinkContainer} from './components/TabLinkContainer';
 import {TabPanels} from './components/TabPanels';
-*/
+
 /**
  * ConfigContainer is the main launching point to construct the tabbed configuration screen
  */

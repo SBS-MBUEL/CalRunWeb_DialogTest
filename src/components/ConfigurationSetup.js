@@ -49,3 +49,16 @@ class ConfigurationSetup extends React.Component {
         );
     }
 }
+
+    /**
+ * Code to make these functions visible in NODE.JS for testing
+ * module.exports is Node specific so we need to test for it's existence
+ */
+     if(typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+     {
+         module.exports = 
+         {
+            ConfigurationSetup: ConfigurationSetup
+    
+         };
+     }
