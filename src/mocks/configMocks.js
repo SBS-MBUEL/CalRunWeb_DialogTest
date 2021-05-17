@@ -146,3 +146,16 @@ let objectCollection = {
     _reference, 
     _datapoint
 };
+
+/**
+ * Code to make these functions visible in NODE.JS for testing
+ * module.exports is Node specific so we need to test for it's existence
+ */
+ if(typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+ {
+     module.exports = 
+     {
+		objectCollection: objectCollection
+
+     };
+ }

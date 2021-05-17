@@ -1,3 +1,7 @@
+import React from 'react';
+import {ConfigurationDisplayHeading} from './ConfigurationDisplayHeading';
+import {ConfigPageRow} from './ConfigPageRow';
+import {SubOptions} from './SubOptions';
 class ConfigurationSetup extends React.Component {
     render() {
         const {content, index, tabName, handler} = this.props;
@@ -45,3 +49,16 @@ class ConfigurationSetup extends React.Component {
         );
     }
 }
+
+    /**
+ * Code to make these functions visible in NODE.JS for testing
+ * module.exports is Node specific so we need to test for it's existence
+ */
+     if(typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+     {
+         module.exports = 
+         {
+            ConfigurationSetup: ConfigurationSetup
+    
+         };
+     }
