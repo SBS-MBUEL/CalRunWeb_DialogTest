@@ -8,7 +8,6 @@ import createGUID from '../utils/createGUID';
  class ConfigPageRow extends React.Component {
     constructor(props) {
         super(props);
-        console.log(props.row);
         this.state = {
             dropState: ""
         }
