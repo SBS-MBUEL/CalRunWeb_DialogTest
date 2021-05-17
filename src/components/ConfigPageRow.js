@@ -17,7 +17,7 @@ import createGUID from '../utils/createGUID';
         e.preventDefault();
         e.stopPropagation();
         if (this.state.dropState == "") {
-            this.setState({dropState: "is-visible"});
+            this.setState({dropState: "is-active"});
         } else {
             this.setState({dropState: ""});
         }
@@ -40,21 +40,21 @@ import createGUID from '../utils/createGUID';
                                 </span>
                             </button>
                         </div>
-                    </div>
-                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                        <div className="dropdown-content">
-                            {/* Need to figure out how to populate this with actual data */}
-                            {row.list.length > 0 ? row.list.map((item, i) => {
-                                return (
-                                    <a
-                                        href="#"
-                                        key={item + i} 
-                                        onClick={this.props.handler} 
-                                        className={`button button-outline-primary popup-link dropdown-item`}>
-                                            {item}
-                                    </a>
-                                );
-                            }) : <p></p>}
+                        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                            <div className="dropdown-content">
+                                {/* Need to figure out how to populate this with actual data */}
+                                {row.list.length > 0 ? row.list.map((item, i) => {
+                                    return (
+                                        <a
+                                            href="#"
+                                            key={item + i} 
+                                            onClick={this.props.handler} 
+                                            className={`button button-outline-primary popup-link dropdown-item`}>
+                                                {item}
+                                        </a>
+                                    );
+                                }) : <p></p>}
+                            </div>
                         </div>
                     </div>
                 </div>
