@@ -1,10 +1,87 @@
+import React from 'react';
+import createGUID from '../utils/createGUID';
+import {DropDownItem} from './DropDownItem';
 class DropDownList extends React.Component {
-    render() {
-        console.log('hello', this.props.ddContent);
-        return (
-            <React.Fragment>
+    constructor(props) {
+        super(props);
+        this.state = {
+            userValue : props.userValue,
+            dropState : props.dropState,            
+            dropState: false
+        }
+        this.changeDropItem = this.changeDropItem.bind(this);
+        this.toggleDropdown = this.toggleDropdown.bind(this);
+    }
 
-            </React.Fragment>
+    /**
+     * toggle the displayed drop down list
+     * @param {Event} e 
+     */
+     changeDropItem(e) {
+        // Prevent default
+        e.preventDefault();
+
+        // stop bubbling
+        e.stopPropagation();
+
+        // set changes locally
+        this.setState({
+            userValue: e.target.textContent, 
+            dropState: false
+        })
+
+        this.props.dropChange(e);
+        // propagate changes up the chain so the settings object gets changed
+    }
+
+    /**
+     * toggle the displayed drop down list
+     * @param {Event} e 
+     */
+    toggleDropdown(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!this.state.dropState) {
+            this.setState({dropState: true});
+        } else {
+            this.setState({dropState: false});
+        }
+    }
+
+    render() {
+        const { row } = this.props;
+        
+        return (
+            <div key={createGUID()} className={`dropdown ${this.state.dropState ? 'is-active' : ''}`}>
+                <div className="dropdown-trigger options">
+                    <span onClick={this.toggleDropdown} className="controlLink" aria-haspopup="true" aria-controls="dropdown-menu">
+                        <span className={`dropdown-toggle`} data-toggle="dropdown">{this.state.userValue}</span>
+                        <span className="icon is-small">
+                            <i className="fa fa-angle-down" aria-hidden="true"></i>
+                        </span>
+                    </span>
+                </div>
+                <div className="dropdown-menu modalPopUp" id="dropdown-menu" role="menu">
+                    <div className="dropdown-content">
+                        {/* Need to figure out how to populate this with actual data */}
+                        <DropDownItem userValue={this.state.userValue} dropChange={this.changeDropItem} row={row} />
+                    </div>
+                </div>
+            </div>
         )
     }
 }
+
+/**
+ * Code to make these functions visible in NODE.JS for testing
+ * module.exports is Node specific so we need to test for it's existence
+ */
+ if(typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+ {
+     module.exports = 
+     {
+        DropDownList: DropDownList
+
+     };
+ }

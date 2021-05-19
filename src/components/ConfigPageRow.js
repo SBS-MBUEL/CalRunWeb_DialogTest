@@ -1,6 +1,9 @@
 import React from 'react';
 import createGUID from '../utils/createGUID';
 
+import {DropDownList} from './DropDownList';
+import {InputItem} from './InputItem';
+
 /**
  * ConfigPageRow - renders each row of the config page
  * setup in a "key/value" pair arrangement - pop ups are still generic, need to be mapped to an object
@@ -9,19 +12,43 @@ import createGUID from '../utils/createGUID';
     constructor(props) {
         super(props);
         this.state = {
-            dropState: ""
+            userValue: props.row.value
         }
-        this.toggleDropdown = this.toggleDropdown.bind(this);
+        this.changeDropItem = this.changeDropItem.bind(this);
+        this.trackChanges = this.trackChanges.bind(this);
     }
-    toggleDropdown(e) {
+
+    changeDropItem(e) {
+        // Prevent default
         e.preventDefault();
+
+        // stop bubbling
         e.stopPropagation();
-        if (this.state.dropState == "") {
-            this.setState({dropState: "is-visible"});
-        } else {
-            this.setState({dropState: ""});
-        }
+
+        // set changes locally
+        this.setState({
+            userValue: e.target.textContent, 
+            dropState: false
+        })
+        // propagate changes up the chain so the settings object gets changed
     }
+
+    trackChanges(e) {
+        // e.preventDefault();
+        // e.stopPropagation();
+        // console.log(e.target);
+
+        // this.setState({userValue: e.target.value})
+
+        // Propagate up to save to database
+    }
+
+
+
+    /**
+     * Builds each row of the configurator
+     * @returns ConfigPageRow object
+     */
     render() {
         const { row, index } = this.props;
         
@@ -31,32 +58,11 @@ import createGUID from '../utils/createGUID';
                     {row.label}
                 </div>
                 <div key={createGUID()} className={`column pl-1 pb-1 is-half text-left is-vcentered`}>
-                    <div onClick={this.toggleDropdown} class={`dropdown ${this.state.dropState}`}>
-                        <div className="dropdown-trigger">
-                            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                                <span className={`dropdown-toggle`} data-toggle="dropdown">{row.value}</span>
-                                <span class="icon is-small">
-                                    <i class="fa fa-angle-down" aria-hidden="true"></i>
-                                </span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                        <div className="dropdown-content">
-                            {/* Need to figure out how to populate this with actual data */}
-                            {row.list.length > 0 ? row.list.map((item, i) => {
-                                return (
-                                    <a
-                                        href="#"
-                                        key={item + i} 
-                                        onClick={this.props.handler} 
-                                        className={`button button-outline-primary popup-link dropdown-item`}>
-                                            {item}
-                                    </a>
-                                );
-                            }) : <p></p>}
-                        </div>
-                    </div>
+                    {row.list.length > 0 ? 
+                        <DropDownList userValue={this.state.userValue} dropChange={this.changeDropItem} row={row} />
+                    : 
+                        <InputItem userValue={this.state.userValue} inputChange={this.trackChanges} trackChanges={this.trackChanges} />
+                    }
                 </div>
             </div>  
         );

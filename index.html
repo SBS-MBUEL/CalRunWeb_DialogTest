@@ -32,7 +32,8 @@
 				
 			});
 			</script>
-			<!-- BULMA is imported from calRun.css -->
+			<!-- BULMA is imported -->
+			<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css"> 
 			<LINK rel='stylesheet' href='css/calRun.css'>
 			<link rel='stylesheet' href='./css/tabs.css'>
 			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -45,7 +46,7 @@
         <nav role="navigation" class="navBar">
             <div class='columns' id="main-menu">
 				<div class="column is-half">
-					<button id="btnStart" class='navElement navButton button is-primary'>
+					<button id="btnStart" class='navElement navButton button is-primary has-text-centered is-clearfix'>
 						<span class="fa fa-play fa-2x"></span>
 						<br/>
 						Start
@@ -113,6 +114,9 @@
         </div>
 
 		<!-- Local JS files -->
+		<script type="text/javascript" src="js/components/DropDownItem.js"></script>
+		<script type="text/javascript" src="js/components/DropDownList.js"></script>
+		<script type="text/javascript" src="js/components/InputItem.js"></script>
 		<script type="text/javascript" src="js/calRunFrontEnd.js"></script>
 		<script type="text/javascript" src="js/mocks/databaseMockContent.js"></script>
 		<script type="text/javascript" src="js/mocks/configMocks.js"></script>
