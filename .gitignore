@@ -10,5 +10,5 @@ js/App.js
 js/ConfigContainer.js
 js/utils
 js/tests
-js/mocks/*
-js/components/*
+js/mocks
+js/components
