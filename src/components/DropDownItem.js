@@ -23,7 +23,7 @@ class DropDownItem extends React.Component {
             userValue: e.target.textContent
         });
 
-        this.props.dropChange(e);
+        this.props.dropChange(e.target.textContent);
 
     }
 

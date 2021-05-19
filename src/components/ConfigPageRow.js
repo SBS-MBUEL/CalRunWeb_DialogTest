@@ -34,11 +34,6 @@ import {InputItem} from './InputItem';
     }
 
     trackChanges(e) {
-        // e.preventDefault();
-        // e.stopPropagation();
-        // console.log(e.target);
-
-        // this.setState({userValue: e.target.value})
 
         // Propagate up to save to database
     }

@@ -30,8 +30,8 @@ class DropDownList extends React.Component {
             dropState: false
         })
 
-        this.props.dropChange(e);
         // propagate changes up the chain so the settings object gets changed
+        this.props.dropChange(e.textContent);
     }
 
     /**

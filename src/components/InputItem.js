@@ -19,7 +19,7 @@ class InputItem extends React.Component {
         this.setState({userValue: e.target.value})
 
         // Propagate up call stack
-        this.props.trackChanges(e);
+        this.props.trackChanges(e.target.value);
     }
 
     render() {

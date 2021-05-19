@@ -16,8 +16,7 @@ function testSetup(opts) {
 test('renders drop item with passed in value', () => {
     let localValue = '';
     render(<DropDownItem row={testSetup(['test'])} userValue={testSetup().value} dropChange={(e) => {
-        e.persist();
-        localValue = e.target.value;
+        localValue = e;
     }}/> );
 
     // Grab the item
@@ -28,9 +27,7 @@ test('renders drop item with passed in value', () => {
 test('renders drop item with passed in value, can be changed', () => {
     let localValue = '';
     render(<DropDownItem row={testSetup(['test'])} userValue={testSetup().value} dropChange={(e) => {
-        e.persist();
-        localValue = e.target.textContent;
-        console.log(e.target.textContent);
+        localValue = e;
     }}/> );
 
     // Grab the item
