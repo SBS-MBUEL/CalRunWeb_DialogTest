@@ -12,6 +12,14 @@
     padding-bottom: 0.15em !important;
 }
 
+.options {
+    margin-bottom: 5px;
+}
+.dropdown-item {
+    padding-right: 0px !important;
+
+}
+
 div.tab-pane>div>div.column {
     border-bottom: 1px solid black;
 }
@@ -106,11 +114,7 @@ a:hover, a:focus {
 }
 
 .modalPopUp {
-    /* display: none !important; */
-    /* position: relative; */
-    /* padding-left: 10px; */
-    /* padding-right: 10px; */
-    /* top: -25px; */
+    border-radius: 5px;
     border: 1px solid  #00ADDD;
     background-color: white;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);

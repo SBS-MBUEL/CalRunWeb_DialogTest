@@ -1,5 +1,5 @@
 //TODO: move import to this file
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, getByDisplayValue, render, screen } from '@testing-library/react';
 import {ConfigPageRow} from '../components/ConfigPageRow';
 
 function testSetup(opts) {
@@ -22,13 +22,13 @@ test('renders config row with no pop ups', () => {
 
     expect(screen.getByText(/Green/).textContent).toBe('Green');
 
-    expect(screen.getByText(/Blue/).textContent).toBe('Blue');
+    expect(screen.getByDisplayValue(/Blue/).value).toBe('Blue');
 });
 
 test('config row with no list, renders input', () => {
     render(<ConfigPageRow row={testSetup()} /> );
 
-    expect(screen.getByText(/submit change/).textContent).toBe('submit change');
+    expect(screen.getByDisplayValue(/Blue/).value).toBe('Blue');
 
 });
 
@@ -44,13 +44,13 @@ test('config row with one list item, renders list', () => {
     expect(linkItem.parentElement.parentElement.parentElement.className).not.toContain('is-active');
     
     // TODO: need to figure out why this isn't changing class - it works in the browser window
-    fireEvent.click(linkItem);
+    // fireEvent.click(linkItem);
     
-    console.log(linkItem.parentElement.parentElement.parentElement.className);
+    // console.log(linkItem.parentElement.parentElement.parentElement.className);
 
-    fireEvent.click(linkItem);
+    // fireEvent.click(linkItem);
     
-    console.log(linkItem.parentElement.parentElement.parentElement.className);
+    // console.log(linkItem.parentElement.parentElement.parentElement.className);
 
     // expect(linkItem.parentElement.parentElement.parentElement.className).toContain('is-active');
 });

@@ -9,9 +9,9 @@ const fs = Promise.promisifyAll(require('fs'));
 const FileReader = require('filereader');
 // const { dir } = require('console');
 
-const regex_imports = /var _[aA-zZ]*[0-9]? = (require|_interopRequireDefault)\((('|")(|\.(.)?\/[aA-zZ]*(|\/)))?[_]?[aA-zZ]*[('|")]?\);/g;
-const regex_react = /_react[0-9]?\.default/g;
-const regex_createGuid = /_createGUID[0-9]?\.default/g;
+const regex_imports = /var _[aA-zZ]*(|[0-9]) = (require|_interopRequireDefault)\((('|")(|\.(.)?\/[aA-zZ]*(|\/)))?[_]?[aA-zZ]*[('|")]?\);/g;
+const regex_react = /_react(|[0-9])\.default/g;
+const regex_createGuid = /_createGUID(|[0-9])\.default/g;
 const regex_ConfigurationDisplayHeading = /_ConfigurationDisplayHeading\./g;
 const regex_ConfigurationSetup = /_ConfigurationSetup\./g;
 const regex_ConfigPageRow = /_ConfigPageRow\./g;
@@ -19,8 +19,9 @@ const regex_SubOptions = /_SubOptions\./g;
 const regex_TabListItem = /_TabListItem\./g;
 const regex_TabPanels = /_TabPanels\./g;
 const regex_TabLinkContainer = /_TabLinkContainer\./g;
-const regex_DropDownList = /_DropDownList2\.default/g;
-const regex_InputList = /_InputList2\.default/g;
+const regex_DropDownList = /_DropDownList(|[0-9])\.(|default)/g;
+const regex_DropDownItem = /_DropDownItem(|[0-9])\.(|default)/g;
+const regex_InputItem = /_InputItem(|[0-9])\.(|default)/g;
 
 const root_search_path = path.join(__dirname, '../js');
 
@@ -42,8 +43,9 @@ iterate(root_search_path)
             res = removeOrReplaceString(res, regex_TabLinkContainer);
             res = removeOrReplaceString(res, regex_TabListItem);
             res = removeOrReplaceString(res, regex_TabPanels);
-            res = removeOrReplaceString(res, regex_DropDownList, 'DropDownList');
-            res = removeOrReplaceString(res, regex_InputList, 'InputList');
+            res = removeOrReplaceString(res, regex_DropDownList);
+            res = removeOrReplaceString(res, regex_DropDownItem);
+            res = removeOrReplaceString(res, regex_InputItem);
 
             if (res !== txt) {
                 console.log(`replacement in ${file}`);

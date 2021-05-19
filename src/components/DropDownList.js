@@ -1,34 +1,71 @@
 import React from 'react';
+import createGUID from '../utils/createGUID';
+import {DropDownItem} from './DropDownItem';
 class DropDownList extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            userValue : props.userValue,
+            dropState : props.dropState,            
+            dropState: false
+        }
+        this.changeDropItem = this.changeDropItem.bind(this);
+        this.toggleDropdown = this.toggleDropdown.bind(this);
+    }
+
+    /**
+     * toggle the displayed drop down list
+     * @param {Event} e 
+     */
+     changeDropItem(e) {
+        // Prevent default
+        e.preventDefault();
+
+        // stop bubbling
+        e.stopPropagation();
+
+        // set changes locally
+        this.setState({
+            userValue: e.target.textContent, 
+            dropState: false
+        })
+
+        this.props.dropChange(e);
+        // propagate changes up the chain so the settings object gets changed
+    }
+
+    /**
+     * toggle the displayed drop down list
+     * @param {Event} e 
+     */
+    toggleDropdown(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!this.state.dropState) {
+            this.setState({dropState: true});
+        } else {
+            this.setState({dropState: false});
+        }
+    }
+
     render() {
-        const {dropState, toggleDropdown, row} = this.props;
+        const { row } = this.props;
         
         return (
-            <div className={`dropdown ${dropState ? 'is-active' : ''}`}>
-                <div className="dropdown-trigger">
-                    <button onClick={(e) => toggleDropdown(e)} className="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                        <span className={`dropdown-toggle`} data-toggle="dropdown">{row.value}</span>
+            <div key={createGUID()} className={`dropdown ${this.state.dropState ? 'is-active' : ''}`}>
+                <div className="dropdown-trigger options">
+                    <span onClick={this.toggleDropdown} className="controlLink" aria-haspopup="true" aria-controls="dropdown-menu">
+                        <span className={`dropdown-toggle`} data-toggle="dropdown">{this.state.userValue}</span>
                         <span className="icon is-small">
                             <i className="fa fa-angle-down" aria-hidden="true"></i>
                         </span>
-                    </button>
+                    </span>
                 </div>
-                <div className="dropdown-menu modalPopUp mr-1 ml-1 pr-2" id="dropdown-menu" role="menu">
+                <div className="dropdown-menu modalPopUp" id="dropdown-menu" role="menu">
                     <div className="dropdown-content">
                         {/* Need to figure out how to populate this with actual data */}
-                        {/* {this.state.dropState && this.userValue !== undefined ? this.userValue.focus() : ''} */}
-                        {row.list.map((item, i) => {
-                            return (
-                                <a
-                                    href="#"
-                                    key={item + i} 
-                                    className={`button button-outline-primary popup-link has-text-centered dropdown-item ml-1 mb-1`}>
-                                        {item}
-                                </a>
-                            );
-                        })
-                            
-                        }
+                        <DropDownItem userValue={this.state.userValue} dropChange={this.changeDropItem} row={row} />
                     </div>
                 </div>
             </div>
