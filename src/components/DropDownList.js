@@ -6,7 +6,6 @@ class DropDownList extends React.Component {
         super(props);
         this.state = {
             userValue : props.userValue,
-            dropState : props.dropState,            
             dropState: false
         }
         this.changeDropItem = this.changeDropItem.bind(this);
@@ -17,21 +16,15 @@ class DropDownList extends React.Component {
      * toggle the displayed drop down list
      * @param {Event} e 
      */
-     changeDropItem(e) {
-        // Prevent default
-        e.preventDefault();
-
-        // stop bubbling
-        e.stopPropagation();
-
+     changeDropItem(val) {
         // set changes locally
         this.setState({
-            userValue: e.target.textContent, 
+            userValue: val, 
             dropState: false
         })
 
         // propagate changes up the chain so the settings object gets changed
-        this.props.dropChange(e.textContent);
+        this.props.trackChanges(val);
     }
 
     /**

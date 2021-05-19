@@ -14,27 +14,14 @@ import {InputItem} from './InputItem';
         this.state = {
             userValue: props.row.value
         }
-        this.changeDropItem = this.changeDropItem.bind(this);
         this.trackChanges = this.trackChanges.bind(this);
     }
 
-    changeDropItem(e) {
-        // Prevent default
-        e.preventDefault();
 
-        // stop bubbling
-        e.stopPropagation();
-
-        // set changes locally
-        this.setState({
-            userValue: e.target.textContent, 
-            dropState: false
-        })
-        // propagate changes up the chain so the settings object gets changed
-    }
-
-    trackChanges(e) {
-
+    trackChanges(val) {
+        // this.setState({
+        //     userValue: val
+        // })
         // Propagate up to save to database
     }
 
@@ -54,7 +41,7 @@ import {InputItem} from './InputItem';
                 </div>
                 <div key={createGUID()} className={`column pl-1 pb-1 is-half text-left is-vcentered`}>
                     {row.list.length > 0 ? 
-                        <DropDownList userValue={this.state.userValue} dropChange={this.changeDropItem} row={row} />
+                        <DropDownList userValue={this.state.userValue} trackChanges={this.trackChanges} row={row} />
                     : 
                         <InputItem userValue={this.state.userValue} inputChange={this.trackChanges} trackChanges={this.trackChanges} />
                     }

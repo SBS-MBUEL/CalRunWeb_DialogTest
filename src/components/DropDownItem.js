@@ -4,9 +4,9 @@ import createGUID from '../utils/createGUID';
 class DropDownItem extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            userValue : props.userValue
-        }
+        // this.state = {
+        //     userValue : props.userValue
+        // }
 
         this.changeDropItem = this.changeDropItem.bind(this);
     }
@@ -19,9 +19,9 @@ class DropDownItem extends React.Component {
         e.stopPropagation();
 
         // set changes locally
-        this.setState({
-            userValue: e.target.textContent
-        });
+        // this.setState({
+        //     userValue: e.target.textContent
+        // });
 
         this.props.dropChange(e.target.textContent);
 
@@ -38,7 +38,7 @@ class DropDownItem extends React.Component {
                             href="#"
                             key={item + i} 
                             onClick={this.changeDropItem} 
-                            className={`button is-info ${this.state.userValue === item ? '' : 'is-outlined'} popup-link dropdown-item has-text-centered pl-1 pr-1`}>
+                            className={`button is-info ${this.props.userValue === item ? '' : 'is-outlined'} popup-link dropdown-item has-text-centered pl-1 pr-1`}>
                                 {item}
                         </a>
                     </div>
