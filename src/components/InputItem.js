@@ -25,7 +25,7 @@ class InputItem extends React.Component {
 
         return (
             <React.Fragment>
-                <div className="is-centered is-info is-rounded">
+                <div key={this.props.key} className="is-centered is-info is-rounded">
                     <input 
                         // onClick={this.setFocus} 
                         type="text"

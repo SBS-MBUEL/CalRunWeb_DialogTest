@@ -20,21 +20,7 @@ class DropDownItem extends React.Component {
         // stop bubbling
         e.stopPropagation();
 
-        // set changes locally
-        // this.setState({
-        //     userValue: e.target.textContent
-        // });
-
         this.props.dropChange(e.target.textContent);
-
-        let value = e.target.textContent;
-
-        // this.setState({
-        //     userValue : value
-        // });
-
-            
-
     }
 
     render() {

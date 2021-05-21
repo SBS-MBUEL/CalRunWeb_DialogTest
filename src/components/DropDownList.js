@@ -1,6 +1,7 @@
 import React from 'react';
 import createGUID from '../utils/createGUID';
 import { DropDownItem } from './DropDownItem';
+
 class DropDownList extends React.Component {
     constructor(props) {
         super(props);
@@ -47,7 +48,7 @@ class DropDownList extends React.Component {
         const { row } = this.props;
         console.log(`UserValue: ${this.state.userValue}`);
         return (
-            <div key={createGUID()} className={`dropdown ${this.state.dropState ? 'is-active' : ''}`}>
+            <div key={`${row.label}-dropdown-container`} className={`dropdown ${this.state.dropState ? 'is-active' : ''}`}>
                 <div className="dropdown-trigger options">
                     <span onClick={this.toggleDropdown} className="controlLink" aria-haspopup="true" aria-controls="dropdown-menu">
                         <span className={`dropdown-toggle`} data-toggle="dropdown">{this.state.userValue}</span>
