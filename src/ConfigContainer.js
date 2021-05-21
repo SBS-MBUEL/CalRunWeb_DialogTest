@@ -18,7 +18,6 @@ class ConfigContainer extends React.Component {
             this.state = {
                 tabs : props.tabs
                 .filter(el => el != undefined),
-                // .filter(el => el.ConfigurationArea === 'system')
                 content : props.configurations,
                 settings: props.settings,
                 activeTab: 0
@@ -37,6 +36,7 @@ class ConfigContainer extends React.Component {
         this.removeRow = this.removeRow.bind(this);
         this.clickRouter = this.clickRouter.bind(this);
         this.changeActiveTab = this.changeActiveTab.bind(this);
+        this.setContent = this.setContent.bind(this);
     }
 
     /**
@@ -62,6 +62,14 @@ class ConfigContainer extends React.Component {
         console.log('changeHandler');
         console.log(e.currentTarget.textContent);
 
+    }
+
+    setContent(content, tabName) {
+        let changedContent = this.state.content;
+        changedContent[`_${tabName}`] = content;
+        this.setState({
+            content: changedContent
+        });
     }
 
 
@@ -144,7 +152,7 @@ class ConfigContainer extends React.Component {
             <div className="columns">
                 <div className="column">
                     <TabLinkContainer tabs={tabs} changeActiveTab={this.changeActiveTab} activeTab={activeTab} />
-                    <TabPanels tabs={tabs} content={content} activeTab={activeTab} clickRouter={this.clickRouter} />
+                    <TabPanels tabs={tabs} content={content} setContent={this.setContent} activeTab={activeTab} clickRouter={this.clickRouter} />
 
                 </div>
             </div>

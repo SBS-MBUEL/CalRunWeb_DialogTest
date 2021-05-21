@@ -12,7 +12,8 @@ import {InputItem} from './InputItem';
     constructor(props) {
         super(props);
         this.state = {
-            userValue: props.row.value
+            userValue: props.row.value,
+            index: props.index
         }
         this.trackChanges = this.trackChanges.bind(this);
     }
@@ -23,9 +24,9 @@ import {InputItem} from './InputItem';
         //     userValue: val
         // })
         // Propagate up to save to database
+
+        this.props.onChange(val, 0, this.state.index);
     }
-
-
 
     /**
      * Builds each row of the configurator
@@ -33,7 +34,7 @@ import {InputItem} from './InputItem';
      */
     render() {
         const { row, index } = this.props;
-        
+        console.log(`UserValue: ${this.state.userValue}`);
         return (
             <div key={row.label + row.value} className="columns content font-weight-bold is-vcentered">
                 <div key={createGUID()} className={`column pr-1 heading is-half text-right`}>

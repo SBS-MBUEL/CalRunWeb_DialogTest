@@ -1,6 +1,6 @@
 import React from 'react';
 import createGUID from '../utils/createGUID';
-import {DropDownItem} from './DropDownItem';
+import { DropDownItem } from './DropDownItem';
 class DropDownList extends React.Component {
     constructor(props) {
         super(props);
@@ -18,13 +18,14 @@ class DropDownList extends React.Component {
      */
      changeDropItem(val) {
         // set changes locally
+        this.props.trackChanges(val);
+
         this.setState({
             userValue: val, 
             dropState: false
         })
 
         // propagate changes up the chain so the settings object gets changed
-        this.props.trackChanges(val);
     }
 
     /**
@@ -44,7 +45,7 @@ class DropDownList extends React.Component {
 
     render() {
         const { row } = this.props;
-        
+        console.log(`UserValue: ${this.state.userValue}`);
         return (
             <div key={createGUID()} className={`dropdown ${this.state.dropState ? 'is-active' : ''}`}>
                 <div className="dropdown-trigger options">

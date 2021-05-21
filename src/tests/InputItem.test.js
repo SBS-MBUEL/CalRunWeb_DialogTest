@@ -17,8 +17,6 @@ test('renders input box with passed in value', () => {
 test('renders input box, verifies value can be changed', () => {
     let result = '';
     render(<InputItem userValue="Input-Test" trackChanges={(e) => {
-        
-        console.log(e);
         result = e;
     }} /> );
 
