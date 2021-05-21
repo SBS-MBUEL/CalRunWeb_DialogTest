@@ -19,13 +19,10 @@ import {InputItem} from './InputItem';
     }
 
 
-    trackChanges(val) {
-        // this.setState({
-        //     userValue: val
-        // })
+    trackChanges(key, val) {
         // Propagate up to save to database
 
-        this.props.onChange(val, 0, this.state.index);
+        this.props.onChange(key, val, 0, this.state.index); // (0 is setting index)
     }
 
     /**
@@ -34,7 +31,6 @@ import {InputItem} from './InputItem';
      */
     render() {
         const { row, index } = this.props;
-        console.log(`UserValue: ${this.state.userValue}`);
         return (
             <div key={row.label + row.value} className="columns content font-weight-bold is-vcentered">
                 <div key={`${row.label}`} className={`column pr-1 heading is-half text-right`}>
@@ -42,9 +38,9 @@ import {InputItem} from './InputItem';
                 </div>
                 <div key={`${row.label}-input-container`} className={`column pl-1 pb-1 is-half text-left is-vcentered`}>
                     {row.list.length > 0 ? 
-                        <DropDownList key={`${row.label}-dropdown`} userValue={this.state.userValue} trackChanges={this.trackChanges} row={row} />
+                        <DropDownList index={row.label} userValue={this.state.userValue} trackChanges={this.trackChanges} row={row} />
                     : 
-                        <InputItem key={`${row.label}-input`} userValue={this.state.userValue} inputChange={this.trackChanges} trackChanges={this.trackChanges} />
+                        <InputItem index={row.label} userValue={this.state.userValue} inputChange={this.trackChanges} trackChanges={this.trackChanges} />
                     }
                 </div>
             </div>  

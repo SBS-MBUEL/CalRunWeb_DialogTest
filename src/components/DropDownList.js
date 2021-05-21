@@ -45,10 +45,9 @@ class DropDownList extends React.Component {
     }
 
     render() {
-        const { row } = this.props;
-        console.log(`UserValue: ${this.state.userValue}`);
+        const { row, index } = this.props;
         return (
-            <div key={`${row.label}-dropdown-container`} className={`dropdown ${this.state.dropState ? 'is-active' : ''}`}>
+            <div key={`${index}-dropdown-container`} className={`dropdown ${this.state.dropState ? 'is-active' : ''}`}>
                 <div className="dropdown-trigger options">
                     <span onClick={this.toggleDropdown} className="controlLink" aria-haspopup="true" aria-controls="dropdown-menu">
                         <span className={`dropdown-toggle`} data-toggle="dropdown">{this.state.userValue}</span>

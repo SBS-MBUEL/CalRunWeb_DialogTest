@@ -14,13 +14,13 @@ class ConfigurationSetup extends React.Component {
         this.setContentValues = this.setContentValues.bind(this);
     }
 
-    setContentValues(val, settingIdx, controlIdx) {
+    setContentValues(key, val, settingIdx, controlIdx) {
         let changedContent = this.state.tabContent.slice()[settingIdx].controls[controlIdx].value = val;
         // TODO: causing sub pages to forget content
         // this.setState({
         //     value:  changedContent
         // })
-        this.props.setContent(changedContent, this.props.tabName);
+        this.props.setContent(key, val, changedContent, this.props.tabName);
         console.log(this.state.tabContent);
     }
 

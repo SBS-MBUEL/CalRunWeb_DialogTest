@@ -149,7 +149,7 @@ function showConfigurationDialog()
 {
 	let popUp = showPopUpDialog('Calibration Configuration', '60%', '95%');
 
-	renderConfig(popUp.contentArea.id, databaseTabs, databaseContent, objectCollection);
+	renderConfig(popUp.contentArea.id, databaseTabs, localSettings, localConfig);
 }
 
 /**

@@ -18,14 +18,14 @@ class InputItem extends React.Component {
         this.setState({userValue: e.target.value})
 
         // Propagate up call stack
-        this.props.trackChanges(e.target.value);
+        this.props.trackChanges(e.target.value, this.props.index);
     }
 
     render() {
-
+        const { index } = this.props;
         return (
             <React.Fragment>
-                <div key={this.props.key} className="is-centered is-info is-rounded">
+                <div key={`${index}-input`} className="is-centered is-info is-rounded">
                     <input 
                         // onClick={this.setFocus} 
                         type="text"

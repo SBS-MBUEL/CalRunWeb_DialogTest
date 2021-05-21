@@ -12,20 +12,17 @@ class DropDownItem extends React.Component {
     }
 
     changeDropItem(e) {
-        console.log('----------------');
-        console.log(`Selected Value: ${e.target.textContent}`);
         // Prevent default
         e.preventDefault();
 
         // stop bubbling
         e.stopPropagation();
 
-        this.props.dropChange(e.target.textContent);
+        this.props.dropChange(e.target.textContent, this.props.index);
     }
 
     render() {
         const { row } = this.props;
-        console.log(`UserValue: ${this.state.userValue}`);
         return (
             row.list.map((item, i) => {
                 return (
