@@ -1,24 +1,54 @@
 import React from 'react';
-import {ConfigurationDisplayHeading} from './ConfigurationDisplayHeading';
-import {ConfigPageRow} from './ConfigPageRow';
-import {SubOptions} from './SubOptions';
+import { ConfigurationDisplayHeading } from './ConfigurationDisplayHeading';
+import { ConfigPageRow } from './ConfigPageRow';
+import { SubOptions } from './SubOptions';
+import { ErrorPage } from './ErrorPage';
 class ConfigurationSetup extends React.Component {
-    render() {
-        const {content, index, tabName, handler} = this.props;
-        const mainContent = content.reduce((sum, cur) => {
-            if(cur.for === 'calibrationOption') {
-                sum.push(cur) 
-            } 
-            return sum;
-        }, [])[0].controls;
-        const subContent = content.reduce((sum, cur) => {
-            if (cur.for === 'calibrationParameter') {
-                sum.push(cur)
-            }
-            return sum;
-        }, [])[0].controls;
 
-        let display = <p>no content</p>;
+    constructor(props) {
+        super(props);
+        this.state = {
+            tabContent: props.content,
+        }
+
+        this.setContentValues = this.setContentValues.bind(this);
+    }
+
+    setContentValues(key, val, settingIdx, controlIdx) {
+        let changedContent = this.state.tabContent.slice();
+        changedContent[settingIdx].controls[controlIdx].value = val;
+        // TODO: causing sub pages to forget content
+        // this.setState({
+        //     value:  changedContent
+        // })
+        console.log(key, val, changedContent, this.props.tabName);
+        this.props.setContent(key, val, changedContent, this.props.tabName);
+    }
+
+    render() {
+        const {index, tabName, handler} = this.props;
+
+        let content = this.state.tabContent;
+
+        let mainContent = undefined;
+        let subContent = undefined;
+
+        if (content && content.length > 0) {
+            mainContent = content.reduce((sum, cur) => {
+                if(cur.for === 'calibrationOption') {
+                    sum.push(cur) 
+                } 
+                return sum;
+            }, [])[0].controls;
+            subContent = content.reduce((sum, cur) => {
+                if (cur.for === 'calibrationParameter') {
+                    sum.push(cur)
+                }
+                return sum;
+            }, [])[0].controls;
+
+        }
+        let display = <ErrorPage variableName="content" pageName="CalRun Configuration Page" />
         display = content &&  content[0].defaultName && (
             <div>
                 
@@ -27,7 +57,7 @@ class ConfigurationSetup extends React.Component {
                     {mainContent.map((row, index) => {
 
                         return (
-                            <ConfigPageRow key={index} row={row} index={index} />
+                            <ConfigPageRow onChange={this.setContentValues} key={index} row={row} index={index} />
                         )
                     })}
                     <hr />

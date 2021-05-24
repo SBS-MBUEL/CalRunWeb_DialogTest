@@ -4,8 +4,9 @@
 // TODO: check if React module is loaded before importing?
 
 import React from 'react';
-import {TabLinkContainer} from './components/TabLinkContainer';
-import {TabPanels} from './components/TabPanels';
+import { setLocalStorage, getLocalStorage } from './utils/LocalStorage'
+import { TabLinkContainer } from './components/TabLinkContainer';
+import { TabPanels } from './components/TabPanels';
 
 /**
  * ConfigContainer is the main launching point to construct the tabbed configuration screen
@@ -18,7 +19,6 @@ class ConfigContainer extends React.Component {
             this.state = {
                 tabs : props.tabs
                 .filter(el => el != undefined),
-                // .filter(el => el.ConfigurationArea === 'system')
                 content : props.configurations,
                 settings: props.settings,
                 activeTab: 0
@@ -37,6 +37,7 @@ class ConfigContainer extends React.Component {
         this.removeRow = this.removeRow.bind(this);
         this.clickRouter = this.clickRouter.bind(this);
         this.changeActiveTab = this.changeActiveTab.bind(this);
+        this.setContent = this.setContent.bind(this);
     }
 
     /**
@@ -62,6 +63,32 @@ class ConfigContainer extends React.Component {
         console.log('changeHandler');
         console.log(e.currentTarget.textContent);
 
+    }
+
+    setContent(key, value, content, tabName) {
+        let changedContent = this.state.content;
+        changedContent[`_${tabName}`] = content;
+
+        this.setState({
+            content: changedContent
+        });
+
+        let copiedSettings = this.state.settings.slice();
+
+        console.log(key, value, tabName.toLowerCase());
+
+        let index = this.state.settings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
+        console.log(index);
+        console.log(copiedSettings[index]);
+        copiedSettings[index].value = value;
+
+        this.setState({
+            settings: copiedSettings
+        });
+
+        // TODO: need "SystemName" to be dynamic
+        setLocalStorage('SystemName-Settings', copiedSettings);
+        setLocalStorage('SystemName-Config', changedContent);
     }
 
 
@@ -144,7 +171,7 @@ class ConfigContainer extends React.Component {
             <div className="columns">
                 <div className="column">
                     <TabLinkContainer tabs={tabs} changeActiveTab={this.changeActiveTab} activeTab={activeTab} />
-                    <TabPanels tabs={tabs} content={content} activeTab={activeTab} clickRouter={this.clickRouter} />
+                    <TabPanels tabs={tabs} content={content} setContent={this.setContent} activeTab={activeTab} clickRouter={this.clickRouter} />
 
                 </div>
             </div>

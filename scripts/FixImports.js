@@ -22,6 +22,8 @@ const regex_TabLinkContainer = /_TabLinkContainer\./g;
 const regex_DropDownList = /_DropDownList(|[0-9])\.(|default)/g;
 const regex_DropDownItem = /_DropDownItem(|[0-9])\.(|default)/g;
 const regex_InputItem = /_InputItem(|[0-9])\.(|default)/g;
+const regex_ErrorPage = /_ErrorPage(|[0-9])\.(|default)/g;
+const regex_LocalStorage = /_LocalStorage\./g;
 
 const root_search_path = path.join(__dirname, '../js');
 
@@ -46,6 +48,8 @@ iterate(root_search_path)
             res = removeOrReplaceString(res, regex_DropDownList);
             res = removeOrReplaceString(res, regex_DropDownItem);
             res = removeOrReplaceString(res, regex_InputItem);
+            res = removeOrReplaceString(res, regex_ErrorPage);
+            res = removeOrReplaceString(res, regex_LocalStorage);
 
             if (res !== txt) {
                 console.log(`replacement in ${file}`);

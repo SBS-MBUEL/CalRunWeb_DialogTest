@@ -57,7 +57,7 @@ const databaseContent = [
         "ParameterIndex": "-1",
         "ItemName": "Device",
         "ItemValue": "ECOV2"
-    },
+    }, 
     {
         "ConfigurationID": "882",
         "ConfigurationName": "DryChloro",
