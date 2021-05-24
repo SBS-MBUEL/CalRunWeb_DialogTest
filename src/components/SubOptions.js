@@ -19,6 +19,13 @@ import createGUID from '../utils/createGUID';
         this.trackChanges = this.trackChanges.bind(this);
     }
 
+    /**
+     * propagates changes up call stack
+     * @param {string} key of item in object
+     * @param {string} val value to replace
+     * @param {number} settingIdx outer index (0 or 1)
+     * @param {number} controlIdx inner index of control list to update
+     */
     trackChanges(key, val, settingIdx, controlIdx) {
         // Propagate up to save to database
         this.props.onChange(key, val, settingIdx, controlIdx); // (0 is setting index)
