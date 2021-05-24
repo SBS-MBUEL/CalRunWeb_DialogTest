@@ -22,13 +22,31 @@
 			<!-- Local Import required -->
 			<script type="text/javascript" src="../sbGlobal/sbGlobalFunctions.js"></script>
 			
-			
-			
+			<!-- // Load mocks to simulate database retrieval -->
+			<script type="text/javascript" src="js/mocks/databaseMockContent.js"></script>
+			<script type="text/javascript" src="js/mocks/configMocks.js"></script>
+
+			<!-- // used to get local data before database retrieval (expensive) -->
+			<script type="text/javascript" src="./js/utils/LocalStorage.js"></script>
+
+			<!-- // Initialize application -->
 			<script type="text/javascript">
-			//This is how we get the program working
-			//Load global files and then initialize the calRun system
-			document.addEventListener('DOMContentLoaded', function() {
-				initializeGlobals(initializeCalRun);
+				// This is how we get the program working
+				//Load global files and then initialize the calRun system
+				var localSettings = getLocalStorage('SystemName-Settings');
+				var localConfig = getLocalStorage('SystemName-Config');
+
+				if (!localSettings) { // retrieve database immediately
+					setLocalStorage('SystemName-Settings', databaseContent);
+					localSettings = databaseContent;
+				}
+
+				if (!localConfig) { // retrieve configuration from database
+					setLocalStorage('SystemName-Config', objectCollection);
+					localConfig = objectCollection;
+				}
+				document.addEventListener('DOMContentLoaded', function() {
+					initializeGlobals(initializeCalRun);
 				
 			});
 			</script>
@@ -114,12 +132,11 @@
         </div>
 
 		<!-- Local JS files -->
+		
+		<script type="text/javascript" src="js/components/ErrorPage.js"></script>
 		<script type="text/javascript" src="js/components/DropDownItem.js"></script>
 		<script type="text/javascript" src="js/components/DropDownList.js"></script>
 		<script type="text/javascript" src="js/components/InputItem.js"></script>
-		<script type="text/javascript" src="js/calRunFrontEnd.js"></script>
-		<script type="text/javascript" src="js/mocks/databaseMockContent.js"></script>
-		<script type="text/javascript" src="js/mocks/configMocks.js"></script>
 		<script type="text/javascript" src="js/components/SubOptions.js"></script>
 		<script type="text/javascript" src="js/components/TabListItem.js"></script>
 		<script type="text/javascript" src="js/components/TabLinkContainer.js"></script>
@@ -128,5 +145,6 @@
 		<script type="text/javascript" src="js/components/ConfigPageRow.js"></script>
 		<script type="text/javascript" src="js/components/ConfigurationSetup.js"></script>
 		<script type="text/javascript" src="js/ConfigContainer.js"></script>
+		<script type="text/javascript" src="js/calRunFrontEnd.js"></script>
     </BODY>
 </HTML>

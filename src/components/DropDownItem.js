@@ -18,18 +18,11 @@ class DropDownItem extends React.Component {
         // stop bubbling
         e.stopPropagation();
 
-        // set changes locally
-        this.setState({
-            userValue: e.target.textContent
-        });
-
-        this.props.dropChange(e);
-
+        this.props.trackChanges(this.props.index, e.target.textContent);
     }
 
     render() {
         const { row } = this.props;
-        
         return (
             row.list.map((item, i) => {
                 return (

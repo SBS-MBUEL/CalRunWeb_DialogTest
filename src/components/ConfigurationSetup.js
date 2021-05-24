@@ -1,7 +1,8 @@
 import React from 'react';
-import {ConfigurationDisplayHeading} from './ConfigurationDisplayHeading';
-import {ConfigPageRow} from './ConfigPageRow';
-import {SubOptions} from './SubOptions';
+import { ConfigurationDisplayHeading } from './ConfigurationDisplayHeading';
+import { ConfigPageRow } from './ConfigPageRow';
+import { SubOptions } from './SubOptions';
+import { ErrorPage } from './ErrorPage';
 class ConfigurationSetup extends React.Component {
     constructor(props) {
         super(props);
@@ -50,6 +51,17 @@ class ConfigurationSetup extends React.Component {
         });
     }
 
+    setContentValues(key, val, settingIdx, controlIdx) {
+        let changedContent = this.state.tabContent.slice();
+        changedContent[settingIdx].controls[controlIdx].value = val;
+        // TODO: causing sub pages to forget content
+        // this.setState({
+        //     value:  changedContent
+        // })
+        console.log(key, val, changedContent, this.props.tabName);
+        this.props.setContent(key, val, changedContent, this.props.tabName);
+    }
+
     changeActiveDropDown(control, index, state) {
         this.resetAllTabs();
         let changedState = this.state[control];
@@ -62,7 +74,27 @@ class ConfigurationSetup extends React.Component {
     render() {
         const {content, index, tabName, handler} = this.props;
 
-        let display = <p>no content</p>;
+        let content = this.state.tabContent;
+
+        let mainContent = undefined;
+        let subContent = undefined;
+
+        if (content && content.length > 0) {
+            mainContent = content.reduce((sum, cur) => {
+                if(cur.for === 'calibrationOption') {
+                    sum.push(cur) 
+                } 
+                return sum;
+            }, [])[0].controls;
+            subContent = content.reduce((sum, cur) => {
+                if (cur.for === 'calibrationParameter') {
+                    sum.push(cur)
+                }
+                return sum;
+            }, [])[0].controls;
+
+        }
+        let display = <ErrorPage variableName="content" pageName="CalRun Configuration Page" />
         display = content &&  content[0].defaultName && (
             <div>
                 
@@ -79,8 +111,11 @@ class ConfigurationSetup extends React.Component {
                                 dropState={this.state.dropStateContent[index]}
                                 changeActiveDropDown={this.changeActiveDropDown}
                                 key={index} 
-                                row={row} 
                                 index={index} 
+                                onChange={this.setContentValues} 
+                                row={row} 
+                                settingIndex={0}
+                                controlIndex={index} 
                             />
                         )
                     })}
@@ -90,9 +125,8 @@ class ConfigurationSetup extends React.Component {
                             dropState={this.state.dropStateSubContent}
                             changeActiveDropDown={this.changeActiveDropDown}
                             subOption={this.state.subContent} 
-                            page={content[0].defaultName.toUpperCase()}
                         />
-                        :
+                    :
                         <React.Fragment>
                             {/* Empty div to display nothing */}
                         </React.Fragment>

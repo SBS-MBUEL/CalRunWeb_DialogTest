@@ -14,9 +14,10 @@ import { InputItem } from './InputItem';
         this.state = {
             userValue: props.row.value,
             dropState : props.dropState,
-            config : props.configPage
+            config : props.configPage,
+            settingIndex: props.settingIndex,
+            controlIndex: props.controlIndex
         }
-        this.changeDropItem = this.changeDropItem.bind(this);
         this.trackChanges = this.trackChanges.bind(this);
     }
 
@@ -45,11 +46,17 @@ import { InputItem } from './InputItem';
         // console.log(e.target);
 
         // this.setState({userValue: e.target.value})
-
-        // Propagate up to save to database
     }
-
-
+    
+    /**
+     * propagates changes up call stack
+     * @param {string} key of item in setting object
+     * @param {string} val value to replace
+     */
+    trackChanges(key, val) {
+        // Propagate up to save to database
+        this.props.onChange(key, val, this.state.settingIndex, this.state.controlIndex); // (0 is setting index)
+    }
 
     /**
      * Builds each row of the configurator
@@ -57,22 +64,23 @@ import { InputItem } from './InputItem';
      */
     render() {
         const { row, index } = this.props;
-        
         return (
             <div key={row.label + row.value} className="columns content font-weight-bold is-vcentered">
-                <div key={createGUID()} className={`column pr-1 heading is-half text-right`}>
+                <div key={`${row.label}`} className={`column pr-1 heading is-half text-right`}>
                     {row.label}
                 </div>
-                <div key={`row-${index}`} className={`column pl-1 pb-1 is-half text-left is-vcentered`}>
+                <div key={`${row.label}-input-container`} className={`column pl-1 pb-1 is-half text-left is-vcentered`}>
                     {row.list.length > 0 ? 
                         <DropDownList 
-                            dropDownState={this.state.dropState}
+                            dropState={this.state.dropState}
+                            index={row.label} 
                             userValue={this.state.userValue} 
-                            dropChange={this.changeDropItem} 
+                            trackChanges={this.trackChanges} 
                             row={row} 
                         />
                     : 
                         <InputItem 
+                            index={row.label} 
                             userValue={this.state.userValue} 
                             inputChange={this.trackChanges} 
                             trackChanges={this.trackChanges} 

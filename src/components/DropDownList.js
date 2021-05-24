@@ -16,20 +16,16 @@ class DropDownList extends React.Component {
      * toggle the displayed drop down list
      * @param {Event} e 
      */
-     changeDropItem(e) {
-        // Prevent default
-        e.preventDefault();
-
-        // stop bubbling
-        e.stopPropagation();
-
+     changeDropItem(key, val) {
         // set changes locally
+         
+        this.props.trackChanges(key, val);
+
         this.setState({
-            userValue: e.target.textContent, 
+            userValue: val, 
             dropState: false
         })
 
-        this.props.dropChange(e);
         // propagate changes up the chain so the settings object gets changed
     }
 
@@ -49,10 +45,9 @@ class DropDownList extends React.Component {
     }
 
     render() {
-        const { row } = this.props;
-        
+        const { row, index } = this.props;
         return (
-            <div key={createGUID()} className={`dropdown ${this.state.dropState ? 'is-active' : ''}`}>
+            <div key={`${index}-dropdown-container`} className={`dropdown ${this.state.dropState ? 'is-active' : ''}`}>
                 <div className="dropdown-trigger options">
                     <span onClick={this.toggleDropdown} className="controlLink" aria-haspopup="true" aria-controls="dropdown-menu">
                         <span className={`dropdown-toggle`} data-toggle="dropdown">{this.state.userValue}</span>
@@ -64,7 +59,7 @@ class DropDownList extends React.Component {
                 <div className="dropdown-menu modalPopUp" id="dropdown-menu" role="menu">
                     <div className="dropdown-content">
                         {/* Need to figure out how to populate this with actual data */}
-                        <DropDownItem userValue={this.state.userValue} dropChange={this.changeDropItem} row={row} />
+                        <DropDownItem index={index} userValue={this.state.userValue} trackChanges={this.changeDropItem} row={row} />
                     </div>
                 </div>
             </div>

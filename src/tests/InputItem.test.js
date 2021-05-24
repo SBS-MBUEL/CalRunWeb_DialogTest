@@ -17,8 +17,7 @@ test('renders input box with passed in value', () => {
 test('renders input box, verifies value can be changed', () => {
     let result = '';
     render(<InputItem userValue="Input-Test" trackChanges={(e) => {
-        e.persist();
-        result = e.target.value;
+        result = e;
     }} /> );
 
     const inputBox = screen.getByDisplayValue(/Input-Test/);
