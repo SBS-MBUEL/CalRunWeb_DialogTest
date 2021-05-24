@@ -57,12 +57,22 @@ class ConfigurationSetup extends React.Component {
                     {mainContent.map((row, index) => {
 
                         return (
-                            <ConfigPageRow onChange={this.setContentValues} key={index} row={row} index={index} />
+                            <ConfigPageRow 
+                                onChange={this.setContentValues} 
+                                key={index} 
+                                row={row} 
+                                settingIndex={0}
+                                controlIndex={index} 
+                            />
                         )
                     })}
                     <hr />
                     {subContent.length > 0 ?
-                        <SubOptions subOption={subContent} page={content[0].defaultName.toUpperCase()}/>
+                        <SubOptions 
+                            onChange={this.setContentValues} 
+                            subOption={subContent} 
+                            page={content[0].defaultName.toUpperCase()}
+                        />
                         :
                         <React.Fragment>
                             {/* Empty div to display nothing */}

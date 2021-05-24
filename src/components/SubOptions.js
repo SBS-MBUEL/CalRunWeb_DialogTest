@@ -16,6 +16,19 @@ import createGUID from '../utils/createGUID';
         }
         this.slideLeft = this.slideLeft.bind(this);
         this.slideRight = this.slideRight.bind(this);
+        this.trackChanges = this.trackChanges.bind(this);
+    }
+
+    /**
+     * propagates changes up call stack
+     * @param {string} key of item in object
+     * @param {string} val value to replace
+     * @param {number} settingIdx outer index (0 or 1)
+     * @param {number} controlIdx inner index of control list to update
+     */
+    trackChanges(key, val, settingIdx, controlIdx) {
+        // Propagate up to save to database
+        this.props.onChange(key, val, settingIdx, controlIdx); // (0 is setting index)
     }
 
 
@@ -53,7 +66,13 @@ import createGUID from '../utils/createGUID';
                     {subOption.map((optionTab, index) => {
                         return (
                             <div key={page + index} style={{"transform": `translateX(${this.state.currentPane * 100 * -1}%)`}}>
-                                <ConfigPageRow key={index} row={optionTab} index={index} />
+                                <ConfigPageRow 
+                                    onChange={this.trackChanges} 
+                                    key={index} 
+                                    row={optionTab} 
+                                    settingIndex={1}
+                                    controlIndex={index} 
+                                />
                             </div>
                         );
                     })}

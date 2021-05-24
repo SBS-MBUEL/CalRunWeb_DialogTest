@@ -13,16 +13,21 @@ import {InputItem} from './InputItem';
         super(props);
         this.state = {
             userValue: props.row.value,
-            index: props.index
+            settingIndex: props.settingIndex,
+            controlIndex: props.controlIndex
         }
         this.trackChanges = this.trackChanges.bind(this);
     }
 
 
+    /**
+     * propagates changes up call stack
+     * @param {string} key of item in setting object
+     * @param {string} val value to replace
+     */
     trackChanges(key, val) {
         // Propagate up to save to database
-        console.log(key, val, 0, this.state.index);
-        this.props.onChange(key, val, 0, this.state.index); // (0 is setting index)
+        this.props.onChange(key, val, this.state.settingIndex, this.state.controlIndex); // (0 is setting index)
     }
 
     /**
