@@ -129,7 +129,7 @@ a:hover, a:focus {
 
 .overflow {
     border: 1px solid black; 
-    height: 600px;
+    height: 740px;
     overflow-y: auto;
     overflow-x: hidden;
     /* overflow-y: none; */
@@ -168,7 +168,7 @@ a:hover, a:focus {
   }
 
 .active--dot {
-    color: yellow;
+    color: #00ADDD;
 }
 
 .slide {

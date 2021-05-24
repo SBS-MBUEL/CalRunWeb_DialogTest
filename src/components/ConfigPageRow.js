@@ -19,7 +19,9 @@ import {InputItem} from './InputItem';
         this.trackChanges = this.trackChanges.bind(this);
     }
 
+    handler() {
 
+    }
     /**
      * propagates changes up call stack
      * @param {string} key of item in setting object
@@ -36,16 +38,34 @@ import {InputItem} from './InputItem';
      */
     render() {
         const { row, index } = this.props;
+        console.log(row);
         return (
             <div key={row.label + row.value} className="columns content font-weight-bold is-vcentered">
                 <div key={`${row.label}`} className={`column pr-1 heading is-half text-right`}>
                     {row.label}
                 </div>
                 <div key={`${row.label}-input-container`} className={`column pl-1 pb-1 is-half text-left is-vcentered`}>
-                    {row.list.length > 0 ? 
+                    {row.type === 'dropdown' ?
                         <DropDownList index={row.label} userValue={this.state.userValue} trackChanges={this.trackChanges} row={row} />
-                    : 
+                    : row.type === 'text' ?
                         <InputItem index={row.label} userValue={this.state.userValue} inputChange={this.trackChanges} trackChanges={this.trackChanges} />
+                    : row.type === 'textarea' ?
+
+                    // TEXT AREA
+                        <textarea onChange={this.trackChanges} id={row.label}>
+                            {row.value}
+                        </textarea>
+                    :
+                        // Render button
+                        <div onClick={this.handler} className={`button is-${row.value.includes('add') ? "success" : row.value.includes('remove') ? 'danger' : 'info'}`}>
+                            <span
+                                
+                                className={`fa fa-${row.value.includes('add') ? "plus" : row.value.includes('remove') ? 'remove' : 'save'}`}
+                            >
+                                &nbsp;
+                            </span>
+                            {row.value}
+                        </div>
                     }
                 </div>
             </div>  
