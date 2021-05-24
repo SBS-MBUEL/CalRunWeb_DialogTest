@@ -17,9 +17,10 @@ class DropDownList extends React.Component {
      * toggle the displayed drop down list
      * @param {Event} e 
      */
-     changeDropItem(val) {
+     changeDropItem(key, val) {
         // set changes locally
-        this.props.trackChanges(val);
+         
+        this.props.trackChanges(key, val);
 
         this.setState({
             userValue: val, 
@@ -59,7 +60,7 @@ class DropDownList extends React.Component {
                 <div className="dropdown-menu modalPopUp" id="dropdown-menu" role="menu">
                     <div className="dropdown-content">
                         {/* Need to figure out how to populate this with actual data */}
-                        <DropDownItem userValue={this.state.userValue} dropChange={this.changeDropItem} row={row} />
+                        <DropDownItem index={index} userValue={this.state.userValue} trackChanges={this.changeDropItem} row={row} />
                     </div>
                 </div>
             </div>

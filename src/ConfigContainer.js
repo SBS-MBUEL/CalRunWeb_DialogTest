@@ -74,13 +74,19 @@ class ConfigContainer extends React.Component {
         });
 
         let copiedSettings = this.state.settings.slice();
-        index = this.state.settings.map((el, index) => el.ItemName === key ? index : undefined).filter((a, b) => a !== undefined)[0];
+
+        console.log(key, value, tabName.toLowerCase());
+
+        let index = this.state.settings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
+        console.log(index);
+        console.log(copiedSettings[index]);
         copiedSettings[index].value = value;
 
         this.setState({
             settings: copiedSettings
         });
 
+        // TODO: need "SystemName" to be dynamic
         setLocalStorage('SystemName-Settings', copiedSettings);
         setLocalStorage('SystemName-Config', changedContent);
     }

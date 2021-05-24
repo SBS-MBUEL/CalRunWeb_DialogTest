@@ -15,13 +15,14 @@ class ConfigurationSetup extends React.Component {
     }
 
     setContentValues(key, val, settingIdx, controlIdx) {
-        let changedContent = this.state.tabContent.slice()[settingIdx].controls[controlIdx].value = val;
+        let changedContent = this.state.tabContent.slice();
+        changedContent[settingIdx].controls[controlIdx].value = val;
         // TODO: causing sub pages to forget content
         // this.setState({
         //     value:  changedContent
         // })
+        console.log(key, val, changedContent, this.props.tabName);
         this.props.setContent(key, val, changedContent, this.props.tabName);
-        console.log(this.state.tabContent);
     }
 
     render() {
@@ -32,7 +33,7 @@ class ConfigurationSetup extends React.Component {
         let mainContent = undefined;
         let subContent = undefined;
 
-        if (content) {
+        if (content && content.length > 0) {
             mainContent = content.reduce((sum, cur) => {
                 if(cur.for === 'calibrationOption') {
                     sum.push(cur) 

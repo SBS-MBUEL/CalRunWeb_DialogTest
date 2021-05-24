@@ -15,10 +15,10 @@ class InputItem extends React.Component {
         // e.preventDefault();
         // e.stopPropagation();
 
-        this.setState({userValue: e.target.value})
+        // this.setState({userValue: e.target.value});
 
         // Propagate up call stack
-        this.props.trackChanges(e.target.value, this.props.index);
+        this.props.trackChanges(this.props.index, e.target.value);
     }
 
     render() {

@@ -18,7 +18,7 @@ class DropDownItem extends React.Component {
         // stop bubbling
         e.stopPropagation();
 
-        this.props.dropChange(e.target.textContent, this.props.index);
+        this.props.trackChanges(this.props.index, e.target.textContent);
     }
 
     render() {

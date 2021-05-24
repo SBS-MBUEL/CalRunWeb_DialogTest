@@ -11,8 +11,8 @@ class TabPanels extends React.Component {
         this.setContent = this.setContent.bind(this);
     }
 
-    setContent(content) {
-        this.props.setContent(content);
+    setContent(key, val, content, tabName) {
+        this.props.setContent(key, val, content, tabName);
     }
 
     getContent() {

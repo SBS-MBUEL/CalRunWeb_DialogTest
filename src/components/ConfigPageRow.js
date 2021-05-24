@@ -21,7 +21,7 @@ import {InputItem} from './InputItem';
 
     trackChanges(key, val) {
         // Propagate up to save to database
-
+        console.log(key, val, 0, this.state.index);
         this.props.onChange(key, val, 0, this.state.index); // (0 is setting index)
     }
 
