@@ -1,8 +1,8 @@
 import React from 'react';
 import createGUID from '../utils/createGUID';
 
-import {DropDownList} from './DropDownList';
-import {InputItem} from './InputItem';
+import { DropDownList } from './DropDownList';
+import { InputItem } from './InputItem';
 
 /**
  * ConfigPageRow - renders each row of the config page
@@ -12,25 +12,31 @@ import {InputItem} from './InputItem';
     constructor(props) {
         super(props);
         this.state = {
-            userValue: props.row.value
+            userValue: props.row.value,
+            dropState : props.dropState,
+            config : props.configPage
         }
         this.changeDropItem = this.changeDropItem.bind(this);
         this.trackChanges = this.trackChanges.bind(this);
     }
 
-    changeDropItem(e) {
-        // Prevent default
-        e.preventDefault();
-
-        // stop bubbling
-        e.stopPropagation();
-
-        // set changes locally
+    changeActiveDropDown(control, index, state) {
+        this.resetAllTabs();
+        let changedState = this.state[control];
+        changedState[index] = state;
         this.setState({
-            userValue: e.target.textContent, 
-            dropState: false
+            [control] : changedState
         })
-        // propagate changes up the chain so the settings object gets changed
+    }
+
+    /**
+     * propagates changes up call stack
+     * @param {string} key of item in setting object
+     * @param {string} val value to replace
+     */
+     trackChanges(key, val) {
+        // Propagate up to save to database
+        this.props.onChange(key, val, this.state.settingIndex, this.state.controlIndex); // (0 is setting index)
     }
 
     trackChanges(e) {
@@ -57,11 +63,20 @@ import {InputItem} from './InputItem';
                 <div key={createGUID()} className={`column pr-1 heading is-half text-right`}>
                     {row.label}
                 </div>
-                <div key={createGUID()} className={`column pl-1 pb-1 is-half text-left is-vcentered`}>
+                <div key={`row-${index}`} className={`column pl-1 pb-1 is-half text-left is-vcentered`}>
                     {row.list.length > 0 ? 
-                        <DropDownList userValue={this.state.userValue} dropChange={this.changeDropItem} row={row} />
+                        <DropDownList 
+                            dropDownState={this.state.dropState}
+                            userValue={this.state.userValue} 
+                            dropChange={this.changeDropItem} 
+                            row={row} 
+                        />
                     : 
-                        <InputItem userValue={this.state.userValue} inputChange={this.trackChanges} trackChanges={this.trackChanges} />
+                        <InputItem 
+                            userValue={this.state.userValue} 
+                            inputChange={this.trackChanges} 
+                            trackChanges={this.trackChanges} 
+                        />
                     }
                 </div>
             </div>  

@@ -3,36 +3,95 @@ import {ConfigurationDisplayHeading} from './ConfigurationDisplayHeading';
 import {ConfigPageRow} from './ConfigPageRow';
 import {SubOptions} from './SubOptions';
 class ConfigurationSetup extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            mainContent : props.content.reduce((sum, cur) => {
+                if(cur.for === 'calibrationOption') {
+                    sum.push(cur) 
+                } 
+                return sum;
+            }, [])[0].controls,
+            subContent : props.content.reduce((sum, cur) => {
+                if (cur.for === 'calibrationParameter') {
+                    sum.push(cur)
+                }
+                return sum;
+            }, [])[0].controls,
+            dropStateContent : new Array(props.content.reduce((sum, cur) => {
+                if(cur.for === 'calibrationOption') {
+                    sum.push(cur) 
+                } 
+                return sum;
+            }, [])[0].controls.length).fill(false),
+            dropStateSubContent : new Array(props.content.reduce((sum, cur) => {
+                if (cur.for === 'calibrationParameter') {
+                    sum.push(cur)
+                }
+                return sum;
+            }, [])[0].controls.length).fill(false)
+        }
+    }
+
+    resetAllTabs() {
+        this.setState({
+            dropStateContent : new Array(props.content.reduce((sum, cur) => {
+                if(cur.for === 'calibrationOption') {
+                    sum.push(cur) 
+                } 
+                return sum;
+            }, [])[0].controls.length).fill(false),
+            dropStateSubContent : new Array(props.content.reduce((sum, cur) => {
+                if (cur.for === 'calibrationParameter') {
+                    sum.push(cur)
+                }
+                return sum;
+            }, [])[0].controls.length).fill(false)
+        });
+    }
+
+    changeActiveDropDown(control, index, state) {
+        this.resetAllTabs();
+        let changedState = this.state[control];
+        changedState[index] = state;
+        this.setState({
+            [control] : changedState
+        })
+    }
+    
     render() {
         const {content, index, tabName, handler} = this.props;
-        const mainContent = content.reduce((sum, cur) => {
-            if(cur.for === 'calibrationOption') {
-                sum.push(cur) 
-            } 
-            return sum;
-        }, [])[0].controls;
-        const subContent = content.reduce((sum, cur) => {
-            if (cur.for === 'calibrationParameter') {
-                sum.push(cur)
-            }
-            return sum;
-        }, [])[0].controls;
 
         let display = <p>no content</p>;
         display = content &&  content[0].defaultName && (
             <div>
                 
-                <ConfigurationDisplayHeading key={content[0].defaultName} handler={handler} heading={content[0].defaultName.toUpperCase()}/>
+                <ConfigurationDisplayHeading 
+                    key={content[0].defaultName} 
+                    handler={handler} 
+                    heading={content[0].defaultName.toUpperCase()}
+                />
                 <div className="overflow">
-                    {mainContent.map((row, index) => {
+                    {this.state.mainContent.map((row, index) => {
 
                         return (
-                            <ConfigPageRow key={index} row={row} index={index} />
+                            <ConfigPageRow 
+                                dropState={this.state.dropStateContent[index]}
+                                changeActiveDropDown={this.changeActiveDropDown}
+                                key={index} 
+                                row={row} 
+                                index={index} 
+                            />
                         )
                     })}
                     <hr />
-                    {subContent.length > 0 ?
-                        <SubOptions subOption={subContent} page={content[0].defaultName.toUpperCase()}/>
+                    {this.state.subContent.length > 0 ?
+                        <SubOptions 
+                            dropState={this.state.dropStateSubContent}
+                            changeActiveDropDown={this.changeActiveDropDown}
+                            subOption={this.state.subContent} 
+                            page={content[0].defaultName.toUpperCase()}
+                        />
                         :
                         <React.Fragment>
                             {/* Empty div to display nothing */}
