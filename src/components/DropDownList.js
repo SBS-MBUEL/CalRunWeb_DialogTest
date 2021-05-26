@@ -11,6 +11,14 @@ class DropDownList extends React.Component {
         }
         this.changeDropItem = this.changeDropItem.bind(this);
         this.toggleDropdown = this.toggleDropdown.bind(this);
+        this.handleBodyClick = this.handleBodyClick.bind(this);
+        this.toggleState = this.toggleState.bind(this);
+    }
+
+    handleBodyClick(e)
+    {
+        e.stopPropagation();
+        this.toggleState(true);
     }
 
     /**
@@ -18,16 +26,31 @@ class DropDownList extends React.Component {
      * @param {Event} e 
      */
      changeDropItem(key, val) {
-        // set changes locally
          
+        // set changes locally
         this.props.trackChanges(key, val);
 
         this.setState({
             userValue: val, 
-            dropState: false
         })
 
+        this.toggleState(true);
+
         // propagate changes up the chain so the settings object gets changed
+    }
+
+    toggleState(state) {
+        if (!state) {
+            document.body.addEventListener('click', this.handleBodyClick);
+            this.setState({
+                dropState: true
+            });
+        } else {
+            document.body.removeEventListener('click', this.handleBodyClick);
+            this.setState({
+                dropState: false
+            });
+        }
     }
 
     /**
@@ -38,11 +61,8 @@ class DropDownList extends React.Component {
         e.preventDefault();
         e.stopPropagation();
 
-        if (!this.state.dropState) {
-            this.setState({dropState: true});
-        } else {
-            this.setState({dropState: false});
-        }
+        this.toggleState(this.state.dropState);
+
     }
 
     render() {
