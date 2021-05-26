@@ -7,6 +7,8 @@ class TextArea extends React.Component {
         this.state = {
             value : props.value
         }
+        
+        this.trackChanges = this.trackChanges.bind(this);
     }
 
     trackChanges(e) {
@@ -18,12 +20,12 @@ class TextArea extends React.Component {
     }
     
     render() {
-        const { label, value, index } = this.props;
+        const { value, index } = this.props;
         return (
             // TEXT AREA
             <textarea 
                 onChange={this.trackChanges} 
-                id={`${label}-${index}`}
+                id={`${index}-inputForNotes`}
                 value={value}
             />
         );

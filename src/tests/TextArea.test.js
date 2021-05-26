@@ -19,7 +19,7 @@ function trackChanges(key, val) {
 
 test('renders Text Area with "Blue"', () => {
     let result = '';
-    render(<TextArea label={testSetup().label} value={testSetup().value} index={0} trackChanges={trackChanges}  /> );
+    render(<TextArea value={testSetup().value} index={0} trackChanges={trackChanges}  /> );
 
     const textInput_rendered = screen.getByText(/Blue/);
 
@@ -29,7 +29,7 @@ test('renders Text Area with "Blue"', () => {
 
 test('renders Text Area with "Blue"', () => {
     let result = '';
-    render(<TextArea label={testSetup().label} value={testSetup().value} index={0} trackChanges={(k, v) => {
+    render(<TextArea value={testSetup().value} index={0} trackChanges={(k, v) => {
         results = trackChanges(k, v);
         expect(results).toBe('NewContent');
     }
