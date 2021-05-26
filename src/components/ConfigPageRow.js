@@ -1,8 +1,9 @@
 import React from 'react';
 import createGUID from '../utils/createGUID';
 
-import {DropDownList} from './DropDownList';
-import {InputItem} from './InputItem';
+import { DropDownList } from './DropDownList';
+import { InputItem } from './InputItem';
+import { TextArea } from './TextArea';
 
 /**
  * ConfigPageRow - renders each row of the config page
@@ -49,13 +50,13 @@ import {InputItem} from './InputItem';
                     : row.type === 'text' ?
                         <InputItem index={row.label} userValue={this.state.userValue} inputChange={this.trackChanges} trackChanges={this.trackChanges} />
                     : row.type === 'textarea' ?
-
-                    // TEXT AREA
-                        <textarea 
-                            onChange={this.trackChanges} 
-                            id={`${row.label}-${index}`}
-                            value={row.value}
-                        />
+                        <TextArea value={this.state.userValue} index={row.label} trackChanges={this.trackChanges} />
+                        // // TEXT AREA
+                        // <textarea 
+                        //     onChange={this.trackChanges} 
+                        //     id={`${row.label}-${index}`}
+                        //     value={row.value}
+                        // />
                     :
                         // Render button
                         <div onClick={this.handler} className={`button is-${row.value.includes('add') ? "success" : row.value.includes('remove') ? 'danger' : 'info'}`}>
