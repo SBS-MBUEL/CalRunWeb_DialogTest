@@ -5,29 +5,56 @@ class TextArea extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value : props.value
+            value : props.value != null ? props.value : "Not Set"
         }
         
         this.trackChanges = this.trackChanges.bind(this);
+        // this.setCursorPos = this.setCursorPos.bind(this);
     }
 
+    // setCursorPos() {
+    //     const textarea = document.querySelector(`#${this.props.label}-inputForNotes`);
+    //     console.log(`#${this.props.label}-inputForNotes`);
+    //     console.log(textarea);
+    //     const cursor_pos = this.state.value.length;
+    
+    //     textarea.setSelectionRange(cursor_pos, cursor_pos);
+    //     textarea.focus();
+    // }
+
     trackChanges(e) {
+        e.preventDefault()
+
+        e.stopPropagation();
+        console.log(e.target);
         this.setState({
             value: e.target.textContent
         })
 
-        this.props.trackChanges(this.props.index, e.target.textContent);
+        this.props.trackChanges(this.props.label, e.target.textContent);
     }
     
     render() {
-        const { value, index } = this.props;
+        const { value, index, label } = this.props;
+        const startingPoint = 0;
+
         return (
             // TEXT AREA
-            <textarea 
-                onChange={this.trackChanges} 
-                id={`${index}-inputForNotes`}
-                value={value}
-            />
+            <div
+                key={`${index}-${label}`}   
+            >
+                <textarea 
+                    onChange={this.trackChanges} 
+                    id={`${label}-inputForNotes`}
+                    value={this.state.value}
+                    // ref={this.setCursorPos} 
+                    selectionStart={startingPoint}
+                    selectionEnd={startingPoint + this.state.value.length}
+                >
+                    
+                </textarea>
+            </div>
+
         );
     }
 }

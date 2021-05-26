@@ -50,7 +50,7 @@ import { TextArea } from './TextArea';
                     : row.type === 'text' ?
                         <InputItem index={row.label} userValue={this.state.userValue} inputChange={this.trackChanges} trackChanges={this.trackChanges} />
                     : row.type === 'textarea' ?
-                        <TextArea value={this.state.userValue} index={row.label} trackChanges={this.trackChanges} />
+                        <TextArea index={index} value={this.state.userValue} label={row.label} trackChanges={this.trackChanges} />
                         // // TEXT AREA
                         // <textarea 
                         //     onChange={this.trackChanges} 
