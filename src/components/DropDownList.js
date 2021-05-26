@@ -1,14 +1,13 @@
 import React from 'react';
 import createGUID from '../utils/createGUID';
 import { DropDownItem } from './DropDownItem';
-
 class DropDownList extends React.Component {
     _isMounted = false;
     constructor(props) {
         super(props);
         this.state = {
             userValue : props.userValue,
-            dropState: false
+            dropState : props.dropState
         }
         this.changeDropItem = this.changeDropItem.bind(this);
         this.toggleDropdown = this.toggleDropdown.bind(this);

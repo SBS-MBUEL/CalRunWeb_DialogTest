@@ -14,6 +14,8 @@ import { TextArea } from './TextArea';
         super(props);
         this.state = {
             userValue: props.row.value,
+            dropState : props.dropState,
+            config : props.configPage,
             settingIndex: props.settingIndex,
             controlIndex: props.controlIndex
         }
@@ -68,6 +70,7 @@ import { TextArea } from './TextArea';
                             </span>
                             {row.value}
                         </div>
+
                     }
                 </div>
             </div>  
