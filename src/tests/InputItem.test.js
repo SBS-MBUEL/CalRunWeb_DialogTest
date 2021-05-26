@@ -16,14 +16,16 @@ test('renders input box with passed in value', () => {
 
 test('renders input box, verifies value can be changed', () => {
     let result = '';
-    render(<InputItem userValue="Input-Test" trackChanges={(e) => {
-        result = e;
+    render(<InputItem userValue="Input-Test" trackChanges={(key, val) => {
+        result = val;
+        expect(result).toBe('NewValue');
+        expect(inputBox.value).toBe('NewValue');
     }} /> );
-
+    
     const inputBox = screen.getByDisplayValue(/Input-Test/);
 
     fireEvent.change(inputBox, { target: { value: 'NewValue' } });
 
-    expect(result).toBe('NewValue');
+
 
 });

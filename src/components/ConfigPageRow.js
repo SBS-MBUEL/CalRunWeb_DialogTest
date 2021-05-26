@@ -53,7 +53,7 @@ import {InputItem} from './InputItem';
                     // TEXT AREA
                         <textarea 
                             onChange={this.trackChanges} 
-                            id={row.label}
+                            id={`${row.label}-${index}`}
                             value={row.value}
                         />
                     :

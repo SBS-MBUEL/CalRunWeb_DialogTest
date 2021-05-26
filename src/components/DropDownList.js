@@ -58,7 +58,7 @@ class DropDownList extends React.Component {
                     </span>
                 </div>
                 <div className="dropdown-menu modalPopUp" id="dropdown-menu" role="menu">
-                    <div className="dropdown-content">
+                    <div role="dropdownlist-content" className="dropdown-content">
                         {/* Need to figure out how to populate this with actual data */}
                         <DropDownItem index={index} userValue={this.state.userValue} trackChanges={this.changeDropItem} row={row} />
                     </div>
