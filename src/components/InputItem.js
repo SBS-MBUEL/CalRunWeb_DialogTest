@@ -12,11 +12,12 @@ class InputItem extends React.Component {
     }
 
     trackChanges(e) {
-        // e.preventDefault();
+        e.preventDefault();
         // e.stopPropagation();
-
+        this.setState({
+            userValue: e.target.userValue
+        });
         // this.setState({userValue: e.target.value});
-
         // Propagate up call stack
         this.props.trackChanges(this.props.index, e.target.value);
     }

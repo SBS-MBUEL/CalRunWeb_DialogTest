@@ -52,14 +52,14 @@ class ConfigurationSetup extends React.Component {
         display = content &&  content[0].defaultName && (
             <div>
                 
-                <ConfigurationDisplayHeading key={content[0].defaultName} handler={handler} heading={content[0].defaultName.toUpperCase()}/>
+                <ConfigurationDisplayHeading key={`${content[0].defaultName}-heading`} handler={handler} heading={content[0].defaultName.toUpperCase()}/>
                 <div className="overflow">
                     {mainContent.map((row, index) => {
 
                         return (
                             <ConfigPageRow 
-                                onChange={this.setContentValues} 
                                 key={index} 
+                                onChange={this.setContentValues} 
                                 row={row} 
                                 settingIndex={0}
                                 controlIndex={index} 

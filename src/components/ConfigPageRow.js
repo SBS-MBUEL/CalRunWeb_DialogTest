@@ -38,9 +38,8 @@ import {InputItem} from './InputItem';
      */
     render() {
         const { row, index } = this.props;
-        console.log(row);
         return (
-            <div key={row.label + row.value} className="columns content font-weight-bold is-vcentered">
+            <div key={`${row.label}-row-data`} className="columns content font-weight-bold is-vcentered">
                 <div key={`${row.label}`} className={`column pr-1 heading is-half text-right`}>
                     {row.label}
                 </div>
@@ -52,9 +51,11 @@ import {InputItem} from './InputItem';
                     : row.type === 'textarea' ?
 
                     // TEXT AREA
-                        <textarea onChange={this.trackChanges} id={row.label}>
-                            {row.value}
-                        </textarea>
+                        <textarea 
+                            onChange={this.trackChanges} 
+                            id={row.label}
+                            value={row.value}
+                        />
                     :
                         // Render button
                         <div onClick={this.handler} className={`button is-${row.value.includes('add') ? "success" : row.value.includes('remove') ? 'danger' : 'info'}`}>

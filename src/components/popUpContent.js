@@ -20,7 +20,6 @@ class PopUpContainer extends React.Component {
 }
 
 function renderPopUp(handler, content, root) {
-    console.log(handler, content, root);
     ReactDOM.render(
         <PopUpContainer 
             handler={handler} 

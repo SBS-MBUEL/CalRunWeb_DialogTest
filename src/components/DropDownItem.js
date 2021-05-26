@@ -17,16 +17,18 @@ class DropDownItem extends React.Component {
 
         // stop bubbling
         e.stopPropagation();
-
+        this.setState({
+            userValue:e.target.textContent
+        });
         this.props.trackChanges(this.props.index, e.target.textContent);
     }
 
     render() {
-        const { row } = this.props;
+        const { row, index } = this.props;
         return (
             row.list.map((item, i) => {
                 return (
-                    <div key={createGUID()} className="container is-clearfix is-centered ml-1 mr-1 mb-1">
+                    <div key={`${index}-dropList-${i}`} className="container is-clearfix is-centered ml-1 mr-1 mb-1">
                         <a
                             href="#"
                             key={item + i} 

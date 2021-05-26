@@ -23,9 +23,7 @@ class TabPanels extends React.Component {
 
     render() {
         const { tabs, content, clickRouter, activeTab } = this.props;
-        // let content = undefined;
-        // const mainContent = 
-        // const subContent = content[`_${tab.ConfigurationArea}`].reduce((acc, cur) => cur.for === 'calibrationParameter' ? acc.push(cur) : acc).controls;
+
         return (
             <div className="columns ">
                 <div className="column">
@@ -35,7 +33,7 @@ class TabPanels extends React.Component {
                             tabs.map((tab, i) => {
                                 return (
                                     <div 
-                                        key={createGUID()} 
+                                        key={`${tab.ConfigurationArea}-panel`} 
                                         role="tabpanel" 
                                         className={`tab-pane ${i == activeTab ? 'fade in is-active show' : 'fade out'}`}  
                                         id={`${tab.ConfigurationArea}`}
