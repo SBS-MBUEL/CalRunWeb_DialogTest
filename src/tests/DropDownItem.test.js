@@ -1,16 +1,16 @@
 import { fireEvent, render, screen, userEvent } from '@testing-library/react';
 import { DropDownItem } from '../components/DropDownItem';
 
-function testSetup(opts) {
+function testSetup(opts, type="dropdown") {
     let list = opts ? opts : []
     const row = {
         label: "Green",
         value: "Blue",
+        type: type,
         list: list
     };
 
     return row;
-
 }
 
 function processClick(key, val) {
