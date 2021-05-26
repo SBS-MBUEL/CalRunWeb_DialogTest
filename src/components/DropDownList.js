@@ -3,6 +3,7 @@ import createGUID from '../utils/createGUID';
 import { DropDownItem } from './DropDownItem';
 
 class DropDownList extends React.Component {
+    _isMounted = false;
     constructor(props) {
         super(props);
         this.state = {
@@ -15,10 +16,21 @@ class DropDownList extends React.Component {
         this.toggleState = this.toggleState.bind(this);
     }
 
+    componentDidMount() {
+        this._isMounted = true;
+
+      }
+
+      componentWillUnmount() {
+        this._isMounted = false;
+      }
+
     handleBodyClick(e)
     {
-        e.stopPropagation();
-        this.toggleState(true);
+        if (e.className !== "drop-item" && this._isMounted) {
+            this.toggleState(true);
+        }
+
     }
 
     /**

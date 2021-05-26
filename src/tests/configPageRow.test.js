@@ -51,3 +51,24 @@ test('config row with one list item, renders list', () => {
     // TODO: need to figure out why this isn't changing class - it works in the browser window
 
 });
+
+test('hide dropdown on doubleclick', () => {
+    render(<ConfigPageRow row={testSetup(['test'])} onChange={processChange} /> );
+
+    const span = screen.getByText(/Blue/);
+
+    fireEvent.click(span);
+    fireEvent.click(span);
+
+    expect(span.parentNode.parentNode.parentNode.className).toBe('dropdown ');
+});
+
+test('display dropdown on single-click', () => {
+    render(<ConfigPageRow row={testSetup(['test'])} onChange={processChange} /> );
+
+    const span = screen.getByText(/Blue/);
+
+    fireEvent.click(span);
+
+    expect(span.parentNode.parentNode.parentNode.className).toBe('dropdown is-active');
+});

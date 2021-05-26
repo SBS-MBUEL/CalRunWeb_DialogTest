@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, userEvent } from '@testing-library/react';
-import {DropDownItem} from '../components/DropDownItem';
+import { DropDownItem } from '../components/DropDownItem';
 
 function testSetup(opts) {
     let list = opts ? opts : []
