@@ -1,6 +1,6 @@
 //TODO: move import to this file
 import { fireEvent, getByDisplayValue, render, screen } from '@testing-library/react';
-import {ConfigPageRow} from '../components/ConfigPageRow';
+import { ConfigPageRow } from '../components/ConfigPageRow';
 
 function testSetup(opts, type="dropdown") {
     let list = opts ? opts : []
