@@ -9,25 +9,6 @@ import createGUID from '../utils/createGUID';
     render() {
         const { heading, handler } = this.props;
 
-        // this should likely come from an external source
-        const buttonMap = [
-            {
-                type: "success",
-                icon: "plus",
-                text: "ADD"
-            },
-            {
-                type: "warning",
-                icon: "copy",
-                text: "COPY"
-            },
-            {
-                type: "danger",
-                icon: "remove",
-                text: "REMOVE"
-            },
-        ]
-
         return (
             <React.Fragment>
                 <div key={createGUID()} className="columns">

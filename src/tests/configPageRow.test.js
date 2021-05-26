@@ -1,39 +1,43 @@
 //TODO: move import to this file
 import { fireEvent, getByDisplayValue, render, screen } from '@testing-library/react';
-import {ConfigPageRow} from '../components/ConfigPageRow';
+import { ConfigPageRow } from '../components/ConfigPageRow';
 
-function testSetup(opts) {
+function testSetup(opts, type="dropdown") {
     let list = opts ? opts : []
     const row = {
         label: "Green",
         value: "Blue",
+        type: type,
         list: list
     };
 
     return row;
-    
-    
+}
+
+function processChange(key, val, idx, loc) {
 
 }
 
 test('renders config row with no pop ups', () => {
 
-    render(<ConfigPageRow row={testSetup()} /> );
+    render(<ConfigPageRow row={testSetup()}  onChange={processChange} />);
 
     expect(screen.getByText(/Green/).textContent).toBe('Green');
 
-    expect(screen.getByDisplayValue(/Blue/).value).toBe('Blue');
+    expect(screen.getByText(/Blue/).textContent).toBe('Blue');
+
+    expect(screen.getByRole('dropdownlist-content').children.length).toBe(0);
 });
 
-test('config row with no list, renders input', () => {
-    render(<ConfigPageRow row={testSetup()} /> );
+test('config row type of text, renders input', () => {
+    render(<ConfigPageRow row={testSetup([], 'text')} onChange={processChange} /> );
 
     expect(screen.getByDisplayValue(/Blue/).value).toBe('Blue');
 
 });
 
 test('config row with one list item, renders list', () => {
-    render(<ConfigPageRow row={testSetup(['test'])} /> );
+    render(<ConfigPageRow row={testSetup(['test'])} onChange={processChange} /> );
 
     const listItem = screen.getByText(/test/);
 
@@ -42,15 +46,29 @@ test('config row with one list item, renders list', () => {
     const linkItem = screen.getByText(/Blue/);
     // console.log(linkItem);
     expect(linkItem.parentElement.parentElement.parentElement.className).not.toContain('is-active');
+    expect(screen.getByRole('dropdownlist-content').children.length).toBe(1);
     
     // TODO: need to figure out why this isn't changing class - it works in the browser window
-    // fireEvent.click(linkItem);
-    
-    // console.log(linkItem.parentElement.parentElement.parentElement.className);
 
-    // fireEvent.click(linkItem);
-    
-    // console.log(linkItem.parentElement.parentElement.parentElement.className);
+});
 
-    // expect(linkItem.parentElement.parentElement.parentElement.className).toContain('is-active');
+test('hide dropdown on doubleclick', () => {
+    render(<ConfigPageRow row={testSetup(['test'])} onChange={processChange} /> );
+
+    const span = screen.getByText(/Blue/);
+
+    fireEvent.click(span);
+    fireEvent.click(span);
+
+    expect(span.parentNode.parentNode.parentNode.className).toBe('dropdown ');
+});
+
+test('display dropdown on single-click', () => {
+    render(<ConfigPageRow row={testSetup(['test'])} onChange={processChange} /> );
+
+    const span = screen.getByText(/Blue/);
+
+    fireEvent.click(span);
+
+    expect(span.parentNode.parentNode.parentNode.className).toBe('dropdown is-active');
 });
