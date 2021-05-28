@@ -4,6 +4,7 @@ import createGUID from '../utils/createGUID';
 import { DropDownList } from './DropDownList';
 import { InputItem } from './InputItem';
 import { TextArea } from './TextArea';
+import { ButtonItem } from './ButtonItem';
 
 /**
  * ConfigPageRow - renders each row of the config page
@@ -51,13 +52,8 @@ import { TextArea } from './TextArea';
                         <InputItem index={row.label} userValue={this.state.userValue} inputChange={this.trackChanges} trackChanges={this.trackChanges} />
                     : row.type === 'textarea' ?
                         <TextArea index={index} value={this.state.userValue} label={row.label} trackChanges={this.trackChanges} />
-                        // // TEXT AREA
-                        // <textarea 
-                        //     onChange={this.trackChanges} 
-                        //     id={`${row.label}-${index}`}
-                        //     value={row.value}
-                        // />
                     :
+                        // <ButtonItem />
                         // Render button
                         <div onClick={this.handler} className={`button is-${row.value.includes('add') ? "success" : row.value.includes('remove') ? 'danger' : 'info'}`}>
                             <span
@@ -82,9 +78,7 @@ import { TextArea } from './TextArea';
  */
  if(typeof module !== 'undefined' && typeof module.exports !== 'undefined')
  {
-     module.exports = 
-     {
+     module.exports = {
          ConfigPageRow: ConfigPageRow
-
      };
  }

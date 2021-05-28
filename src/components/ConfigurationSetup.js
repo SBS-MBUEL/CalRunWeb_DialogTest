@@ -17,10 +17,7 @@ class ConfigurationSetup extends React.Component {
     setContentValues(key, val, settingIdx, controlIdx) {
         let changedContent = this.state.tabContent.slice();
         changedContent[settingIdx].controls[controlIdx].value = val;
-        // TODO: causing sub pages to forget content
-        // this.setState({
-        //     value:  changedContent
-        // })
+
         console.log(key, val, changedContent, this.props.tabName);
         this.props.setContent(key, val, changedContent, this.props.tabName);
     }
@@ -94,11 +91,9 @@ class ConfigurationSetup extends React.Component {
  * Code to make these functions visible in NODE.JS for testing
  * module.exports is Node specific so we need to test for it's existence
  */
-     if(typeof module !== 'undefined' && typeof module.exports !== 'undefined')
-     {
-         module.exports = 
-         {
-            ConfigurationSetup: ConfigurationSetup
-    
-         };
-     }
+if(typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    module.exports = {
+    ConfigurationSetup: ConfigurationSetup
+
+    };
+}
