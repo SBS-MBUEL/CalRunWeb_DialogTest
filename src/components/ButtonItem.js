@@ -16,7 +16,7 @@ class ButtonItem extends React.Component {
      * @param {DOM} e - element clicked on
      */
     handleClick(e) {
-        const el = !(e.target.className.includes('button')) ? el.target.parentElement : el.target;
+        const el = !(e.target.className.includes('button')) ? e.target.parentElement : e.target;
 
         this.props.handler(el);
     }
