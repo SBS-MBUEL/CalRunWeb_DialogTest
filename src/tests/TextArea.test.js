@@ -23,27 +23,25 @@ test('renders Text Area with "Blue"', () => {
 
     const textInput_rendered = screen.getByText(/Blue/);
 
-    expect(textInput_rendered.textContent).toBe("Blue");
+    expect(textInput_rendered.value).toBe("Blue");
     
 });
 
 test('renders Text Area with "Blue" changed', () => {
     let result = '';
     render(<TextArea value={testSetup().value} index={0} label={testSetup().label} trackChanges={(k, v) => {
-        results = trackChanges(k, v);
-        expect(results).toBe('NewContent');
+        result = trackChanges(k, v);
+        expect(result).toBe('NewContent');
     }
     }  /> );
 
     const textInput_rendered = screen.getByText(/Blue/);
 
-    fireEvent.change(textInput_rendered, {target:{textContent:'NewContent'}});
+    fireEvent.change(textInput_rendered, {target:{value:'NewContent'}});
 
     screen.debug();
 
-    // textInput_rendered.textContent = 'NewContent';
-
-    expect(textInput_rendered.textContent).toBe("NewContent");
+    expect(textInput_rendered.value).toBe("NewContent");
     
 });
 

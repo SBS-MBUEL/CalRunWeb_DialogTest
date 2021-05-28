@@ -13,8 +13,6 @@ class TextArea extends React.Component {
 
     trackChanges(e) {
 
-        console.log(e.target);
-
         this.setState({
             value: e.target.value
         })
