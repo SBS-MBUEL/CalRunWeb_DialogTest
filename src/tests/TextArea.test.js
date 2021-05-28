@@ -39,8 +39,6 @@ test('renders Text Area with "Blue" changed', () => {
 
     fireEvent.change(textInput_rendered, {target:{value:'NewContent'}});
 
-    screen.debug();
-
     expect(textInput_rendered.value).toBe("NewContent");
     
 });

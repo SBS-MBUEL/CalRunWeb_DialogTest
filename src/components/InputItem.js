@@ -5,7 +5,7 @@ class InputItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            userValue : props.userValue
+            userValue : props.userValue !== undefined && props.userValue !== null ? props.userValue : 'Not Set'
         }
 
         this.trackChanges = this.trackChanges.bind(this);
@@ -28,11 +28,11 @@ class InputItem extends React.Component {
             <React.Fragment>
                 <div key={`${index}-input`} className="is-centered is-info is-rounded">
                     <input 
+                        value={this.state.userValue}
                         // onClick={this.setFocus} 
                         type="text"
                         // ref={(input) => { userInput = input; }} 
                         onChange={this.trackChanges}
-                        value={this.state.userValue}
                     ></input>
                 </div>          
             </React.Fragment>

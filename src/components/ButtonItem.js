@@ -1,13 +1,31 @@
 import React from 'react';
 
 class ButtonItem extends React.Component {
+
+    /**
+     * constructor for ButtonItem
+     * @param {object} props - passed in properties
+     */
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    /**
+     * handleClick - for the button pressed determines which part of the UI was clicked and passes up appropriate UI element to next level.
+     * @param {DOM} e - element clicked on
+     */
+    handleClick(e) {
+        const el = !(e.target.className.includes('button')) ? el.target.parentElement : el.target;
+
+        this.props.handler(el);
+    }
     render() {
-        const { value, handler} = this.props;
+        const { value } = this.props;
 
         return (
-            <div onClick={handler} className={`button is-${value.includes('add') ? "success" : value.includes('remove') ? 'danger' : 'info'}`}>
+            <div onClick={this.handleClick} className={`button is-${value.includes('add') ? "success" : value.includes('remove') ? 'danger' : 'info'}`}>
                 <span
-                    
                     className={`fa fa-${value.includes('add') ? "plus" : value.includes('remove') ? 'remove' : 'save'}`}
                 >
                     &nbsp;
