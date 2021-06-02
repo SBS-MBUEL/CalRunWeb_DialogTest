@@ -13,44 +13,104 @@ class ConfigurationSetup extends React.Component {
 
         this.setContentValues = this.setContentValues.bind(this);
         this.buttonHandler = this.buttonHandler.bind(this);
+        this.addRow = this.addRow.bind(this);
     }
 
+    componentDidMount() {
+        
+    }
+
+    parseContent(content) {
+        let mainContent = undefined;
+        let subContent = undefined;
+
+        if (content && content.length > 0) {
+
+            mainContent = content.reduce((sum, cur) => {
+                if(cur.for === 'calibrationOption') {
+                    sum.push(cur) 
+                } 
+                return sum;
+            }, [])[0].controls.slice();
+
+            subContent = content.reduce((sum, cur) => {
+                if (cur.for === 'calibrationParameter') {
+                    sum.push(cur)
+                }
+                return sum;
+            }, [])[0].controls.slice();
+        }
+
+        return {
+            mainContent, subContent
+        }
+    }
+
+    /**
+     * adds row to selected subContent
+     * //TODO: this will likely need to be refactored to deal with more complex lists
+     * @param {array} subContent - controls list object
+     * @returns 
+     */
+    addRow(subContent) {
+        // change state from content
+        let idx = subContent.push(subContent[0]) - 1;
+        let setIdx = 1;
+
+        let changedContent = this.state.tabContent.slice();
+
+        // 1 is for subContent
+        changedContent[setIdx].controls = subContent;
+        // TODO: this will not work for subcontent with a list of options
+
+        changedContent[setIdx].controls[idx].label = subContent[idx].label.replace(/([0-9][0-9]|[0-9])/, idx);
+        let key = changedContent[setIdx].controls[idx].label
+        let val = 'Not Set'
+
+        changedContent[setIdx].controls[idx].value = val;
+        
+        this.props.setContent(key, val, changedContent, this.props.tabName);
+
+        return idx;
+    }
+
+    /**
+     * appropriately process button clicked
+     * @param {dom} btn pressed in ButtonItem
+     */
     buttonHandler(btn) {
-        console.log(btn);
+        const btnFunction = btn.children[1].textContent.split(' ')[0];
+        // Determine path of button press
+        console.log(btnFunction);
+
+        let { subContent } = this.parseContent(this.state.tabContent);
+
+        if (btnFunction === 'add') {
+            let idx = this.addRow(subContent);
+        }
+
+
     }
 
     setContentValues(key, val, settingIdx, controlIdx) {
         let changedContent = this.state.tabContent.slice();
         changedContent[settingIdx].controls[controlIdx].value = val;
 
-        console.log(key, val, changedContent, this.props.tabName);
         this.props.setContent(key, val, changedContent, this.props.tabName);
     }
 
     render() {
-        const {index, tabName, handler} = this.props;
-
+        const { index, tabName, handler } = this.props;
         let content = this.state.tabContent;
 
-        let mainContent = undefined;
-        let subContent = undefined;
+        let { mainContent, subContent } = this.parseContent(content);
 
-        if (content && content.length > 0) {
-            mainContent = content.reduce((sum, cur) => {
-                if(cur.for === 'calibrationOption') {
-                    sum.push(cur) 
-                } 
-                return sum;
-            }, [])[0].controls;
-            subContent = content.reduce((sum, cur) => {
-                if (cur.for === 'calibrationParameter') {
-                    sum.push(cur)
-                }
-                return sum;
-            }, [])[0].controls;
+        console.log('000000000000000');
+        console.log(subContent);
+        console.log('000000000000000');
 
-        }
         let display = <ErrorPage variableName="content" pageName="CalRun Configuration Page" />
+
         display = content &&  content[0].defaultName && (
             <div>
                 
