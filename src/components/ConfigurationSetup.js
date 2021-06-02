@@ -12,6 +12,11 @@ class ConfigurationSetup extends React.Component {
         }
 
         this.setContentValues = this.setContentValues.bind(this);
+        this.buttonHandler = this.buttonHandler.bind(this);
+    }
+
+    buttonHandler(btn) {
+        console.log(btn);
     }
 
     setContentValues(key, val, settingIdx, controlIdx) {
@@ -60,6 +65,7 @@ class ConfigurationSetup extends React.Component {
                                 row={row} 
                                 settingIndex={0}
                                 controlIndex={index} 
+                                buttonHandler={this.buttonHandler}
                             />
                         )
                     })}

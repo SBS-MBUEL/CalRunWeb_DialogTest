@@ -5,6 +5,7 @@ import { DropDownList } from './DropDownList';
 import { InputItem } from './InputItem';
 import { TextArea } from './TextArea';
 import { ButtonItem } from './ButtonItem';
+import { ErrorRow } from './ErrorRow';
 
 /**
  * ConfigPageRow - renders each row of the config page
@@ -14,15 +15,16 @@ import { ButtonItem } from './ButtonItem';
     constructor(props) {
         super(props);
         this.state = {
-            userValue: props.row.value,
+            userValue: props && props.row && props.row.value ? props.row.value : undefined,
             settingIndex: props.settingIndex,
             controlIndex: props.controlIndex
         }
         this.trackChanges = this.trackChanges.bind(this);
+        this.btnClickHandler = this.btnClickHandler.bind(this);
     }
 
-    handler() {
-
+    btnClickHandler(btn) {
+        this.props.buttonHandler(btn);
     }
     /**
      * propagates changes up call stack
@@ -40,33 +42,34 @@ import { ButtonItem } from './ButtonItem';
      */
     render() {
         const { row, index } = this.props;
+
+        let content = <ErrorRow />;
+        let subContent = '';
+        if (row && row.value && row.label) {
+        
+            subContent = row.type === 'dropdown' ?
+                    <DropDownList index={row.label} userValue={this.state.userValue} trackChanges={this.trackChanges} row={row} />
+                : row.type === 'text' ?
+                    <InputItem index={row.label} userValue={this.state.userValue} inputChange={this.trackChanges} trackChanges={this.trackChanges} />
+                : row.type === 'textarea' ?
+                    <TextArea index={index} value={this.state.userValue} label={row.label} trackChanges={this.trackChanges} />
+                :
+                    <ButtonItem value={row.value} handler={this.handler} />;
+        
+            content =  <div key={`${row.label}-row-data`} className="columns content font-weight-bold is-vcentered">
+                    <div key={`${row.label}`} className={`column pr-1 heading is-half text-right`}>
+                        {row.label}
+                    </div>
+                    <div key={`${row.label}-input-container`} className={`column pl-1 pb-1 is-half text-left is-vcentered`}>
+                        {subContent}
+                    </div>
+                </div>  
+        }
+        
         return (
-            <div key={`${row.label}-row-data`} className="columns content font-weight-bold is-vcentered">
-                <div key={`${row.label}`} className={`column pr-1 heading is-half text-right`}>
-                    {row.label}
-                </div>
-                <div key={`${row.label}-input-container`} className={`column pl-1 pb-1 is-half text-left is-vcentered`}>
-                    {row.type === 'dropdown' ?
-                        <DropDownList index={row.label} userValue={this.state.userValue} trackChanges={this.trackChanges} row={row} />
-                    : row.type === 'text' ?
-                        <InputItem index={row.label} userValue={this.state.userValue} inputChange={this.trackChanges} trackChanges={this.trackChanges} />
-                    : row.type === 'textarea' ?
-                        <TextArea index={index} value={this.state.userValue} label={row.label} trackChanges={this.trackChanges} />
-                    :
-                        // <ButtonItem />
-                        // Render button
-                        <div onClick={this.handler} className={`button is-${row.value.includes('add') ? "success" : row.value.includes('remove') ? 'danger' : 'info'}`}>
-                            <span
-                                
-                                className={`fa fa-${row.value.includes('add') ? "plus" : row.value.includes('remove') ? 'remove' : 'save'}`}
-                            >
-                                &nbsp;
-                            </span>
-                            {row.value}
-                        </div>
-                    }
-                </div>
-            </div>  
+            <React.Fragment>
+                {content}
+            </React.Fragment>
         );
     }
 }

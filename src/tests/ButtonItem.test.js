@@ -111,5 +111,16 @@ describe('Button clicks work as expected', () => {
         fireEvent.click(getButton);
     
     });
+    test('Button event propagates correct object back when div for button is clicked', () => {
+        render(<ButtonItem value={testSetup([],undefined,'custom device').value} handler={(e) => {
+            console.log(e);
+                expect(e.className).toBe('button is-info');
+            }
+        } /> );
+
+        const getButton = screen.getByText(/custom device/).parentNode;
+
+        fireEvent.click(getButton);
+    });
     
 });

@@ -25,7 +25,8 @@ const regex_InputItem = /_InputItem(|[0-9])\.(|default)/g;
 const regex_ErrorPage = /_ErrorPage(|[0-9])\.(|default)/g;
 const regex_LocalStorage = /_LocalStorage\.(|default)/g;
 const regex_TextArea = /_TextArea\.(|default)/g;
-const regex_TextArea = /_TextArea\.(|default)/g;
+const regex_ButtonItem = /_ButtonItem\.(|default)/g;
+const regex_ErrorRow = /_ErrorRow\.(|default)/g;
 
 const root_search_path = path.join(__dirname, '../js');
 
@@ -53,6 +54,8 @@ iterate(root_search_path)
             res = removeOrReplaceString(res, regex_ErrorPage);
             res = removeOrReplaceString(res, regex_LocalStorage);
             res = removeOrReplaceString(res, regex_TextArea);
+            res = removeOrReplaceString(res, regex_ButtonItem);
+            res = removeOrReplaceString(res, regex_ErrorRow);
 
             if (res !== txt) {
                 console.log(`replacement in ${file}`);
