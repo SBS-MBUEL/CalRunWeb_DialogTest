@@ -105,10 +105,6 @@ class ConfigurationSetup extends React.Component {
 
         let { mainContent, subContent } = this.parseContent(content);
 
-        console.log('000000000000000');
-        console.log(subContent);
-        console.log('000000000000000');
-
         let display = <ErrorPage variableName="content" pageName="CalRun Configuration Page" />
 
         display = content &&  content[0].defaultName && (

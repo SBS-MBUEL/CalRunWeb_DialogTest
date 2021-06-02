@@ -57,7 +57,7 @@ import createGUID from '../utils/createGUID';
         const { subOption, page } = this.props;
 
         let currentRow = 0
-
+        // TODO: changing dropdown for sub list is not working
         return (
             <div className="columns">
                 <div className="column">
