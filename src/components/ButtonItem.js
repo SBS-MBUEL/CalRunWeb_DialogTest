@@ -18,7 +18,7 @@ class ButtonItem extends React.Component {
     handleClick(e) {
         const el = !(e.target.className.includes('button')) ? e.target.parentElement : e.target;
 
-        this.props.handler(el);
+        this.props.handler ? this.props.handler(el) : console.error('unable to propagate button click up stack');
     }
     render() {
         const { value } = this.props;

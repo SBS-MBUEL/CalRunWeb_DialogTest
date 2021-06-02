@@ -54,7 +54,7 @@ import { ErrorRow } from './ErrorRow';
                 : row.type === 'textarea' ?
                     <TextArea index={index} value={this.state.userValue} label={row.label} trackChanges={this.trackChanges} />
                 :
-                    <ButtonItem value={row.value} handler={this.handler} />;
+                    <ButtonItem value={row.value} handler={this.btnClickHandler} />;
         
             content =  <div key={`${row.label}-row-data`} className="columns content font-weight-bold is-vcentered">
                     <div key={`${row.label}`} className={`column pr-1 heading is-half text-right`}>

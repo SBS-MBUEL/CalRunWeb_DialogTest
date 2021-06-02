@@ -124,3 +124,19 @@ describe('Button clicks work as expected', () => {
     });
     
 });
+
+
+describe('Button properly deals with missing propagated listener', () => {
+    test('Button has no listener passed in, doesn\'t cause error', () => {
+        render(<ButtonItem value={testSetup([],undefined,'custom device').value} handler={undefined} /> );
+        const getButton = screen.getByText(/custom device/).parentNode;
+        let actualErrorMsg;
+        try {
+            fireEvent.click(getButton);
+        } catch(e) {
+            actualErrorMsg = e.message;
+        }
+
+        expect(actualErrorMsg).toBe(undefined);
+    });
+});
