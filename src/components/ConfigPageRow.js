@@ -52,7 +52,7 @@ import { ErrorRow } from './ErrorRow';
                 : row.type === 'text' ?
                     <InputItem index={row.label} userValue={this.state.userValue} inputChange={this.trackChanges} trackChanges={this.trackChanges} />
                 : row.type === 'textarea' ?
-                    <TextArea index={index} value={this.state.userValue} label={row.label} trackChanges={this.trackChanges} />
+                    <TextArea index={row.label} value={this.state.userValue} label={row.label} trackChanges={this.trackChanges} />
                 :
                     <ButtonItem value={row.value} handler={this.btnClickHandler} />;
         

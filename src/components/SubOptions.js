@@ -78,7 +78,8 @@ import createGUID from '../utils/createGUID';
                     })}
                     {/* TODO: Don't like styling of these  */}
                     {/* TODO: Make sure they only display if the instrument has sub configs - makes a tab confusing */}
-                    {(subOption.length > 1 ? 
+                    {/* TODO: This is not working the way it should - remarked it out to rethink design and layout. Need to rethink mock object when I get to Datapoints */}
+                    {/* {(subOption.length > 1 ? 
                         <React.Fragment>
                             <button key={page+createGUID()} onClick={this.slideLeft} className="slider__btn slider__btn--left">
                                 <span className="fa fa-arrow-left"></span>
@@ -111,7 +112,7 @@ import createGUID from '../utils/createGUID';
 
                             })}
                         </React.Fragment>
-                    )}
+                    )} */}
 
                 </div>
             </div>

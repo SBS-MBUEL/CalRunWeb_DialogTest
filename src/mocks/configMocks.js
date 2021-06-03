@@ -1,6 +1,6 @@
 'use strict';
 
-let _reference = 
+const _reference = 
 [
 	{for:'calibrationOption',
 		defaultName:'Reference',
@@ -39,7 +39,7 @@ let _reference =
 		{label:'Coefficients', type:'textarea', list:[], width:'200px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
 	]}
 ];
-let _device = 
+const _device = 
 [
 	{for:'calibrationOption',
 		defaultName:'Control Device',
@@ -66,7 +66,7 @@ let _device =
 		{label:'Measurand-0', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:0},
 	]}
 ];
-let _datapoint = 
+const _datapoint = 
 [
 	{for:'calibrationOption',
 		defaultName:'Data Point',
@@ -94,7 +94,7 @@ let _datapoint =
 		{label:'Fill', type:'dropdown', list:['yes', 'no'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
 	]}
 ];
-let _system = 
+const _system = 
 [
 	{for:'calibrationOption',
     defaultName:'System Settings',
@@ -120,7 +120,8 @@ let _system =
 		{label:'Sine Max target slope', type:'text', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
 		{label:'Sentinel target offset', type:'text', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
 		{label:'Add Device That Can Be Calibrated', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add device', maxLength:0, titleOrder:-1},
-		{label:'Remove Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove device', maxLength:0, titleOrder:-1},
+		{label:'Copy Device Last Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'copy device', maxLength:0, titleOrder:-1},
+		{label:'Remove Last Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove device', maxLength:0, titleOrder:-1},
 	]},
 	{for:'calibrationParameter',
 		defaultName:'Device',
@@ -131,7 +132,7 @@ let _system =
 	]}
 ];
 
-let systemStatusObjects = 
+const systemStatusObjects = 
 {
 	//TODO: This should come from the database
 	parameters: ['Unknown'],
@@ -140,7 +141,7 @@ let systemStatusObjects =
 
 };
 
-let objectCollection = {
+const objectCollection = {
     _system, 
     _device, 
     _reference, 

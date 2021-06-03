@@ -20,6 +20,11 @@ class ConfigurationSetup extends React.Component {
         
     }
 
+    /**
+     * takes content and divides it between main and sub content
+     * @param {object} content 
+     * @returns 
+     */
     parseContent(content) {
         let mainContent = undefined;
         let subContent = undefined;
@@ -92,6 +97,13 @@ class ConfigurationSetup extends React.Component {
 
     }
 
+    /**
+     * 
+     * @param {string} key "header" that helps locate the item in the control list
+     * @param {string} val value to add to the table
+     * @param {number} settingIdx whether upper (main) or lower (sub)
+     * @param {number} controlIdx numeric position in control list
+     */
     setContentValues(key, val, settingIdx, controlIdx) {
         let changedContent = this.state.tabContent.slice();
         changedContent[settingIdx].controls[controlIdx].value = val;
@@ -112,31 +124,36 @@ class ConfigurationSetup extends React.Component {
                 
                 <ConfigurationDisplayHeading key={`${content[0].defaultName}-heading`} handler={handler} heading={content[0].defaultName.toUpperCase()}/>
                 <div className="overflow">
-                    {mainContent.map((row, index) => {
+                    <div className="container">
+                        {mainContent.map((row, index) => {
 
-                        return (
-                            <ConfigPageRow 
-                                key={index} 
-                                onChange={this.setContentValues} 
-                                row={row} 
-                                settingIndex={0}
-                                controlIndex={index} 
-                                buttonHandler={this.buttonHandler}
-                            />
-                        )
-                    })}
+                            return (
+                                <ConfigPageRow 
+                                    key={index} 
+                                    onChange={this.setContentValues} 
+                                    row={row} 
+                                    settingIndex={0}
+                                    controlIndex={index} 
+                                    buttonHandler={this.buttonHandler}
+                                />
+                            )
+                        })}
+
+                    </div>
                     <hr />
-                    {subContent.length > 0 ?
-                        <SubOptions 
-                            onChange={this.setContentValues} 
-                            subOption={subContent} 
-                            page={content[0].defaultName.toUpperCase()}
-                        />
-                        :
-                        <React.Fragment>
-                            {/* Empty div to display nothing */}
-                        </React.Fragment>
-                    }
+                    <div className="container">
+                        {subContent.length > 0 ?
+                            <SubOptions 
+                                onChange={this.setContentValues} 
+                                subOption={subContent} 
+                                page={content[0].defaultName.toUpperCase()}
+                            />
+                            :
+                            <React.Fragment>
+                                {/* Empty div to display nothing */}
+                            </React.Fragment>
+                        }
+                    </div>
                     {/* {rows.length > 0 ? rows.map((col, index) => <SubOptions />) : <p>No configs below this.</p>} */}
                 </div>
             </div>

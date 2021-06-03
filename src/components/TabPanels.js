@@ -50,8 +50,6 @@ class TabPanels extends React.Component {
                                                 content={content[`_${tab.ConfigurationArea}`]}
                                                 setContent={this.setContent}
                                                 tabName={tab.ConfigurationArea}
-                                                // mainContent={content[`_${tab.ConfigurationArea}`].reduce((sum, cur) => cur.for === 'calibrationOptions' ? sum.push(cur) : sum, []).controls}
-                                                // subContent={content[`_${tab.ConfigurationArea}`].reduce((sum, cur) => cur.for === 'calibrationParameter' ? sum.push(cur) : sum, []).controls}
                                                 handler={clickRouter}
                                             />
                                         :

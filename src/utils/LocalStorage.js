@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * takes key / value pair and stores data to localstorage after JSON.stringify is applied
+ * @param {string} key - string to identify item being stored
+ * @param {object} value - could be object, string, array
+ */
 function setLocalStorage(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
 }
