@@ -1,4 +1,4 @@
-import { RemoveItemFromArray } from '../utils/RemoveItemFromArray';
+import { RemoveItemFromArray } from '../utils/ArrayUtils';
 
 const test_array = ['test1', 'test2', 'test3', 'test4', 'test5'];
 
