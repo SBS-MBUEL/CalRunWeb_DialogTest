@@ -25,7 +25,7 @@ describe('properly deal with errors', ()=> {
         expect(results).toBe(expected);
     });
 
-    test('passed in index of 2 returns -1 for error', () => {
+    test('passed in index of 200 returns -1 for error', () => {
         const expected = -1;
 
         const results = RemoveItemFromArray(test_array, 200);

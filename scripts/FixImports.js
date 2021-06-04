@@ -7,7 +7,6 @@ const path = require('path');
 const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
 const FileReader = require('filereader');
-// const { dir } = require('console');
 
 const regex_imports = /var _[aA-zZ]*(|[0-9]) = (require|_interopRequireDefault)\((('|")(|\.(.)?\/[aA-zZ]*(|\/)))?[_]?[aA-zZ]*[('|")]?\);/g;
 const regex_react = /_react(|[0-9])\.default/g;

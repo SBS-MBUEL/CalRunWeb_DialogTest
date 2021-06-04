@@ -59,6 +59,8 @@ class ConfigurationSetup extends React.Component {
      */
     addRow(subContent) {
         // change state from content
+        const fn = 'add';
+
         let idx = subContent.push(subContent[0]) - 1;
         let setIdx = 1;
 
@@ -74,7 +76,7 @@ class ConfigurationSetup extends React.Component {
 
         changedContent[setIdx].controls[idx].value = val;
         
-        this.props.setContent(key, val, changedContent, this.props.tabName);
+        this.props.setContent(key, val, changedContent, this.props.tabName, fn); // TODO: change signature to pass "add" for fn
 
         return idx;
     }
@@ -111,11 +113,12 @@ class ConfigurationSetup extends React.Component {
         this.props.setContent(key, val, changedContent, this.props.tabName);
     }
 
+    // TODO: Error Page not rendering after adding this.parseContent
     render() {
         const { index, tabName, handler } = this.props;
         let content = this.state.tabContent;
 
-        let { mainContent, subContent } = this.parseContent(content);
+        let { mainContent, subContent } = content && this.parseContent(content);
 
         let display = <ErrorPage variableName="content" pageName="CalRun Configuration Page" />
 

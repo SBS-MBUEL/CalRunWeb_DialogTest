@@ -50,7 +50,7 @@ class DropDownList extends React.Component {
 
         // propagate changes up the chain so the settings object gets changed
     }
-
+    //TODO: is it being triggered on mouse down and mouse up?
     toggleState(state) {
         if (!state) {
             document.body.addEventListener('click', this.handleBodyClick);

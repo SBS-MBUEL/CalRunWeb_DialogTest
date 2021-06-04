@@ -14,8 +14,6 @@ function RemoveItemFromArray(array, index) {
 
     const results = [...copiedArray.splice(0, index), ...copiedArray.splice(index - 1)];
 
-    console.log(results);
-
     return results;
 }
 

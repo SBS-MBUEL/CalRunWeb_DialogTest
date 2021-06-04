@@ -15,8 +15,8 @@ function setLocalStorage(key, value) {
 }
 
 /**
- * 
- * @param {string} key 
+ * getLocalStorage, retrieves item from localStorage
+ * @param {string} key - string to retrieve item
  * @returns null for error, object/string/array for valid value
  */
 function getLocalStorage(key) {
