@@ -65,7 +65,15 @@ class ConfigContainer extends React.Component {
 
     }
 
-    setContent(key, value, content, tabName) {
+    /**
+     * setContent takes the changes from the tabs, updates the real-time objects and saves them to local-storage
+     * @param {string} key 
+     * @param {string} value 
+     * @param {object} content 
+     * @param {string} tabName 
+     * @param {string} fn - default is update mode / options "update", "delete", "add" (copy is dealt with as an add)
+     */
+    setContent(key, value, content, tabName, fn='update') {
         let changedContent = this.state.content;
         changedContent[`_${tabName}`] = content;
 
@@ -77,10 +85,31 @@ class ConfigContainer extends React.Component {
 
         console.log(key, value, tabName.toLowerCase());
 
-        let index = this.state.settings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
-        console.log(index);
-        console.log(copiedSettings[index]);
-        copiedSettings[index].value = value;
+        
+        if (fn === 'update') {
+            let index = this.state.settings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
+            copiedSettings[index].value = value;
+        }
+
+        if (fn === 'add') {
+            let index = this.state.settings.map((el, index) => el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
+
+            // Copy object
+            let copiedObject = JSON.parse(JSON.stringify(copiedSettings[index]));
+
+            // Change copied object
+            copiedObject.ItemName = key;
+            copiedObject.value = value;
+
+            // Add copied object to copiedSettings
+            copiedSettings.push(copiedObject);
+        }
+
+        if (fn === 'delete') {
+            let index = this.state.settings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
+
+            copiedSettings = [...copiedSettings.splice(0, index),  ...copiedSettings.splice(index)];
+        }
 
         this.setState({
             settings: copiedSettings
