@@ -65,7 +65,7 @@ function continueCalRunInitialization()
  * @param {boolean} enable
  * @param {boolean} allButtons 
  */
-function enableButtons(enable, allButtons)
+function enableButtons(enable, allButtons = false)
 {
 	try
 	{
@@ -136,12 +136,20 @@ function addListeners()
 	}
 }
 
+// TODO: move to Globals - compare to Olessia function, use better (more tested function)
+function createGUID() {
+	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+		var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+		return v.toString(16);
+	});
+}
+
 // FIXED: this doesn't disable the menu bar, allowing the background pop up to be displayed again over the config screen
 function showConfigurationDialog()
 {
-	let popUp = showPopUpDialog('Calibration Configuration', '90%', '85%');
+	let popUp = showPopUpDialog('Calibration Configuration', '60%', '95%');
 
-	renderConfig(popUp.contentArea.id);
+	renderConfig(popUp.contentArea.id, databaseTabs, localSettings, localConfig);
 }
 
 /**

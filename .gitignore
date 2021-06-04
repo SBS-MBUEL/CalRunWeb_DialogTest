@@ -1,3 +1,14 @@
 node_modules
 sbGlobal
 yarn.lock
+js/configContent.js
+js/databaseMockContent.js
+js/popUpConfig.js
+js/popUpContent.js
+js/tabConfigs.js
+js/App.js
+js/ConfigContainer.js
+js/utils
+js/tests
+js/mocks
+js/components

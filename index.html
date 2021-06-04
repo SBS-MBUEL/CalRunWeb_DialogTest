@@ -3,93 +3,119 @@
     <HEAD>
         <TITLE>CalRun V12</TITLE>
         <LINK rel='SHORTCUT ICON' HREF='images/favicon.ico'>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
         <META http-equiv='X-UA-Compatible' content='IE=edge'>
         <META charset='utf-8'>
-        <META name='viewport' content='width=device-width, initial-scale=1.0'>
-			<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script></script>
-			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">
+			<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script></script> -->
 			
 			<!-- Note: when deploying, replace "development.js" with "production.min.js". -->
 			<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
 			<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
-
-			<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script>
+			
+			<!-- CDN Imports required for project -->
+			<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> -->
+			<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script> -->
+			
+			<!-- SB Serial Widget -->
 			<script type="text/javascript" src="http://localhost:8080/socket.io/socket.io.js"></script>
+			
+			<!-- Local Import required -->
 			<script type="text/javascript" src="../sbGlobal/sbGlobalFunctions.js"></script>
-			<script type="text/javascript" src="js/calRunFrontEnd.js"></script>
-			<script type="text/javascript" src="js/tabConfigs.js"></script>
-			<script type="text/javascript" src="js/configContent.js"></script>
-			<!-- <script src="./js/tabSelect.js"></script> -->
+			
+			<!-- // Load mocks to simulate database retrieval -->
+			<script type="text/javascript" src="js/mocks/databaseMockContent.js"></script>
+			<script type="text/javascript" src="js/mocks/configMocks.js"></script>
+
+			<!-- // used to get local data before database retrieval (expensive) -->
+			<script type="text/javascript" src="./js/utils/LocalStorage.js"></script>
+
+			<!-- // Initialize application -->
 			<script type="text/javascript">
-            //This is how we get the program working
-            //Load global files and then initialize the calRun system
-            initializeGlobals(initializeCalRun);
+				// This is how we get the program working
+				//Load global files and then initialize the calRun system
+				var localSettings = getLocalStorage('SystemName-Settings');
+				var localConfig = getLocalStorage('SystemName-Config');
+
+				if (!localSettings) { // retrieve database immediately
+					setLocalStorage('SystemName-Settings', databaseContent);
+					localSettings = databaseContent;
+				}
+
+				if (!localConfig) { // retrieve configuration from database
+					setLocalStorage('SystemName-Config', objectCollection);
+					localConfig = objectCollection;
+				}
+				document.addEventListener('DOMContentLoaded', function() {
+					initializeGlobals(initializeCalRun);
+				
+			});
 			</script>
+			<!-- BULMA is imported -->
+			<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css"> 
 			<LINK rel='stylesheet' href='css/calRun.css'>
 			<link rel='stylesheet' href='./css/tabs.css'>
 			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    
+				
     </HEAD>
     <!--This ensures the body of the page takes up all the viewable area-->
     <BODY style='height:100vh;'>
         <!--Navigation bar-->
-        <nav role="navigation" class="container-fluid navBar navbar navbar-light bg-light">
-            <div class='row' id="main-menu">
-				<div class="col-6">
-	
-					<div id="calMenu" class='inline'>
-						<button id="btnStart" class='navElement navButton btn btn-primary'>
-							<span class="fa fa-play fa-2x"></span>
-							<br/>
-							Start
-						</button>
-						<button id="btnStop" class='navElement navButton btn btn-primary'>
-							<span class="fa fa-stop fa-2x"></span>
-							<br/>
-							Stop
-						</button>
-						<button id="btnNext" class='navElement navButton btn btn-primary'>
-							<span class="fa fa-refresh fa-2x"></span>
-							<br/>
-							Next
-						</button>
-						<button id="btnTerminal" class='navElement navButton btn btn-primary'>
-							<span class="fa fa-terminal fa-2x"></span>
-							<br/>
-							Terminal
-						</button>
-						<button id="btnAction" class='navElement navButton btn btn-primary'>
-							<span class="fa fa-gamepad fa-2x"></span>
-							<br/>
-							Control
-						</button>
-						<button id="btnConfigure" class='navElement navButton btn btn-primary'>
-							<span class="fa fa-cogs fa-2x"></span>
-							<br/>
-							Setup
-						</button>
-						<button id="btnCalCert" class='navElement navButton btn btn-primary'>
-							<span class="fa fa-line-chart fa-2x"></span>
-							<br/>
-							Graph
-						</button>
-						<button id="btnBug" class='navElement navButton btn btn-primary'>
-							<span class="fa fa-bug fa-2x"></span>
-							<br/>
-							Bug
-						</button>
-	
-					</div>
+		<div id="calMenu" class='inline'>
+        <nav role="navigation" class="navBar">
+            <div class='columns' id="main-menu">
+				<div class="column is-half">
+					<button id="btnStart" class='navElement navButton button is-primary has-text-centered is-clearfix'>
+						<span class="fa fa-play fa-2x"></span>
+						<br/>
+						Start
+					</button>
+					<button id="btnStop" class='navElement navButton button is-primary'>
+						<span class="fa fa-stop fa-2x"></span>
+						<br/>
+						Stop
+					</button>
+					<button id="btnNext" class='navElement navButton button is-primary'>
+						<span class="fa fa-refresh fa-2x"></span>
+						<br/>
+						Next
+					</button>
+					<button id="btnTerminal" class='navElement navButton button is-primary'>
+						<span class="fa fa-terminal fa-2x"></span>
+						<br/>
+						Terminal
+					</button>
+					<button id="btnAction" class='navElement navButton button is-primary'>
+						<span class="fa fa-exclamation fa-2x"></span>
+						<br/>
+						Action
+					</button>
+					<button id="btnConfigure" class='navElement navButton button is-primary'>
+						<span class="fa fa-cogs fa-2x"></span>
+						<br/>
+						Setup
+					</button>
+					<button id="btnCalCert" class='navElement navButton button is-primary'>
+						<span class="fa fa-line-chart fa-2x"></span>
+						<br/>
+						Graph
+					</button>
+					<button id="btnBug" class='navElement navButton button is-primary'>
+						<span class="fa fa-bug fa-2x"></span>
+						<br/>
+						Bug
+					</button>
+
 				</div>
-				<div class="col-6 float-right">
+				<div class="column is-half float-right">
 					<div class='systemName' contenteditable='true'>Not Set</div>
 					<div class='systemName'>System Name:</div>
-
+					
 				</div>
-
-            </div>
-        </nav>
-
+					
+			</div>
+		</nav>
+		</div>
+			
         <!-- System status information-->
         <div id='systemStatusDiv'>
             Nothing for now
@@ -105,5 +131,23 @@
             Status goes in here
         </div>
 
+		<!-- Local JS files -->
+		
+		<script type="text/javascript" src="js/components/ErrorRow.js"></script>
+		<script type="text/javascript" src="js/components/ErrorPage.js"></script>
+		<script type="text/javascript" src="js/components/ButtonItem.js"></script>
+		<script type="text/javascript" src="js/components/DropDownItem.js"></script>
+		<script type="text/javascript" src="js/components/DropDownList.js"></script>
+		<script type="text/javascript" src="js/components/InputItem.js"></script>
+		<script type="text/javascript" src="js/components/TextArea.js"></script>
+		<script type="text/javascript" src="js/components/SubOptions.js"></script>
+		<script type="text/javascript" src="js/components/TabListItem.js"></script>
+		<script type="text/javascript" src="js/components/TabLinkContainer.js"></script>
+		<script type="text/javascript" src="js/components/TabPanels.js"></script>
+		<script type="text/javascript" src="js/components/ConfigurationDisplayHeading.js"></script>
+		<script type="text/javascript" src="js/components/ConfigPageRow.js"></script>
+		<script type="text/javascript" src="js/components/ConfigurationSetup.js"></script>
+		<script type="text/javascript" src="js/ConfigContainer.js"></script>
+		<script type="text/javascript" src="js/calRunFrontEnd.js"></script>
     </BODY>
 </HTML>
