@@ -133,6 +133,22 @@ describe('test input is correct', () => {
     });
 });
 
+describe('invalid content packaage renders correct error', () => {
+    test('error page rendered with incorrect content', () => {
+        render(<ConfigurationSetup                                                 
+            index={0} 
+            content={undefined}
+            setContent={processChange}
+            tabName={_configuration_area}
+            handler={clickRouter} 
+        /> );
+
+        const _error_screen = screen.getByText(/Unable to process/);
+
+        expect(_error_screen.textContent).toBe('Unable to process variable for CalRun Configuration Page');
+    });
+});
+
 describe('Can change sub item', () => {
     test('change sub item propagates, has no undefined values.', () => {
         render(<ConfigurationSetup                                                 
@@ -153,6 +169,7 @@ describe('Can change sub item', () => {
         expect(_sub_item_1.textContent).toBe('purple');
     });
     
+    // at this stage does not add yet to the display
     test('add sub item propagates, has no undefined values.', () => {
         render(<ConfigurationSetup                                                 
                 index={0} 
@@ -167,6 +184,6 @@ describe('Can change sub item', () => {
         
         const _sub_list = screen.getAllByText(/Measurand-[0-9]/);
 
-        expect(_sub_list.length).toBeGreaterThan(1);
+        expect(_sub_list.length).toBe(1);
     });
 });

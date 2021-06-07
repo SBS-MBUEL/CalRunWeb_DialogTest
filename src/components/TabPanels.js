@@ -1,7 +1,7 @@
 import React from 'react';
-import {ConfigurationSetup} from './ConfigurationSetup';
+import { ConfigurationSetup } from './ConfigurationSetup';
 import createGUID from '../utils/createGUID';
-import {ErrorPage} from './ErrorPage';
+import { ErrorPage } from './ErrorPage';
 
 class TabPanels extends React.Component {
     constructor(props) {

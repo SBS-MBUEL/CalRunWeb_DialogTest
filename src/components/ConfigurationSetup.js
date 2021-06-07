@@ -113,54 +113,58 @@ class ConfigurationSetup extends React.Component {
         this.props.setContent(key, val, changedContent, this.props.tabName);
     }
 
-    // TODO: Error Page not rendering after adding this.parseContent
     render() {
         const { index, tabName, handler } = this.props;
         let content = this.state.tabContent;
 
-        let { mainContent, subContent } = content && this.parseContent(content);
-
+        
         let display = <ErrorPage variableName="content" pageName="CalRun Configuration Page" />
-
-        display = content &&  content[0].defaultName && (
-            <div>
-                
-                <ConfigurationDisplayHeading key={`${content[0].defaultName}-heading`} handler={handler} heading={content[0].defaultName.toUpperCase()}/>
-                <div className="overflow">
-                    <div className="container">
-                        {mainContent.map((row, index) => {
-
-                            return (
-                                <ConfigPageRow 
-                                    key={index} 
+        
+        if (content) {
+            let { mainContent, subContent } = content && this.parseContent(content);
+            display = content[0].defaultName ? (
+                <div>
+                    
+                    <ConfigurationDisplayHeading key={`${content[0].defaultName}-heading`} handler={handler} heading={content[0].defaultName.toUpperCase()}/>
+                    <div className="overflow">
+                        <div className="container">
+                            {mainContent.map((row, index) => {
+    
+                                return (
+                                    <ConfigPageRow 
+                                        key={index} 
+                                        onChange={this.setContentValues} 
+                                        row={row} 
+                                        settingIndex={0}
+                                        controlIndex={index} 
+                                        buttonHandler={this.buttonHandler}
+                                    />
+                                )
+                            })}
+    
+                        </div>
+                        <hr />
+                        <div className="container">
+                            {subContent.length > 0 ?
+                                <SubOptions 
                                     onChange={this.setContentValues} 
-                                    row={row} 
-                                    settingIndex={0}
-                                    controlIndex={index} 
-                                    buttonHandler={this.buttonHandler}
+                                    subOption={subContent} 
+                                    page={content[0].defaultName.toUpperCase()}
                                 />
-                            )
-                        })}
-
+                                :
+                                <React.Fragment>
+                                    {/* Empty div to display nothing */}
+                                </React.Fragment>
+                            }
+                        </div>
+                        {/* {rows.length > 0 ? rows.map((col, index) => <SubOptions />) : <p>No configs below this.</p>} */}
                     </div>
-                    <hr />
-                    <div className="container">
-                        {subContent.length > 0 ?
-                            <SubOptions 
-                                onChange={this.setContentValues} 
-                                subOption={subContent} 
-                                page={content[0].defaultName.toUpperCase()}
-                            />
-                            :
-                            <React.Fragment>
-                                {/* Empty div to display nothing */}
-                            </React.Fragment>
-                        }
-                    </div>
-                    {/* {rows.length > 0 ? rows.map((col, index) => <SubOptions />) : <p>No configs below this.</p>} */}
                 </div>
-            </div>
-        );
+            ) : 
+            display;
+
+        }
+
         return (
             <React.Fragment>
                 {display}

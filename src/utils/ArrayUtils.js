@@ -17,7 +17,7 @@ function RemoveItemFromArray(array, index) {
     return results;
 }
 
-function filterElementsOnTextContent(element, regex) {
+function FilterElementsOnTextContent(element, regex) {
     const results = Array.from(document.querySelectorAll(element))
         .reduce((acc, el) => {
             if (el.textContent.match(regex) !== null) {
@@ -28,14 +28,23 @@ function filterElementsOnTextContent(element, regex) {
     return results;
 }
 
+function ArrayUtils() {
+    return {
+        FilterElementsOnTextContent,
+        RemoveItemFromArray
+    }
+}
+
 /**
  * Code to make these functions visible in NODE.JS for testing
  * module.exports is Node specific so we need to test for it's existence
  */
  if(typeof module !== 'undefined' && typeof module.exports !== 'undefined')
  {
-     module.exports = {
+
+    module.default = ArrayUtils;
+    module.exports = {
         RemoveItemFromArray: RemoveItemFromArray,
-        filterElementsOnTextContent: filterElementsOnTextContent
-     };
+        FilterElementsOnTextContent: FilterElementsOnTextContent
+    };
  }
