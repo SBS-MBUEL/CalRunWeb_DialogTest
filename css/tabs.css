@@ -3,6 +3,7 @@
     from {width: 50%;}
     to {width: 100%;}
 }
+
 .columns {
     margin:0 !important
 }
@@ -30,9 +31,13 @@ div.tab-pane>div>div.column {
 
 .content {
     margin: 0 auto !important;
+    z-index: 10;
 }
-.content:nth-child(odd) {
+.columns.content:nth-child(even) {
     background-color: #fafbfb;
+}
+.columns.content:nth-child(odd) {
+    background-color: #cdd4e9;
 }
 
 a:hover, a:focus {
@@ -98,6 +103,7 @@ a:hover, a:focus {
     background: #e7ecea;
     padding: 20px 85px;
 }
+
 .button {
     font-size: 0.8em;
 }
@@ -118,6 +124,7 @@ a:hover, a:focus {
     border: 1px solid  #00ADDD;
     background-color: white;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    z-index: 1000;
 }
 
 .heading {
@@ -138,7 +145,7 @@ a:hover, a:focus {
 .slider__btn {
     position: absolute;
     top: 90%;
-    z-index: 10;
+    z-index: 100;
     border: none;
     background: rgba(5, 189, 235, 0.705);
     font-family: inherit;
@@ -159,13 +166,13 @@ a:hover, a:focus {
     left: 6%;
     transform: translate(-50%, -50%);
     border-radius: 50% 0 0 50%;
-  }
+}
   
-  .slider__btn--right {
+.slider__btn--right {
     right: 6%;
     transform: translate(50%, -50%);
     border-radius: 0 50% 50% 0;
-  }
+}
 
 .active--dot {
     color: #00ADDD;

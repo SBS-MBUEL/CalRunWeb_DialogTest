@@ -56,14 +56,15 @@ import { ErrorRow } from './ErrorRow';
                 :
                     <ButtonItem value={row.value} handler={this.btnClickHandler} />;
         
-            content =  <div key={`${row.label}-row-data`} className="columns content font-weight-bold is-vcentered">
+            content = ( 
+                <div key={`${row.label}-row-data`} className="columns content font-weight-bold is-vcentered">
                     <div key={`${row.label}`} className={`column pr-1 heading is-half text-right`}>
                         {row.label}
                     </div>
                     <div key={`${row.label}-input-container`} className={`column pl-1 pb-1 is-half text-left is-vcentered`}>
                         {subContent}
                     </div>
-                </div>  
+                </div> ) 
         }
         
         return (
