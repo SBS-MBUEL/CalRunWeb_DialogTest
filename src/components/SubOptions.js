@@ -60,20 +60,17 @@ import createGUID from '../utils/createGUID';
         // TODO: changing dropdown for sub list is not working
         return (
             <div className="columns">
-                <div className="column">
+                <div className="column"  style={{"transform": `translateX(${this.state.currentPane * 100 * -1}%)`}}>
 
                     {/* increment through options */}
                     {subOption.map((optionTab, index) => {
-                        return (
-                            <div key={page + index} style={{"transform": `translateX(${this.state.currentPane * 100 * -1}%)`}}>
-                                <ConfigPageRow 
+                        return (<ConfigPageRow 
                                     onChange={this.trackChanges} 
                                     key={index} 
                                     row={optionTab} 
                                     settingIndex={1}
                                     controlIndex={index} 
                                 />
-                            </div>
                         );
                     })}
                     {/* TODO: Don't like styling of these  */}
@@ -125,10 +122,8 @@ import createGUID from '../utils/createGUID';
  * Code to make these functions visible in NODE.JS for testing
  * module.exports is Node specific so we need to test for it's existence
  */
- if(typeof module !== 'undefined' && typeof module.exports !== 'undefined')
- {
-     module.exports = 
-     {
+ if(typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+     module.exports = {
          SubOptions: SubOptions
 
      };
