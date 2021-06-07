@@ -13,6 +13,7 @@ const _mock_device = [
 		{label:'SN', type:'text', list:[], width:'50px', height:'30px', control:null, value:'text-input', maxLength:20, titleOrder:1},
 		{label:'Port', type:'textarea', list:[], width:'50px', height:'30px', control:null, value:'textarea-input', maxLength:0, titleOrder:-1},
         {label:'Remove Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove device-button', maxLength:0, titleOrder:-1},
+        {label:'Add Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add device-button', maxLength:0, titleOrder:-1},
 	]},
 	{for:'calibrationParameter',
 		defaultName:'Measurand',
@@ -28,7 +29,7 @@ let _global_content = {};
 let _global_tab_name = 'Not Set';
 let _global_setting_index = -1;
 
-const processChange = (key, val, content, tabName) => {
+const processChange = (key, val, content, tabName, fn) => {
     expect(val).not.toBe(undefined);
     _global_value = val;
 
@@ -46,36 +47,40 @@ const processChange = (key, val, content, tabName) => {
 
 }
 
-const clickRouter = (e) => {
-
+const clickRouter = (key, val, changedContent, tabName, fn) => {
+    expect(fn).toBe('add');
+    
 }
 
 describe('test input is correct', () => {
     test('renders correct items', () => {
         render(<ConfigurationSetup                                                 
-            index={0} 
-            content={_mock_device}
-            setContent={processChange}
-            tabName={_configuration_area}
-            handler={clickRouter} 
+                index={0} 
+                content={_mock_device}
+                setContent={processChange}
+                tabName={_configuration_area}
+                handler={clickRouter} 
             /> );
 
         const _drop_list = screen.getByText(/drop-list/);
         const _text_input = screen.getByDisplayValue(/text-input/);
         const _textarea = screen.getByDisplayValue(/textarea-input/);
+        const _remove_button = screen.getByText(/remove device-button/)
+        const _add_button = screen.getByText(/add device-button/)
         
         expect(_drop_list.textContent).toBe('drop-list');
         expect(_text_input.value).toBe('text-input');
-        expect(_textarea.textContent).toBe('textarea-input');
+        expect(_remove_button.textContent).toBe('remove device-button');
+        expect(_add_button.textContent).toBe('add device-button');
     });
 
     test('list has valid items', () => {
         render(<ConfigurationSetup                                                 
-            index={0} 
-            content={_mock_device}
-            setContent={processChange}
-            tabName={_configuration_area}
-            handler={clickRouter} 
+                index={0} 
+                content={_mock_device}
+                setContent={processChange}
+                tabName={_configuration_area}
+                handler={clickRouter} 
             /> );
 
         const _drop_item_1 = screen.getByText(/item-1/);
@@ -129,23 +134,57 @@ describe('test input is correct', () => {
     });
 });
 
-describe('Can change sub item', () => {
-    test('change sub item propagates, has no undefined values.', () => {
+describe('invalid content packaage renders correct error', () => {
+    test('error page rendered with incorrect content', () => {
         render(<ConfigurationSetup                                                 
             index={0} 
-            content={_mock_device}
+            content={undefined}
             setContent={processChange}
             tabName={_configuration_area}
             handler={clickRouter} 
+        /> );
+
+        const _error_screen = screen.getByText(/Unable to process/);
+
+        expect(_error_screen.textContent).toBe('Unable to process variable for CalRun Configuration Page');
+    });
+});
+
+describe('Can change sub item', () => {
+    test('change sub item propagates, has no undefined values.', () => {
+        render(<ConfigurationSetup                                                 
+                index={0} 
+                content={_mock_device}
+                setContent={processChange}
+                tabName={_configuration_area}
+                handler={clickRouter} 
             /> );
 
-            const _sub_item = screen.getByText(/sub-list/);
-            fireEvent.click(_sub_item);
-            
-            const _sub_item_1 = screen.getByText(/purple/);
-            
-            fireEvent.click(_sub_item_1);
+        const _sub_item = screen.getByText(/sub-list/);
+        fireEvent.click(_sub_item);
+        
+        const _sub_item_1 = screen.getByText(/purple/);
+        
+        fireEvent.click(_sub_item_1);
 
-            expect(_sub_item_1.textContent).toBe('purple');
+        expect(_sub_item_1.textContent).toBe('purple');
+    });
+    
+    // at this stage does not add yet to the display
+    test('add sub item propagates, has no undefined values.', () => {
+        render(<ConfigurationSetup                                                 
+                index={0} 
+                content={_mock_device}
+                setContent={clickRouter}
+                tabName={_configuration_area}
+                handler={clickRouter} 
+            /> );
+
+        const _sub_item = screen.getByText(/add device-button/);
+        fireEvent.click(_sub_item);
+        
+        const _sub_list = screen.getAllByText(/Measurand-[0-9]/);
+
+        expect(_sub_list.length).toBe(1);
     });
 });

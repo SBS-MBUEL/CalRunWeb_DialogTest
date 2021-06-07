@@ -76,7 +76,7 @@ class ConfigContainer extends React.Component {
     setContent(key, value, content, tabName, fn='update') {
         let changedContent = this.state.content;
         changedContent[`_${tabName}`] = content;
-
+        console.log(changedContent[`_${tabName}`][1].controls);
         this.setState({
             content: changedContent
         });
@@ -88,7 +88,7 @@ class ConfigContainer extends React.Component {
         
         if (fn === 'update') {
             let index = this.state.settings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
-            copiedSettings[index].value = value;
+            copiedSettings[index].value = value; // TODO: this needs error checking so it's not trying to set something that doesn't exist
         }
 
         if (fn === 'add') {
@@ -98,6 +98,7 @@ class ConfigContainer extends React.Component {
             let copiedObject = JSON.parse(JSON.stringify(copiedSettings[index]));
 
             // Change copied object
+
             copiedObject.ItemName = key;
             copiedObject.value = value;
 

@@ -1,4 +1,4 @@
-import { RemoveItemFromArray } from '../utils/RemoveItemFromArray';
+import { RemoveItemFromArray, FilterElementsOnTextContent } from '../utils/ArrayUtils';
 
 const test_array = ['test1', 'test2', 'test3', 'test4', 'test5'];
 
@@ -10,8 +10,8 @@ describe('remove correct item', ()=> {
 
         for (let i = 0; i < expected.length; i++) {
             expect(results[i]).toBe(expected[i]);
-
         }
+
         expect(results).not.toStrictEqual(test_array);
     });
 });
@@ -25,7 +25,7 @@ describe('properly deal with errors', ()=> {
         expect(results).toBe(expected);
     });
 
-    test('passed in index of 2 returns -1 for error', () => {
+    test('passed in index of 200 returns -1 for error', () => {
         const expected = -1;
 
         const results = RemoveItemFromArray(test_array, 200);

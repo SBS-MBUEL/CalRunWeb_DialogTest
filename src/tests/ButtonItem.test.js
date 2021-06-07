@@ -14,7 +14,6 @@ function testSetup(opts, type="dropdown", value="add device") {
 }
 
 function processClick(key, val) {
-    console.log(key);
     return val;
 }
 
@@ -89,7 +88,6 @@ describe('rendering with custom text works', () => {
 describe('Button clicks work as expected', () => {
     test('Button event propagates correct object back when span for text is clicked', () => {
         render(<ButtonItem value={testSetup([],undefined,'custom device').value} handler={(e) => {
-            console.log(e);
                 expect(e.className).toBe('button is-info');
             }
          } /> );
@@ -101,7 +99,6 @@ describe('Button clicks work as expected', () => {
     });
     test('Button event propagates correct object back when span for icon is clicked', () => {
         render(<ButtonItem value={testSetup([],undefined,'custom device').value} handler={(e) => {
-            console.log(e);
                 expect(e.className).toBe('button is-info');
             }
          } /> );
@@ -113,7 +110,6 @@ describe('Button clicks work as expected', () => {
     });
     test('Button event propagates correct object back when div for button is clicked', () => {
         render(<ButtonItem value={testSetup([],undefined,'custom device').value} handler={(e) => {
-            console.log(e);
                 expect(e.className).toBe('button is-info');
             }
         } /> );

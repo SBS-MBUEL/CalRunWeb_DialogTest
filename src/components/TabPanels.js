@@ -1,7 +1,7 @@
 import React from 'react';
-import {ConfigurationSetup} from './ConfigurationSetup';
+import { ConfigurationSetup } from './ConfigurationSetup';
 import createGUID from '../utils/createGUID';
-import {ErrorPage} from './ErrorPage';
+import { ErrorPage } from './ErrorPage';
 
 class TabPanels extends React.Component {
     constructor(props) {
@@ -11,12 +11,11 @@ class TabPanels extends React.Component {
         this.setContent = this.setContent.bind(this);
     }
 
-    setContent(key, val, content, tabName) {
-        this.props.setContent(key, val, content, tabName);
+    setContent(key, val, content, tabName, fn) {
+        this.props.setContent(key, val, content, tabName, fn);
     }
 
     getContent() {
-        console.log(this.content, this.currentTab, this.filterOptions);
         return this.content[`_${this.tab}`].reduce((acc, cur) => cur.for === this.filterOptions ? acc.push(cur) : acc).controls;
     }
 

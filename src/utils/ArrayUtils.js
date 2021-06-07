@@ -14,9 +14,25 @@ function RemoveItemFromArray(array, index) {
 
     const results = [...copiedArray.splice(0, index), ...copiedArray.splice(index - 1)];
 
-    console.log(results);
-
     return results;
+}
+
+function FilterElementsOnTextContent(element, regex) {
+    const results = Array.from(document.querySelectorAll(element))
+        .reduce((acc, el) => {
+            if (el.textContent.match(regex) !== null) {
+                acc.push(el);
+            }
+            return acc;
+        }, []);
+    return results;
+}
+
+function ArrayUtils() {
+    return {
+        FilterElementsOnTextContent,
+        RemoveItemFromArray
+    }
 }
 
 /**
@@ -25,7 +41,10 @@ function RemoveItemFromArray(array, index) {
  */
  if(typeof module !== 'undefined' && typeof module.exports !== 'undefined')
  {
-     module.exports = {
-        RemoveItemFromArray: RemoveItemFromArray
-     };
+
+    module.default = ArrayUtils;
+    module.exports = {
+        RemoveItemFromArray: RemoveItemFromArray,
+        FilterElementsOnTextContent: FilterElementsOnTextContent
+    };
  }
