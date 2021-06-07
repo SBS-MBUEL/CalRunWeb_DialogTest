@@ -76,7 +76,7 @@ class ConfigContainer extends React.Component {
     setContent(key, value, content, tabName, fn='update') {
         let changedContent = this.state.content;
         changedContent[`_${tabName}`] = content;
-
+        console.log(changedContent[`_${tabName}`][1].controls);
         this.setState({
             content: changedContent
         });
@@ -98,6 +98,7 @@ class ConfigContainer extends React.Component {
             let copiedObject = JSON.parse(JSON.stringify(copiedSettings[index]));
 
             // Change copied object
+
             copiedObject.ItemName = key;
             copiedObject.value = value;
 

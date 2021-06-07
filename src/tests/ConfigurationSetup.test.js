@@ -29,7 +29,7 @@ let _global_content = {};
 let _global_tab_name = 'Not Set';
 let _global_setting_index = -1;
 
-const processChange = (key, val, content, tabName) => {
+const processChange = (key, val, content, tabName, fn) => {
     expect(val).not.toBe(undefined);
     _global_value = val;
 
@@ -47,8 +47,10 @@ const processChange = (key, val, content, tabName) => {
 
 }
 
-const clickRouter = (e) => {
-
+const clickRouter = (key, val, changedContent, tabName, fn) => {
+    expect(fn).toBe('add');
+    console.log(changedContent[1].controls);
+    
 }
 
 describe('test input is correct', () => {
@@ -174,7 +176,7 @@ describe('Can change sub item', () => {
         render(<ConfigurationSetup                                                 
                 index={0} 
                 content={_mock_device}
-                setContent={processChange}
+                setContent={clickRouter}
                 tabName={_configuration_area}
                 handler={clickRouter} 
             /> );

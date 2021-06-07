@@ -54,29 +54,32 @@ class ConfigurationSetup extends React.Component {
     /**
      * adds row to selected subContent
      * //TODO: this will likely need to be refactored to deal with more complex lists
-     * @param {array} subContent - controls list object
+     * @param {array} subControls - controls list object
      * @returns 
      */
-    addRow(subContent) {
+    addRow(subControls) {
         // change state from content
         const fn = 'add';
+        let changedControls = JSON.parse(JSON.stringify(subControls));
+        let newContent = JSON.parse(JSON.stringify(changedControls[0]));
+        newContent.label = newContent.label.replace(/([0-9][0-9][0-9]|[0-9][0-9]|[0-9])/g, changedControls.length);
+        newContent.value = 'Not Set';
+        
+        let idx = changedControls.push(newContent) - 1;
 
-        let idx = subContent.push(subContent[0]) - 1;
         let setIdx = 1;
 
-        let changedContent = this.state.tabContent.slice();
-
+        let newTabContent = this.state.tabContent.slice();
+        newTabContent[setIdx].controls = changedControls;
         // 1 is for subContent
-        changedContent[setIdx].controls = subContent;
         // TODO: this will not work for subcontent with a list of options
+        newTabContent[setIdx].controls = changedControls;
 
-        changedContent[setIdx].controls[idx].label = subContent[idx].label.replace(/([0-9][0-9]|[0-9])/, idx);
-        let key = changedContent[setIdx].controls[idx].label
-        let val = 'Not Set'
+        let key = newTabContent[setIdx].controls[idx].label
+        let val = newTabContent[setIdx].controls[idx].value
 
-        changedContent[setIdx].controls[idx].value = val;
-        
-        this.props.setContent(key, val, changedContent, this.props.tabName, fn); // TODO: change signature to pass "add" for fn
+        console.log(newTabContent[1].controls);
+        this.props.setContent(key, val, newTabContent, this.props.tabName, fn); // TODO: change signature to pass "add" for fn
 
         return idx;
     }

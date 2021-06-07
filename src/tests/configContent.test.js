@@ -1,30 +1,77 @@
 //TODO: move import to this file
 import { render, screen, fireEvent } from '@testing-library/react';
 import { link } from 'fs';
+
 import App from '../App';
+import LocalStorage from '../utils/LocalStorage';
+
+function setup() {
+    localStorage.clear('SystemName-Config');
+
+    localStorage.clear('SystemName-Settings');
+}
 
 // Basic render test, renders the whole configuration stack
-test('renders config', () => {
+describe('normal functions', () => {
+    test('renders config', () => {
+        setup();
 
-    render(<App /> );
-    const linkElement = screen.getByText(/SYSTEM/);
-
-    expect(linkElement).toBeDefined();
-});
-
-// verifies from the stack that we can click a tab and the class appropriately changes
-test('switch tabs', () => {
-    render(<App /> );
-
-    const linkElement = screen.getAllByText('reference')[0];
+        render(<App /> );
+        const linkElement = screen.getByText(/SYSTEM/);
     
-    let currentClassName = linkElement.parentElement.className;
-
-    expect(currentClassName).not.toContain('is-active')
+        expect(linkElement).toBeDefined();
+    });
     
-    fireEvent.click(linkElement);
+    // verifies from the stack that we can click a tab and the class appropriately changes
+    test('switch tabs', () => {
+        setup();
 
-    currentClassName = linkElement.parentElement.className;
+        render(<App /> );
+    
+        const linkElement = screen.getAllByText('reference')[0];
+        
+        let currentClassName = linkElement.parentElement.className;
+    
+        expect(currentClassName).not.toContain('is-active')
+        
+        fireEvent.click(linkElement);
+    
+        currentClassName = linkElement.parentElement.className;
+    
+        expect(currentClassName).toContain('is-active');
+    });
 
-    expect(currentClassName).toContain('is-active');
-});
+    // at this stage it does add it to the list
+    test('add sub item propagates, has no undefined values.', () => {
+        setup();
+
+        render(<App /> );
+
+        const _sub_item = screen.getAllByText(/add device/)[0];
+        fireEvent.click(_sub_item);
+        
+        const _sub_list = screen.getAllByText(/Device-[0-9]/);
+
+        expect(_sub_list.length).toBe(2);
+    });
+
+    // at this stage it does add it to the list
+    test('Keys are correct after adding item.', () => {
+        setup();
+
+        render(<App /> );
+
+        const _sub_item = screen.getAllByText(/add device/)[0];
+        fireEvent.click(_sub_item);
+        
+        const _sub_list = screen.getAllByText(/Device-[0-9]/);
+
+        expect(_sub_list.length).toBe(3);
+
+        _sub_list.forEach((el, i) => {
+            console.log(el.textContent);
+            expect(el.textContent).toBe("Device-" + i);
+        });
+    });
+
+})
