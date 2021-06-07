@@ -49,7 +49,6 @@ const processChange = (key, val, content, tabName, fn) => {
 
 const clickRouter = (key, val, changedContent, tabName, fn) => {
     expect(fn).toBe('add');
-    console.log(changedContent[1].controls);
     
 }
 

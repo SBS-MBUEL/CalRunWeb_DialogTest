@@ -78,7 +78,6 @@ class ConfigurationSetup extends React.Component {
         let key = newTabContent[setIdx].controls[idx].label
         let val = newTabContent[setIdx].controls[idx].value
 
-        console.log(newTabContent[1].controls);
         this.props.setContent(key, val, newTabContent, this.props.tabName, fn); // TODO: change signature to pass "add" for fn
 
         return idx;
@@ -91,7 +90,6 @@ class ConfigurationSetup extends React.Component {
     buttonHandler(btn) {
         const btnFunction = btn.children[1].textContent.split(' ')[0];
         // Determine path of button press
-        console.log(btnFunction);
 
         let { subContent } = this.parseContent(this.state.tabContent);
 

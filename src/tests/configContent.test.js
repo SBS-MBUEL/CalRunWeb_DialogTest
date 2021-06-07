@@ -69,7 +69,6 @@ describe('normal functions', () => {
         expect(_sub_list.length).toBe(3);
 
         _sub_list.forEach((el, i) => {
-            console.log(el.textContent);
             expect(el.textContent).toBe("Device-" + i);
         });
     });

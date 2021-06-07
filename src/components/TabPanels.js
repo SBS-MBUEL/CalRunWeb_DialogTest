@@ -16,7 +16,6 @@ class TabPanels extends React.Component {
     }
 
     getContent() {
-        console.log(this.content, this.currentTab, this.filterOptions);
         return this.content[`_${this.tab}`].reduce((acc, cur) => cur.for === this.filterOptions ? acc.push(cur) : acc).controls;
     }
 

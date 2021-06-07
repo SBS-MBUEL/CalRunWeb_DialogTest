@@ -59,7 +59,6 @@ describe('Normal config renders', () => {
         expect(listItem.textContent).toBe('test');
         
         const linkItem = screen.getByText(/Blue/);
-        // console.log(linkItem);
         expect(linkItem.parentElement.parentElement.parentElement.className).not.toContain('is-active');
         expect(screen.getByRole('dropdownlist-content').children.length).toBe(1);
         
