@@ -73,4 +73,24 @@ describe('normal functions', () => {
         });
     });
 
-})
+});
+
+describe('value errors not popping up.', () => {
+    test('changing sub option 0 propagates appropriately with no errors.', () => {
+        render(<App /> );
+
+        const _sub_drop_items = screen.getAllByText(/Not Set/);
+
+        const _sub_drop_item = _sub_drop_items[_sub_drop_items.length - 1];
+
+        fireEvent.click(_sub_drop_item);
+
+        const _sub_item_list = screen.getAllByText(/DeepSeapHoxV2/);
+
+        _sub_item_list.forEach(el => {
+            fireEvent.click(el);
+        });
+
+        expect(_sub_drop_item.textContent).toBe('DeepSeapHoxV2');
+    });
+});

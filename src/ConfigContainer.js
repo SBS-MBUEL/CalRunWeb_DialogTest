@@ -74,25 +74,33 @@ class ConfigContainer extends React.Component {
      * @param {string} fn - default is update mode / options "update", "delete", "add" (copy is dealt with as an add)
      */
     setContent(key, value, content, tabName, fn='update') {
-        let changedContent = this.state.content;
-        changedContent[`_${tabName}`] = content;
-        console.log(changedContent[`_${tabName}`][1].controls);
+        let changedContent = JSON.parse(JSON.stringify(this.state.content));
+        changedContent[`_${tabName}`] = JSON.parse(JSON.stringify(content));
+
         this.setState({
             content: changedContent
         });
 
-        let copiedSettings = this.state.settings.slice();
+        let copiedSettings = JSON.parse(JSON.stringify(this.state.settings.slice()));
 
-        console.log(key, value, tabName.toLowerCase());
-
-        
         if (fn === 'update') {
-            let index = this.state.settings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
-            copiedSettings[index].value = value; // TODO: this needs error checking so it's not trying to set something that doesn't exist
+            let index = copiedSettings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
+
+            if (copiedSettings && copiedSettings[index] && copiedSettings[index].value) {
+                copiedSettings[index].value = value; // TODO: this needs error checking so it's not trying to set something that doesn't exist
+            } else {
+                console.error(`Error trying to set value:\n
+                key: ${key}\n
+                value: ${value}\n
+                content: ${JSON.stringify(content)}\n
+                tabName: ${tabName}\n
+                fn: ${fn}\n
+                index: ${index}`)
+            }
         }
 
         if (fn === 'add') {
-            let index = this.state.settings.map((el, index) => el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
+            let index = copiedSettings.map((el, index) => el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
 
             // Copy object
             let copiedObject = JSON.parse(JSON.stringify(copiedSettings[index]));
@@ -107,7 +115,7 @@ class ConfigContainer extends React.Component {
         }
 
         if (fn === 'delete') {
-            let index = this.state.settings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
+            let index = copiedSettings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
 
             copiedSettings = [...copiedSettings.splice(0, index),  ...copiedSettings.splice(index)];
         }
