@@ -18,7 +18,7 @@ const regex_SubOptions = /_SubOptions\./g;
 const regex_TabListItem = /_TabListItem\./g;
 const regex_TabPanels = /_TabPanels\./g;
 const regex_TabLinkContainer = /_TabLinkContainer\./g;
-const regex_DropDownList = /_DropDownList(|[0-9])\.(|default)/g;
+const regex_DropDownContainer = /_DropDownContainer(|[0-9])\.(|default)/g;
 const regex_DropDownItem = /_DropDownItem(|[0-9])\.(|default)/g;
 const regex_InputItem = /_InputItem(|[0-9])\.(|default)/g;
 const regex_ErrorPage = /_ErrorPage(|[0-9])\.(|default)/g;
@@ -47,7 +47,7 @@ iterate(root_search_path)
             res = removeOrReplaceString(res, regex_TabLinkContainer);
             res = removeOrReplaceString(res, regex_TabListItem);
             res = removeOrReplaceString(res, regex_TabPanels);
-            res = removeOrReplaceString(res, regex_DropDownList);
+            res = removeOrReplaceString(res, regex_DropDownContainer);
             res = removeOrReplaceString(res, regex_DropDownItem);
             res = removeOrReplaceString(res, regex_InputItem);
             res = removeOrReplaceString(res, regex_ErrorPage);

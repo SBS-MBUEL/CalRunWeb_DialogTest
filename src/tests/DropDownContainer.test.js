@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, userEvent } from '@testing-library/react';
-import { DropDownList } from '../components/DropDownList';
+import { DropDownContainer } from '../components/DropDownContainer';
 
 const testRowObject = {
     label: 'DropDownList-test',
@@ -12,13 +12,13 @@ const processClick = (k, v) => {
 }
 
 test('row renders span', () => {
-    render(<DropDownList userValue={testRowObject.value} row={testRowObject} index={testRowObject.label} /> );
+    render(<DropDownContainer userValue={testRowObject.value} row={testRowObject} index={testRowObject.label} /> );
 
     expect(screen.getByText('span-test').textContent).toBe('span-test');
 });
 
 test('row renders span with class set correctly (inactive)', () => {
-    render(<DropDownList userValue={testRowObject.value} row={testRowObject} index={testRowObject.label} /> );
+    render(<DropDownContainer userValue={testRowObject.value} row={testRowObject} index={testRowObject.label} /> );
 
     const span = screen.getByText('span-test');
 
@@ -26,7 +26,7 @@ test('row renders span with class set correctly (inactive)', () => {
 });
 
 test('row renders span with class set correctly (active) when clicked', () => {
-    render(<DropDownList userValue={testRowObject.value} row={testRowObject} index={testRowObject.label} /> );
+    render(<DropDownContainer userValue={testRowObject.value} row={testRowObject} index={testRowObject.label} /> );
 
     const span = screen.getByText('span-test');
 
@@ -36,7 +36,7 @@ test('row renders span with class set correctly (active) when clicked', () => {
 });
 
 test('row renders span with class set correctly (inactive) when clicked twice', () => {
-    render(<DropDownList userValue={testRowObject.value} row={testRowObject} index={testRowObject.label} /> );
+    render(<DropDownContainer userValue={testRowObject.value} row={testRowObject} index={testRowObject.label} /> );
 
     const span = screen.getByText('span-test');
 
@@ -47,7 +47,7 @@ test('row renders span with class set correctly (inactive) when clicked twice', 
 });
 
 test('row renders span with class set correctly (inactive) when body clicked', () => {
-    render(<DropDownList userValue={testRowObject.value} row={testRowObject} index={testRowObject.label} /> );
+    render(<DropDownContainer userValue={testRowObject.value} row={testRowObject} index={testRowObject.label} /> );
 
     const span = screen.getByText('span-test');
 

@@ -12,6 +12,29 @@ function setup() {
 }
 
 // Basic render test, renders the whole configuration stack
+
+describe('value errors not popping up.', () => {
+    test('changing sub option 0 propagates appropriately with no errors.', () => {
+
+        render(<App /> );
+
+        const _sub_drop_items = screen.getAllByText(/Not Set/);
+
+        const _sub_drop_item = _sub_drop_items[5];
+
+        fireEvent.click(_sub_drop_item);
+
+        const _sub_item_list = screen.getAllByText(/DeepSeapHoxV2/);
+
+        _sub_item_list.forEach(el => {
+            console.log(`processing click: ${el.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.firstChild.textContent}`)
+            fireEvent.click(el);
+        });
+
+        expect(_sub_drop_item.textContent).toBe('DeepSeapHoxV2');
+    });
+});
+
 describe('normal functions', () => {
     test('renders config', () => {
         setup();
@@ -57,6 +80,7 @@ describe('normal functions', () => {
 
     // at this stage it does add it to the list
     test('Keys are correct after adding item.', () => {
+        
         setup();
 
         render(<App /> );
@@ -73,4 +97,5 @@ describe('normal functions', () => {
         });
     });
 
-})
+});
+

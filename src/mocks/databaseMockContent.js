@@ -1297,7 +1297,7 @@ const databaseContent = [
         "ConfigurationArea": "system",
         "OptionIndex": "0",
         "ParameterIndex": "0",
-        "ItemName": "Device",
+        "ItemName": "Device-0",
         "ItemValue": "ECOV2"
     }
 ]
@@ -1306,10 +1306,8 @@ const databaseContent = [
  * Code to make these functions visible in NODE.JS for testing
  * module.exports is Node specific so we need to test for it's existence
  */
- if(typeof module !== 'undefined' && typeof module.exports !== 'undefined')
- {
-     module.exports = 
-     {
+ if(typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+     module.exports = {
         databaseContent : databaseContent,
         databaseTabs: databaseTabs
 
