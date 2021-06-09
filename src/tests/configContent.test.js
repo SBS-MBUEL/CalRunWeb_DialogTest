@@ -20,7 +20,7 @@ describe('value errors not popping up.', () => {
 
         const _sub_drop_items = screen.getAllByText(/Not Set/);
 
-        const _sub_drop_item = _sub_drop_items[_sub_drop_items.length - 1];
+        const _sub_drop_item = _sub_drop_items[5];
 
         fireEvent.click(_sub_drop_item);
 
