@@ -1,7 +1,7 @@
 import React from 'react';
 import createGUID from '../utils/createGUID';
 
-import { DropDownList } from './DropDownList';
+import { DropDownContainer } from './DropDownContainer';
 import { InputItem } from './InputItem';
 import { TextArea } from './TextArea';
 import { ButtonItem } from './ButtonItem';
@@ -48,7 +48,7 @@ import { ErrorRow } from './ErrorRow';
         if (row && row.value && row.label) {
         
             subContent = row.type === 'dropdown' ?
-                    <DropDownList index={row.label} userValue={this.state.userValue} trackChanges={this.trackChanges} row={row} />
+                    <DropDownContainer index={row.label} userValue={this.state.userValue} trackChanges={this.trackChanges} row={row} />
                 : row.type === 'text' ?
                     <InputItem index={row.label} userValue={this.state.userValue} inputChange={this.trackChanges} trackChanges={this.trackChanges} />
                 : row.type === 'textarea' ?

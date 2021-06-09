@@ -5,10 +5,17 @@ class DropDownItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            userValue : props.userValue
+            userValue : null
         }
 
         this.changeDropItem = this.changeDropItem.bind(this);
+    }
+
+    componentDidMount() {
+        let newState = this.state.userValue === null ? this.props.userValue : this.state.userValue;
+        this.setState({
+            userValue: newState
+        })
     }
 
     changeDropItem(e) {
@@ -18,7 +25,7 @@ class DropDownItem extends React.Component {
         // stop bubbling
         e.stopPropagation();
         this.setState({
-            userValue:e.target.textContent
+            userValue: e.target.textContent
         });
         console.log('changing ' + this.props.index + ' to ' + e.target.textContent);
         this.props.trackChanges(this.props.index, e.target.textContent);
@@ -52,8 +59,7 @@ class DropDownItem extends React.Component {
  */
  if(typeof module !== 'undefined' && typeof module.exports !== 'undefined')
  {
-     module.exports = 
-     {
+     module.exports = {
          DropDownItem: DropDownItem
 
      };

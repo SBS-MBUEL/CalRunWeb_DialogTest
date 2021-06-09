@@ -7,7 +7,7 @@
  */
 function setLocalStorage(key, value) {
     if (!key || !value || value.length <= 0) {
-        console.error(`Not storing anything to Local Storage.\nkey: ${JSON.stringify(key)}\nvalue: ${JSON.stringify(value)}`);
+        // console.error(`Not storing anything to Local Storage.\nkey: ${JSON.stringify(key)}\nvalue: ${JSON.stringify(value)}`);
         return null;
     }
 
@@ -21,14 +21,14 @@ function setLocalStorage(key, value) {
  */
 function getLocalStorage(key) {
     if (!key) {
-        console.error(`Cannot retrieve Local Storage with an empty key value\nkey: ${JSON.stringify(key)}`);
+        // console.error(`Cannot retrieve Local Storage with an empty key value\nkey: ${JSON.stringify(key)}`);
         return null;
     }
 
     const results = JSON.parse(localStorage.getItem(key));
 
     if (!results) {
-        console.warn(`The provided key does not exist in local storage`);
+        // console.warn(`The provided key does not exist in local storage`);
     }
 
     return results;
@@ -38,8 +38,7 @@ function getLocalStorage(key) {
  * Code to make these functions visible in NODE.JS for testing
  * module.exports is Node specific so we need to test for it's existence
  */
- if(typeof module !== 'undefined' && typeof module.exports !== 'undefined')
- {
+ if(typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
      module.exports = {
          setLocalStorage: setLocalStorage,
          getLocalStorage: getLocalStorage

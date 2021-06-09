@@ -82,20 +82,30 @@ class ConfigContainer extends React.Component {
         });
 
         let copiedSettings = JSON.parse(JSON.stringify(this.state.settings.slice()));
+        let successfulUpdate = false;
 
         if (fn === 'update') {
             let index = copiedSettings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
 
-            if (copiedSettings && copiedSettings[index] && copiedSettings[index].value) {
+            if (index) {
                 copiedSettings[index].value = value; // TODO: this needs error checking so it's not trying to set something that doesn't exist
+                successfulUpdate = true;
             } else {
-                console.error(`Error trying to set value:\n
-                key: ${key}\n
-                value: ${value}\n
-                content: ${JSON.stringify(content)}\n
-                tabName: ${tabName}\n
-                fn: ${fn}\n
-                index: ${index}`)
+                console.error(`Error trying to set value:`);
+                console.log(`key:`);
+                console.log(key);
+                console.log(`value:`);
+                console.log(value);
+                console.log(`content:`);
+                console.log(changedContent);
+                console.log(`settings:`);
+                console.log(copiedSettings);
+                console.log(`tabName:`);
+                console.log(tabName);
+                console.log(`fn:`);
+                console.log(fn);
+                console.log(`index:`);
+                console.log(index);
             }
         }
 
@@ -106,27 +116,31 @@ class ConfigContainer extends React.Component {
             let copiedObject = JSON.parse(JSON.stringify(copiedSettings[index]));
 
             // Change copied object
-
             copiedObject.ItemName = key;
             copiedObject.value = value;
 
             // Add copied object to copiedSettings
             copiedSettings.push(copiedObject);
+            successfulUpdate = true;
         }
 
         if (fn === 'delete') {
             let index = copiedSettings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
 
             copiedSettings = [...copiedSettings.splice(0, index),  ...copiedSettings.splice(index)];
+            successfulUpdate = true;
         }
 
         this.setState({
             settings: copiedSettings
         });
 
-        // TODO: need "SystemName" to be dynamic
-        setLocalStorage('SystemName-Settings', copiedSettings);
-        setLocalStorage('SystemName-Config', changedContent);
+        if (successfulUpdate) {
+            // TODO: need "SystemName" to be dynamic
+            setLocalStorage('SystemName-Settings', copiedSettings);
+            setLocalStorage('SystemName-Config', changedContent);
+
+        }
     }
 
 

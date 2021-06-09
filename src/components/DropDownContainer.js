@@ -2,7 +2,7 @@ import React from 'react';
 import createGUID from '../utils/createGUID';
 import { DropDownItem } from './DropDownItem';
 
-class DropDownList extends React.Component {
+class DropDownContainer extends React.Component {
     _isMounted = false;
     constructor(props) {
         super(props);
@@ -104,11 +104,9 @@ class DropDownList extends React.Component {
  * Code to make these functions visible in NODE.JS for testing
  * module.exports is Node specific so we need to test for it's existence
  */
- if(typeof module !== 'undefined' && typeof module.exports !== 'undefined')
- {
-     module.exports = 
-     {
-        DropDownList: DropDownList
+ if(typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+     module.exports = {
+        DropDownContainer: DropDownContainer
 
      };
  }
