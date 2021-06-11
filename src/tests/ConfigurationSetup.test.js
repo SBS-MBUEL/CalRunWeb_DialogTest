@@ -13,6 +13,7 @@ const _mock_device = [
 		{label:'SN', type:'text', list:[], width:'50px', height:'30px', control:null, value:'text-input', maxLength:20, titleOrder:1},
 		{label:'Port', type:'textarea', list:[], width:'50px', height:'30px', control:null, value:'textarea-input', maxLength:0, titleOrder:-1},
         {label:'Remove Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove device-button', maxLength:0, titleOrder:-1},
+        {label:'Copy Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'copy device-button', maxLength:0, titleOrder:-1},
         {label:'Add Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add device-button', maxLength:0, titleOrder:-1},
 	]},
 	{for:'calibrationParameter',
@@ -46,9 +47,11 @@ const processChange = (key, val, content, tabName, fn) => {
     _global_tab_name = tabName;
 
 }
-
+let globalFN = '';
 const clickRouter = (key, val, changedContent, tabName, fn) => {
-    expect(fn).toBe('add');
+    console.log(fn);
+    console.log(globalFN);
+    expect(fn).toBe(globalFN);
     
 }
 
@@ -181,10 +184,54 @@ describe('Can change sub item', () => {
             /> );
 
         const _sub_item = screen.getByText(/add device-button/);
+        globalFN = 'add';
         fireEvent.click(_sub_item);
         
         const _sub_list = screen.getAllByText(/Measurand-[0-9]/);
 
         expect(_sub_list.length).toBe(1);
     });
+
+    // at this stage does not add yet to the display
+    test('copy sub item propagates, has existing value of last entry.', () => {
+        render(<ConfigurationSetup                                                 
+                index={0} 
+                content={_mock_device}
+                setContent={clickRouter}
+                tabName={_configuration_area}
+                handler={clickRouter} 
+            /> );
+
+        const _sub_item = screen.getByText(/copy device-button/);
+        globalFN = 'add';
+
+        fireEvent.click(_sub_item);
+        
+        const _sub_list = screen.getAllByText(/Measurand-[0-9]/);
+
+        expect(_sub_list.length).toBe(2); // TODO: not really certain why this is 2?
+        
+    });
+
+
+        // at this stage does not remove from the display
+        test('remove sub item propagates, has existing value of last entry.', () => {
+            globalFN = 'remove';
+            render(<ConfigurationSetup                                                 
+                    index={0} 
+                    content={_mock_device}
+                    setContent={clickRouter}
+                    tabName={_configuration_area}
+                    handler={clickRouter} 
+                /> );
+    
+            const _sub_item = screen.getByText(/remove device-button/);
+
+            fireEvent.click(_sub_item);
+            
+            const _sub_list = screen.getAllByText(/Measurand-[0-9]/);
+    
+            expect(_sub_list.length).toBe(2); // TODO: not really certain why this is 2?
+            
+        });
 });

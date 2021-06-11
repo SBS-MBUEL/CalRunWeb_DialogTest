@@ -124,7 +124,7 @@ class ConfigContainer extends React.Component {
             successfulUpdate = true;
         }
 
-        if (fn === 'delete') {
+        if (fn === 'remove') {
             let index = copiedSettings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
 
             copiedSettings = [...copiedSettings.splice(0, index),  ...copiedSettings.splice(index)];
