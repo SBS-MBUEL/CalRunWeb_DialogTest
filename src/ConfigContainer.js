@@ -30,6 +30,7 @@ class ConfigContainer extends React.Component {
                 settings: props.settings
             };
         }
+        
         this.changeHandler = this.changeHandler.bind(this);
         this.insertRow = this.insertRow.bind(this);
         this.copyRow = this.copyRow.bind(this);

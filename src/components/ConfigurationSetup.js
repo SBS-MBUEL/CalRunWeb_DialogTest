@@ -13,7 +13,8 @@ class ConfigurationSetup extends React.Component {
 
         this.setContentValues = this.setContentValues.bind(this);
         this.buttonHandler = this.buttonHandler.bind(this);
-        this.addRow = this.addRow.bind(this);
+        this.duplicateOrAddRow = this.duplicateOrAddRow.bind(this);
+        this.removeRow = this.removeRow.bind(this);
     }
 
     componentDidMount() {
@@ -56,14 +57,14 @@ class ConfigurationSetup extends React.Component {
      * //TODO: this will likely need to be refactored to deal with more complex lists
      * @param {array} subControls - controls list object
      * @returns 
-     */
-    addRow(subControls) {
+    */
+    duplicateOrAddRow(subControls, fn) {
         // change state from content
-        const fn = 'add';
+        // const fn = 'add';
         let changedControls = JSON.parse(JSON.stringify(subControls));
         let newContent = JSON.parse(JSON.stringify(changedControls[0]));
         newContent.label = newContent.label.replace(/([0-9][0-9][0-9]|[0-9][0-9]|[0-9])/g, changedControls.length);
-        newContent.value = 'Not Set';
+        newContent.value = fn === 'add' ? 'Not Set' : newContent.value;
         
         let idx = changedControls.push(newContent) - 1;
 
@@ -83,20 +84,38 @@ class ConfigurationSetup extends React.Component {
         return idx;
     }
 
+
+    removeRow(subControls, fn) {
+        let changedControls = JSON.parse(JSON.stringify(subControls));
+        let newTabContent = this.state.tabContent.slice();
+
+        let setIdx = 1;
+        let idx = changedControls.length - 1
+        
+        let key = newTabContent[setIdx].controls[idx].label
+
+        this.props.setContent(key, null, null, this.props.tabName, fn);
+    }
+
     /**
      * appropriately process button clicked
      * @param {dom} btn pressed in ButtonItem
      */
     buttonHandler(btn) {
         const btnFunction = btn.children[1].textContent.split(' ')[0];
-        // Determine path of button press
 
+        // Determine path of button press
         let { subContent } = this.parseContent(this.state.tabContent);
 
         if (btnFunction === 'add') {
-            let idx = this.addRow(subContent);
+            let idx = this.duplicateOrAddRow(subContent, btnFunction);
         }
-
+        if (btnFunction === 'copy') {
+            let idx = this.duplicateOrAddRow(subContent, btnFunction);
+        }
+        if (btnFunction === 'remove') {
+            let idx = this.removeRow(subContent, btnFunction);
+        }
 
     }
 

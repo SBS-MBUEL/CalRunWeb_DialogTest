@@ -203,7 +203,7 @@ describe('Can change sub item', () => {
             /> );
 
         const _sub_item = screen.getByText(/copy device-button/);
-        globalFN = 'add';
+        globalFN = 'copy';
 
         fireEvent.click(_sub_item);
         
@@ -231,7 +231,7 @@ describe('Can change sub item', () => {
             
             const _sub_list = screen.getAllByText(/Measurand-[0-9]/);
     
-            expect(_sub_list.length).toBe(2); // TODO: not really certain why this is 2?
+            expect(_sub_list.length).toBe(3); // TODO: not really certain why this is 3?
             
         });
 });
