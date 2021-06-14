@@ -10,9 +10,23 @@
  * @param {string} title optional parameter that displays title of growl
  */
 function renderGrowl(elementID, msg, level, title='') {
-    // need to validate parameters
-    const root = document.querySelector(`#${elementID}`)
 
+    // need to validate parameters
+    if (!elementID || !msg || !level) {
+        console.warn('unable to process growl with missing parameters');
+        console.log(`elementID: ${elementID}\n
+        msg: ${msg}\n
+        level: ${level}\n`);
+        return;
+    }
+
+    const root = document.querySelector(`#${elementID}`)
+    if (!root) {
+        console.warn('unable to find specified elementID on page, cannot render growl');
+        console.log(`elementID: ${elementID}`);
+        return;
+    }
+    
     const article = document.createElement('article');
     article.className = `tile is-child notification is-${level} growling removed`;
 
@@ -58,4 +72,14 @@ function setListener(element, timer) {
         element.classList.add('removed');
         setTimerToRemoveGrowl(element, 30000);
     });
+}
+
+/**
+ * Code to make these functions visible in NODE.JS for testing
+ * module.exports is Node specific so we need to test for it's existence
+ */
+ if(typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    module.exports = {
+        renderGrowl: renderGrowl
+    };
 }

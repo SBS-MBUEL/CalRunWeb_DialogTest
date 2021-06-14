@@ -3,6 +3,7 @@ import { ConfigurationDisplayHeading } from './ConfigurationDisplayHeading';
 import { ConfigPageRow } from './ConfigPageRow';
 import { SubOptions } from './SubOptions';
 import { ErrorPage } from './ErrorPage';
+import { renderGrowl } from '../utils/growl'
 class ConfigurationSetup extends React.Component {
 
     constructor(props) {
@@ -193,6 +194,8 @@ class ConfigurationSetup extends React.Component {
             ) : 
             display;
 
+        } else {
+            renderGrowl('growl', 'Problem retrieving or displaying tabContent variable. This is likely a bug.', 'danger', 'Unable to Load Page');
         }
 
         return (
