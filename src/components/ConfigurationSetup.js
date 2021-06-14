@@ -87,14 +87,28 @@ class ConfigurationSetup extends React.Component {
 
     removeRow(subControls, fn) {
         let changedControls = JSON.parse(JSON.stringify(subControls));
+
         let newTabContent = this.state.tabContent.slice();
 
         let setIdx = 1;
         let idx = changedControls.length - 1
         
+        if (changedControls.length > 1) {
+            changedControls.pop();
+        } else {
+            changedControls[idx].value = 'Not Set';
+            newTabContent[setIdx].controls[idx].value = 'Not Set';
+            fn = 'update';
+            this.setState({
+                tabContent: newTabContent
+            })
+        }
+        
         let key = newTabContent[setIdx].controls[idx].label
+        let val = newTabContent[setIdx].controls[idx].value
+        newTabContent[setIdx].controls = changedControls;
 
-        this.props.setContent(key, null, null, this.props.tabName, fn);
+        this.props.setContent(key, val, newTabContent, this.props.tabName, fn);
     }
 
     /**

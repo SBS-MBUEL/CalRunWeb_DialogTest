@@ -75,7 +75,9 @@ class ConfigContainer extends React.Component {
      * @param {string} fn - default is update mode / options "update", "delete", "add" (copy is dealt with as an add)
     */
     setContent(key, value, content, tabName, fn='update') {
+        console.log(key, value, content, tabName, fn);
         let changedContent = JSON.parse(JSON.stringify(this.state.content));
+
         changedContent[`_${tabName}`] = JSON.parse(JSON.stringify(content));
 
         this.setState({
@@ -110,7 +112,7 @@ class ConfigContainer extends React.Component {
             }
         }
 
-        if (fn === 'add') {
+        if (fn === 'add' || fn === 'copy') {
             let index = copiedSettings.map((el, index) => el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
 
             // Copy object
@@ -128,7 +130,7 @@ class ConfigContainer extends React.Component {
         if (fn === 'remove') {
             let index = copiedSettings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
 
-            copiedSettings = [...copiedSettings.splice(0, index),  ...copiedSettings.splice(index)];
+            copiedSettings = [...copiedSettings.splice(0, index), ...copiedSettings.splice(index - 1)];
             successfulUpdate = true;
         }
 

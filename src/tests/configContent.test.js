@@ -183,7 +183,7 @@ describe('normal functions', () => {
         
         const _sub_list = screen.getAllByText(/Device-[0-9]/);
 
-        expect(_sub_list.length).toBe(5);
+        expect(_sub_list.length).toBe(4);
     });
 
     // at this stage it does add it to the list
@@ -197,7 +197,7 @@ describe('normal functions', () => {
         
         const _sub_list = screen.getAllByText(/Device-[0-9]/);
 
-        expect(_sub_list.length).toBe(5);
+        expect(_sub_list.length).toBe(3);
 
         _sub_list.forEach((el, i) => {
             expect(el.textContent).toBe("Device-" + i);
