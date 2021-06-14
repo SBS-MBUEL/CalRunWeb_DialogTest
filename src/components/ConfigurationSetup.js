@@ -96,12 +96,8 @@ class ConfigurationSetup extends React.Component {
         if (changedControls.length > 1) {
             changedControls.pop();
         } else {
-            changedControls[idx].value = 'Not Set';
-            newTabContent[setIdx].controls[idx].value = 'Not Set';
-            fn = 'update';
-            this.setState({
-                tabContent: newTabContent
-            });
+            renderGrowl('growl', 'Unable to remove any additional rows.', 'warning');
+            return;
         }
         
         let key = newTabContent[setIdx].controls[idx].label

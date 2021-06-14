@@ -1,0 +1,50 @@
+.removed {
+  
+    -webkit-animation: disapear 400ms;
+    -webkit-animation-fill-mode: forwards; 
+    animation: disapear 400ms;
+    animation-delay: 4500ms;
+    animation-fill-mode: forwards;
+  }
+
+  @-webkit-keyframes disapear{
+  
+    50% {
+      
+      -webkit-transform: translateX(-5%);
+      transform: translateX(-5%);
+    }
+    
+    100% {
+      -webkit-transform: translateX(200%);
+      transform: translateX(200%); 
+    }    
+  }
+  
+  @keyframes disapear{
+    
+    50% {
+      
+      -webkit-transform: translateX(-5%);
+      transform: translateX(-5%);
+    }
+    
+    100% {
+      -webkit-transform: translateX(200%);
+      transform: translateX(200%); 
+    }    
+  }
+
+  #growl-container {
+    position: fixed;
+    opacity: 80%;
+    width: 60%;
+    left: 30%;
+    top: 50%;
+    z-index:1000;
+    
+  }
+
+  .growling {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
