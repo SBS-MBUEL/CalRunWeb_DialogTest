@@ -101,7 +101,7 @@ class ConfigurationSetup extends React.Component {
             fn = 'update';
             this.setState({
                 tabContent: newTabContent
-            })
+            });
         }
         
         let key = newTabContent[setIdx].controls[idx].label
