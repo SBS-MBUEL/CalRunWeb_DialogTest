@@ -26,7 +26,7 @@ jobs:
     - run: npm install yarn
     - run: yarn
     - run: yarn test
-    - name: Jest Code Coverage Report
+      # - name: Jest Code Coverage Report
       # You may pin to the exact commit or the version. (coverage)
       # uses: ziishaned/jest-reporter-action@872c1051350ecaf625ba2490d68e7cb63854b44c
       # uses: ziishaned/jest-reporter-action@0.1.1
