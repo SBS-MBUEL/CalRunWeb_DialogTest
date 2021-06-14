@@ -38,7 +38,8 @@ describe('rendering with add device works', () => {
         const getButton = screen.getByText(/add device/).parentNode;
         expect(getButton.className).toBe('button is-success');
     });
-})
+});
+
 describe('rendering with remove button works', () => {
     test('renders button with correct delete text', () => {
         render(<ButtonItem value={testSetup([],undefined,'remove device').value} handler={processClick} /> );
@@ -60,7 +61,7 @@ describe('rendering with remove button works', () => {
         const getButton = screen.getByText(/remove device/).parentNode;
         expect(getButton.className).toBe('button is-danger');
     });
-})
+});
 
 describe('rendering with custom text works', () => {
     test('renders button with correct custom text', () => {
@@ -83,7 +84,7 @@ describe('rendering with custom text works', () => {
         const getButton = screen.getByText(/custom device/).parentNode;
         expect(getButton.className).toBe('button is-info');
     });
-})
+});
 
 describe('Button clicks work as expected', () => {
     test('Button event propagates correct object back when span for text is clicked', () => {
