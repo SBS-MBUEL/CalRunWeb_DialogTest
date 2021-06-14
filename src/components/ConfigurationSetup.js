@@ -96,7 +96,7 @@ class ConfigurationSetup extends React.Component {
         if (changedControls.length > 1) {
             changedControls.pop();
         } else {
-            renderGrowl('growl', 'Unable to remove any additional rows.', 'warning');
+            renderGrowl('growl', 'There must be at least one option in the sub option list below.', 'warning');
             return;
         }
         
