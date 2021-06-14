@@ -62,7 +62,7 @@ class ConfigurationSetup extends React.Component {
         // change state from content
         // const fn = 'add';
         let changedControls = JSON.parse(JSON.stringify(subControls));
-        let newContent = JSON.parse(JSON.stringify(changedControls[0]));
+        let newContent = JSON.parse(JSON.stringify(changedControls[changedControls.length - 1]));
         newContent.label = newContent.label.replace(/([0-9][0-9][0-9]|[0-9][0-9]|[0-9])/g, changedControls.length);
         newContent.value = fn === 'add' ? 'Not Set' : newContent.value;
         

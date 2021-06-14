@@ -46,7 +46,7 @@ class ConfigContainer extends React.Component {
      * @param {DOM} domElement Where the pop up dialog will appear
      * @param {string} id the DOM element to manipulate after selection is made
      * @returns 
-     */
+    */
     popUpSelection(domElement, id) {
         console.log($(domElement).parent());
         // TODO: Implement listener
@@ -59,7 +59,7 @@ class ConfigContainer extends React.Component {
      * deals with changes to UI to make sure they are saved to the state
      * //TODO: need to implement code here to deal with changes to selected item
      * @param {Event} e 
-     */
+    */
     changeHandler(e) {
         console.log('changeHandler');
         console.log(e.currentTarget.textContent);
@@ -73,7 +73,7 @@ class ConfigContainer extends React.Component {
      * @param {object} content 
      * @param {string} tabName 
      * @param {string} fn - default is update mode / options "update", "delete", "add" (copy is dealt with as an add)
-     */
+    */
     setContent(key, value, content, tabName, fn='update') {
         let changedContent = JSON.parse(JSON.stringify(this.state.content));
         changedContent[`_${tabName}`] = JSON.parse(JSON.stringify(content));
@@ -147,9 +147,9 @@ class ConfigContainer extends React.Component {
 
 
     /**
-    * copy current config row to a new row
-    * //TODO: code needs implemented
-    * @param {Event} e 
+        * copy current config row to a new row
+        * //TODO: code needs implemented
+        * @param {Event} e 
     */
     copyRow(e) {
         console.log('copy Row');
@@ -157,9 +157,9 @@ class ConfigContainer extends React.Component {
     }
 
     /**
-    * update row of current config row to database and local configs
-    * //TODO: code needs implemented
-    * @param {Event} e 
+        * update row of current config row to database and local configs
+        * //TODO: code needs implemented
+        * @param {Event} e 
     */
     updateRow(e) {
         console.log('update Row');
@@ -170,7 +170,7 @@ class ConfigContainer extends React.Component {
      * insert new config row to table
      * //TODO: code needs implemented
      * @param {Event} e 
-     */
+    */
     removeRow(e) {
         console.log('remove row');
         console.log(e.currentTarget);
@@ -180,7 +180,7 @@ class ConfigContainer extends React.Component {
      * insert new config row to table
      * //TODO: code needs implemented
      * @param {Event} e 
-     */
+    */
     insertRow(e) {
         console.log('insert Row');
         console.log(e.currentTarget);
@@ -225,7 +225,6 @@ class ConfigContainer extends React.Component {
                 <div className="column">
                     <TabLinkContainer tabs={tabs} changeActiveTab={this.changeActiveTab} activeTab={activeTab} />
                     <TabPanels tabs={tabs} content={content} setContent={this.setContent} activeTab={activeTab} clickRouter={this.clickRouter} />
-
                 </div>
             </div>
         );
