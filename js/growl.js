@@ -38,18 +38,24 @@ function renderGrowl(elementID, msg, level, title='') {
 }
 
 function setTimerToRemoveGrowl(element, timeout=5000) {
-    return setTimeout(() => {
+    let timer = setTimeout(function() {
         element.remove();
     }, timeout);
+    console.log(timer);
+    return timer;
 }
 
 function setListener(element, timer) {
+    
     element.addEventListener('mouseover', () => {
+        console.log(timer);
+        element.classList.remove('removed');
         clearTimeout(timer);
-
-        element.addEventListener('mouseout', () => {
-            setTimerToRemoveGrowl(element);
-        });
     });
-
+    
+    element.addEventListener('mouseout', () => {
+        clearTimeout(timer);
+        element.classList.add('removed');
+        setTimerToRemoveGrowl(element, 30000);
+    });
 }
