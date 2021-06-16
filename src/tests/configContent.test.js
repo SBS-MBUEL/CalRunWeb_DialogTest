@@ -3,7 +3,6 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { link } from 'fs';
 
 import App from '../App';
-import LocalStorage from '../utils/LocalStorage';
 
 function setup() {
     localStorage.clear('SystemName-Config');
@@ -27,7 +26,6 @@ describe('value errors not popping up.', () => {
         const _sub_item_list = screen.getAllByText(/DeepSeapHoxV2/);
 
         _sub_item_list.forEach(el => {
-            console.log(`processing click: ${el.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.firstChild.textContent}`)
             fireEvent.click(el);
         });
 
@@ -84,7 +82,6 @@ describe('normal functions', () => {
         expect(_sub_item_list.length).toBe(1);
 
         _sub_item_list.forEach(el => {
-            console.log(`processing click: ${el.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.firstChild.textContent}`)
             fireEvent.click(el);
         });
 
@@ -167,7 +164,6 @@ describe('normal functions', () => {
 
         _sub_list.forEach((el, i) => {
             expect(el.textContent).toBe("Device-" + i);
-            console.log(el.textContent);
         });
         
     });

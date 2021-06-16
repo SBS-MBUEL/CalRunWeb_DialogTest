@@ -27,7 +27,6 @@ class DropDownItem extends React.Component {
         this.setState({
             userValue: e.target.textContent
         });
-        console.log('changing ' + this.props.index + ' to ' + e.target.textContent);
         this.props.trackChanges(this.props.index, e.target.textContent);
     }
 
