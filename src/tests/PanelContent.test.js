@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, userEvent } from '@testing-library/react';
-import { ConfigurationSetup } from '../components/ConfigurationSetup';
+import { PanelContent } from '../components/PanelContent';
 
 
 const _configuration_area = 'Mock Control Device';
@@ -55,7 +55,7 @@ const clickRouter = (key, val, changedContent, tabName, fn) => {
 
 describe('test input is correct', () => {
     test('renders correct items', () => {
-        render(<ConfigurationSetup                                                 
+        render(<PanelContent                                                 
                 index={0} 
                 content={_mock_device}
                 setContent={processChange}
@@ -76,7 +76,7 @@ describe('test input is correct', () => {
     });
 
     test('list has valid items', () => {
-        render(<ConfigurationSetup                                                 
+        render(<PanelContent                                                 
                 index={0} 
                 content={_mock_device}
                 setContent={processChange}
@@ -95,7 +95,7 @@ describe('test input is correct', () => {
 
     });
     test('sub list renders', () => {
-        render(<ConfigurationSetup                                                 
+        render(<PanelContent                                                 
             index={0} 
             content={_mock_device}
             setContent={processChange}
@@ -112,7 +112,7 @@ describe('test input is correct', () => {
 
     test('sub list has valid items', () => {
         _global_setting_index = 1;
-        render(<ConfigurationSetup                                                 
+        render(<PanelContent                                                 
             index={0} 
             content={_mock_device}
             setContent={processChange}
@@ -137,7 +137,7 @@ describe('test input is correct', () => {
 
 describe('invalid content packaage renders correct error', () => {
     test('error page rendered with incorrect content', () => {
-        render(<ConfigurationSetup                                                 
+        render(<PanelContent                                                 
             index={0} 
             content={undefined}
             setContent={processChange}
@@ -153,7 +153,7 @@ describe('invalid content packaage renders correct error', () => {
 
 describe('Can change sub item', () => {
     test('change sub item propagates, has no undefined values.', () => {
-        render(<ConfigurationSetup                                                 
+        render(<PanelContent                                                 
                 index={0} 
                 content={_mock_device}
                 setContent={processChange}
@@ -173,7 +173,7 @@ describe('Can change sub item', () => {
     
     // at this stage does not add yet to the display
     test('add sub item propagates, has no undefined values.', () => {
-        render(<ConfigurationSetup                                                 
+        render(<PanelContent                                                 
                 index={0} 
                 content={_mock_device}
                 setContent={clickRouter}
@@ -192,7 +192,7 @@ describe('Can change sub item', () => {
 
     // at this stage does not add yet to the display
     test('copy sub item propagates, has existing value of last entry.', () => {
-        render(<ConfigurationSetup                                                 
+        render(<PanelContent                                                 
                 index={0} 
                 content={_mock_device}
                 setContent={clickRouter}
@@ -215,7 +215,7 @@ describe('Can change sub item', () => {
         // at this stage does not remove from the display
         test('remove sub item propagates, has existing value of last entry.', () => {
             globalFN = 'remove';
-            render(<ConfigurationSetup                                                 
+            render(<PanelContent                                                 
                     index={0} 
                     content={_mock_device}
                     setContent={clickRouter}

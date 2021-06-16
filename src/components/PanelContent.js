@@ -4,7 +4,9 @@ import { ConfigPageRow } from './ConfigPageRow';
 import { SubOptions } from './SubOptions';
 import { ErrorPage } from './ErrorPage';
 import { renderGrowl } from '../utils/growl'
-class ConfigurationSetup extends React.Component {
+
+
+class PanelContent extends React.Component {
 
     constructor(props) {
         super(props);
@@ -145,7 +147,7 @@ class ConfigurationSetup extends React.Component {
     }
 
     render() {
-        const { index, tabName, handler } = this.props;
+        const { index, tabName, handler, activeTab } = this.props;
         let content = this.state.tabContent;
 
         
@@ -154,7 +156,12 @@ class ConfigurationSetup extends React.Component {
         if (content) {
             let { mainContent, subContent } = content && this.parseContent(content);
             display = content[0].defaultName ? (
-                <div>
+                <div 
+                    key={`${tabName}-panel`} 
+                    role="tabpanel" 
+                    className={`tab-pane ${activeTab ? 'fade in is-active show' : 'fade out'}`}  
+                    id={`${tabName}`}
+                >
                     
                     <ConfigurationDisplayHeading key={`${content[0].defaultName}-heading`} handler={handler} heading={content[0].defaultName.toUpperCase()}/>
                     <div className="overflow">
@@ -212,7 +219,7 @@ class ConfigurationSetup extends React.Component {
  */
 if(typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     module.exports = {
-    ConfigurationSetup: ConfigurationSetup
+    PanelContent: PanelContent
 
     };
 }

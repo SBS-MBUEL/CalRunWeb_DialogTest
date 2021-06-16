@@ -26,7 +26,7 @@ const regex_replacements = [
         replace: 'createGUID'
     },
     {
-        regex: /_ConfigurationSetup\./g,
+        regex: /_PanelContent\./g,
         replace: ''
     },
     {
