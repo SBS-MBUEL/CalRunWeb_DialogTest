@@ -62,7 +62,7 @@ describe('golden path functionality', () => {
         
         try {
             const growl = screen.getByText(/danger-test/);
-        } catch {
+        } catch(er) {
             // Unable to find element after timer elapsed
             expect(true).toBe(true);
         }
@@ -79,7 +79,7 @@ describe('trying to break method', () => {
 
         try {
             const growl = screen.getByText(/danger/);
-        } catch {
+        } catch(er) {
             // Unable to find element with null id
             expect(true).toBe(true);
         }
@@ -89,7 +89,7 @@ describe('trying to break method', () => {
         try {
             const growl = screen.getByText(/danger-test/);
             expect(false).toBe(true);
-        } catch {
+        } catch(er) {
             // Unable to find element with null id
             expect(true).toBe(true);
         }
@@ -99,7 +99,7 @@ describe('trying to break method', () => {
         try {
             const growl = screen.getByText(/growl/);
             expect(false).toBe(true);
-        } catch {
+        } catch(er) {
             // Unable to find element with null id
             expect(true).toBe(true);
         }

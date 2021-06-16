@@ -1,17 +1,33 @@
-TODO: make pop up container different - styling and CSS is inconsistent
-TODO: Measurand buttons are different sizes
+
+// STYLING FIXES
 TODO: make button size fixed to some set value - varying sizes is not a clean look
-TODO: work on System Tab - copy / update / delete / add config buttons and their placement
-TODO: propagate selected change back down to clicked item.
-TODO: save change to setting object, on detect - save to local storage and database (should use external functions)
+TODO: tab select needs indices or tool-tip
+TODO: Measurand buttons are different sizes
+
+// INPUT FIXES
+TODO: Interaction between LocalStorage and Database - save LocalStorage to Database on settings close.
+Done: Focus needs to stay on the input box as user is changing it
+DONE: work on System Tab - copy / update / delete / add config buttons and their placement
+DONE: propagate selected change back down to clicked item.
+DONE: LocalStorage portion completed save change to setting object, on detect - save to local storage and database (should use external functions)
+
+// INTERFACE ISSUES
+TODO: Adjust font size in application?
 TODO: figure out how to display option that has sub option panels. Went with sliding tabs - still need a divider between system types
 TODO: deal with knowing the appropriate input for each drop down - text / list / numeric / etc
 TODO: Check the device.js for the existing methods
+TODO: quickly jump to tab number (tooltip over dot?)
 TODO: Differentiate varying devices in setpoints - may need to reflow layout - need to spend time on this a bit more, figuring out how to add devices / systems
-TODO: Focus needs to stay on the input box as user is changing it
-
-DONE: Object is not filtering correctly - everything gone, when I filter external from function it works as expected
-DONE: mock tab slider not working (may need to look at prior projects for examples)
-DONE: tab background not behind new content
-DONE: tab sub content
+FIXED: make pop up container different - styling and CSS is inconsistent
 DONE: change dropdown to drop right, adjust for proper fit
+
+FIXED: Input losing focus after every character - not practical for production as it is
+DONE: tab sub content
+DONE: tab background not behind new content
+DONE: mock tab slider not working (may need to look at prior projects for examples)
+DONE: Object is not filtering correctly - everything gone, when I filter external from function it works as expected
+
+// CONTROL devices
+// TODO: capture if add / copy / or remove contains 'device' if it does appropriately route that change to the appropriate function in the container
+// TODO: container needs to know if there is more than one position in the array. If there is, appropriately render
+// TODO: make sure copied object/ added object has correct information

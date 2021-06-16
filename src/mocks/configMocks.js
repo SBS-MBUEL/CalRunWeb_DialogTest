@@ -1,7 +1,6 @@
 'use strict';
 
-const _reference = 
-[
+const _reference = [
 	{for:'calibrationOption',
 		defaultName:'Reference',
 		controls:
@@ -39,35 +38,35 @@ const _reference =
 		{label:'Coefficients', type:'textarea', list:[], width:'200px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
 	]}
 ];
-const _device = 
-[
+const _device = [
 	{for:'calibrationOption',
 		defaultName:'Control Device',
 		controls:
 	[
-		{label:'Device', type:'dropdown', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:0},
-		{label:'SN', type:'text', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:1},
-		{label:'Port', type:'dropdown', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1},
-		{label:'Baud', type:'dropdown', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1},
-		{label:'Settings', type:'dropdown', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1},
-		{label:'Format', type:'dropdown', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1},
+		{label:'Device', type:'dropdown', list:['Not Set', 'AC-S', 'ECOV2', 'Keithley', 'SBE3', 'SBE4', 'SBE63', 'SKR-MINI', 'SNTL', 'SparkFun', 'UNO'], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:0},
+		{label:'SN', type:'text', list:['Not Set', 'COM3', 'COM4', 'COM5'], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:1},
+		{label:'Port', type:'dropdown', list:['Not Set', 'COM3', 'COM4', 'COM5'], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1},
+		{label:'Baud', type:'dropdown', list:['Not Set', '115200', '57600', '38400', '19200', '9600', '4800', '2400', '1200', '600', '300'], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1},
+		{label:'Settings', type:'dropdown', list:['Not Set', 'N,8', 'E,7', 'O,7'], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1},
+		{label:'Format', type:'dropdown', list:['RS-232', 'RS-485', 'IM'], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1},
 		{label:'Delay before sampling', type:'text', list:[], width:'200px', height:'30px', control:null, value:'0', maxLength:20, titleOrder:-1},
 		{label:'Configuration Commands', type:'textarea', list:[], width:'200px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
 		{label:'Sample Command', type:'text', list:[], width:'200px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
-		{label:'Add Measurand', type:'button', list:[], width:'50px', height:'30px', control:null, value:'addParameter', maxLength:0, titleOrder:-1},
-		{label:'Remove Measurand', type:'button', list:[], width:'50px', height:'30px', control:null, value:'removeParameter', maxLength:0, titleOrder:-1},
-		{label:'Add New System Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'addOption', maxLength:0, titleOrder:-1},
-		{label:'Remove This System Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'removeOption', maxLength:0, titleOrder:-1},
+		{label:'Add Measurand', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add measurand', maxLength:0, titleOrder:-1},
+		{label:'Copy Measurand', type:'button', list:[], width:'50px', height:'30px', control:null, value:'copy measurand', maxLength:0, titleOrder:-1},
+		{label:'Remove Measurand', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove measurand', maxLength:0, titleOrder:-1},
+		{label:'Add New System Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add device', maxLength:0, titleOrder:-1},
+		{label:'Copy Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'copy device', maxLength:0, titleOrder:-1},
+		{label:'Remove This System Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove device', maxLength:0, titleOrder:-1},
 	]},
 	{for:'calibrationParameter',
 		defaultName:'Measurand',
 		controls:
 	[
-		{label:'Measurand-0', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:0},
+		{label:'Measurand-0', type:'dropdown', list:['Not Set',	'Backscatter', 'Chlorophyll',	'Conductivity',	'FDOM',	'FLPC',	'FLPE',	'FLRH',	'FLUR',	'NTU',	'Oxygen',	'Phenanthrene', 'Pressure',	'Temperature',	'Voltage',	'pH'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:0},
 	]}
 ];
-const _datapoint = 
-[
+const _datapoint = [
 	{for:'calibrationOption',
 		defaultName:'Data Point',
 		controls:
@@ -94,8 +93,7 @@ const _datapoint =
 		{label:'Fill', type:'dropdown', list:['yes', 'no'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
 	]}
 ];
-const _system = 
-[
+const _system = [
 	{for:'calibrationOption',
     defaultName:'System Settings',
     controls:
@@ -132,8 +130,7 @@ const _system =
 	]}
 ];
 
-const systemStatusObjects = 
-{
+const systemStatusObjects = {
 	//TODO: This should come from the database
 	parameters: ['Unknown'],
 	statusItems:['Countdown', 'Current Time', 'Data Point', 'Errors', 'Status', 'Calibration Cycles', 'Wait Time', 'Configuration', 'Samples to Average'],
