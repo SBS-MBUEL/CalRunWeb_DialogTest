@@ -58,7 +58,6 @@ describe('interact with dropdown', () => {
 
         expect(span.parentNode.parentNode.parentNode.className).toBe('dropdown ');
 
-        console.log(span.textContent);
         expect(span.textContent).toBe('in-1-AC-S');
     });
 });

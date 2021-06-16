@@ -9,7 +9,7 @@
  * @param {string} level info, success, warning, danger
  * @param {string} title optional parameter that displays title of growl
  */
-function renderGrowl(elementID, msg, level, title='') {
+function renderGrowl(elementID, msg, level, title = '', timeout = true) {
 
     // need to validate parameters
     if (!elementID || !msg || !level) {
@@ -46,16 +46,17 @@ function renderGrowl(elementID, msg, level, title='') {
 
     root.appendChild(article);
 
-    let timer = setTimerToRemoveGrowl(article);
-    
-    setListener(article, timer);
+    if (timeout) {
+        let timer = setTimerToRemoveGrowl(article);
+        
+        setListener(article, timer);
+    }
 }
 
 function setTimerToRemoveGrowl(element, timeout=5000) {
     let timer = setTimeout(function() {
         element.remove();
     }, timeout);
-    console.log(timer);
     return timer;
 }
 

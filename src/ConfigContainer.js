@@ -75,7 +75,6 @@ class ConfigContainer extends React.Component {
      * @param {string} fn - default is update mode / options "update", "delete", "add" (copy is dealt with as an add)
     */
     setContent(key, value, content, tabName, fn='update') {
-        console.log(key, value, content, tabName, fn);
         let changedContent = JSON.parse(JSON.stringify(this.state.content));
 
         changedContent[`_${tabName}`] = JSON.parse(JSON.stringify(content));

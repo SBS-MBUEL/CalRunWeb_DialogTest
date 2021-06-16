@@ -49,8 +49,6 @@ const processChange = (key, val, content, tabName, fn) => {
 }
 let globalFN = '';
 const clickRouter = (key, val, changedContent, tabName, fn) => {
-    console.log(fn);
-    console.log(globalFN);
     expect(fn).toBe(globalFN);
     
 }
