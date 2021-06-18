@@ -17,7 +17,8 @@ import { ErrorRow } from './ErrorRow';
         this.state = {
             userValue: props && props.row && props.row.value ? props.row.value : undefined,
             settingIndex: props.settingIndex,
-            controlIndex: props.controlIndex
+            controlIndex: props.controlIndex,
+            objectIndex: props.contentIdx
         }
         this.trackChanges = this.trackChanges.bind(this);
         this.btnClickHandler = this.btnClickHandler.bind(this);

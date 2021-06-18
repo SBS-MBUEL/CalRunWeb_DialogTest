@@ -232,17 +232,18 @@ class PanelContent extends React.Component {
                     <ConfigurationDisplayHeading key={`${content[0].defaultName}-heading`} handler={handler} heading={content[0].defaultName.toUpperCase()}/>
                     <div className="overflow">
                         <div className="container">
-                            {mainContent.map((panel, i) => {
+                            {mainContent.map((panel, contentIdx) => {
                                 return (<div key={`mainContent-panel.defaultName-${i}`} className="mainPanel-content">
-                                    {panel.controls.map((mainRow, index) => {
+                                    {panel.controls.map((mainRow, rowIdx) => {
             
                                         return (
                                             <ConfigPageRow 
+                                                contentIdx={contentIdx}
                                                 key={index} 
                                                 onChange={this.setContentValues} 
                                                 row={mainRow} 
                                                 settingIndex={panel.indice}
-                                                controlIndex={index} 
+                                                controlIndex={rowIdx} 
                                                 buttonHandler={this.buttonHandler}
                                             />
                                         )
@@ -254,22 +255,23 @@ class PanelContent extends React.Component {
                         </div>
                         <hr />
                         <div className="container">
-                        {subContent.map((subPanel, i) => {
-                            return (<div key={`subContent-subPanel.defaultName-${i}`} className="subPanel-content">
-                                {subPanel.controls.length > 0 ?
-                                    <SubOptions 
-                                        onChange={this.setContentValues} 
-                                        subOption={subPanel.controls} 
-                                        settingIndex={subPanel.indice}
-                                        page={content[0].defaultName.toUpperCase()}
-                                    />
-                                    :
-                                    <React.Fragment>
-                                        {/* Empty div to display nothing */}
-                                    </React.Fragment>
-                                }
-                            </div>);
-                        })}
+                            {subContent.map((subPanel, subContentIdx) => {
+                                return (<div key={`subContent-subPanel.defaultName-${i}`} className="subPanel-content">
+                                    {subPanel.controls.length > 0 ?
+                                        <SubOptions 
+                                            subContentIdx={subContentIdx}
+                                            onChange={this.setContentValues} 
+                                            subOption={subPanel.controls} 
+                                            settingIndex={subPanel.indice}
+                                            page={content[0].defaultName.toUpperCase()}
+                                        />
+                                        :
+                                        <React.Fragment>
+                                            {/* Empty div to display nothing */}
+                                        </React.Fragment>
+                                    }
+                                </div>);
+                            })}
                         </div>
                         {/* {rows.length > 0 ? rows.map((col, index) => <SubOptions />) : <p>No configs below this.</p>} */}
                     </div>
