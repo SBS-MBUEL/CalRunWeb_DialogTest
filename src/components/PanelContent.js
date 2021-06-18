@@ -67,6 +67,40 @@ class PanelContent extends React.Component {
         }
     }
 
+        /**
+     * adds row to selected subContent
+     * //TODO: this will likely need to be refactored to deal with more complex lists
+     * @param {array} subControls - controls list object
+     * @returns 
+    */
+         duplicateOrAddRow(subControls, fn) {
+            // change state from content
+            // const fn = 'add';
+            let changedControls = JSON.parse(JSON.stringify(subControls));
+    
+            let newContent = JSON.parse(JSON.stringify(changedControls[changedControls.length - 1]));
+            
+            newContent.label = newContent.label.replace(/([0-9][0-9][0-9]|[0-9][0-9]|[0-9])/g, changedControls.length);
+            newContent.value = fn === 'add' ? 'Not Set' : newContent.value;
+            
+            let idx = changedControls.push(newContent) - 1;
+    
+            let setIdx = 1;
+    
+            let newTabContent = this.state.tabContent.slice();
+            newTabContent[setIdx].controls = changedControls;
+            // 1 is for subContent
+            // TODO: this will not work for subcontent with a list of options
+            newTabContent[setIdx].controls = changedControls;
+    
+            let key = newTabContent[setIdx].controls[idx].label
+            let val = newTabContent[setIdx].controls[idx].value
+    
+            this.props.setContent(key, val, newTabContent, this.props.tabName, fn); // TODO: change signature to pass "add" for fn
+    
+            return idx;
+        }
+
     /**
      * adds row to selected subContent
      * //TODO: this will likely need to be refactored to deal with more complex lists
@@ -134,15 +168,30 @@ class PanelContent extends React.Component {
         // Determine path of button press
         let { subContent, mainContent } = this.parseContent(this.state.tabContent);
 
-        if (parameter = '') {
+        console.log(parameter, btnFunction, settingIdx, subContent[0].indice);
+
+        // TODO: need to determine which panel is currently displayed and appropriately copy / remove / duplicate it or rows in it.
+        if (parameter === '') {
+            console.dir(subContent);
+            console.dir(subContent[subContent[0].indice]);
             if (btnFunction === 'add') {
-                let idx = this.duplicateOrAddRow(subContent[settingIdx].controls, btnFunction);
+                let idx = this.duplicateOrAddRow(subContent[0].controls, btnFunction);
             }
             if (btnFunction === 'copy') {
-                let idx = this.duplicateOrAddRow(subContent[settingIdx].controls, btnFunction);
+                let idx = this.duplicateOrAddRow(subContent[0].controls, btnFunction);
             }
             if (btnFunction === 'remove') {
-                let idx = this.removeRow(subContent[settingIdx].controls, btnFunction);
+                let idx = this.removeRow(subContent[0].controls, btnFunction);
+            }
+        } else if (parameter === 'device') {
+            if (btnFunction === 'add') {
+                let idx = this.duplicateOrAddContent(subContent[settingIdx].controls, btnFunction);
+            }
+            if (btnFunction === 'copy') {
+                let idx = this.duplicateOrAddContent(subContent[settingIdx].controls, btnFunction);
+            }
+            if (btnFunction === 'remove') {
+                let idx = this.removeContent(subContent[settingIdx].controls, btnFunction);
             }
         }
 

@@ -35,14 +35,16 @@ class TabPanels extends React.Component {
             if (content) {
                 main = tabs.map((tab, i) => {
                     return (
-                        <PanelContent 
-                            index={i} 
-                            content={content[`_${tab.ConfigurationArea}`]}
-                            setContent={this.setContent}
-                            tabName={tab.ConfigurationArea}
-                            handler={clickRouter}
-                            activeTab={i == activeTab}
-                        />
+                        <div key={`panel-content-${tab.ConfigurationArea}`} className="panel-content">
+                            <PanelContent 
+                                index={i} 
+                                content={content[`_${tab.ConfigurationArea}`]}
+                                setContent={this.setContent}
+                                tabName={tab.ConfigurationArea}
+                                handler={clickRouter}
+                                activeTab={i == activeTab}
+                            />
+                        </div>
                     );
                 });
             } else {
@@ -55,9 +57,7 @@ class TabPanels extends React.Component {
         return (
             <div className="columns ">
                 <div className="column">
-                    <div className="panel-content">
-                        { main }
-                    </div>
+                    { main }
                 </div>
             </div>
         )
