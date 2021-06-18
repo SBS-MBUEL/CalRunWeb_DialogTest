@@ -232,15 +232,22 @@ class PanelContent extends React.Component {
                     <ConfigurationDisplayHeading key={`${content[0].defaultName}-heading`} handler={handler} heading={content[0].defaultName.toUpperCase()}/>
                     <div className="overflow">
                         <div className="container">
+                            <div className="columns has-text-centered">
+                                <div className="column is-half">
+                                    <div className="button is-link fa fa-chevron-left"></div>
+                                </div>
+                                <div className="column is-half">
+                                    <div className="button is-link fa-chevron-right"></div>
+                                </div>
+                            </div>
                             {mainContent.map((panel, contentIdx) => {
-                                return (<div key={`mainContent-panel.defaultName-${i}`} className="mainPanel-content">
+                                return (<div key={`mainContent-panel.defaultName-${contentIdx}`} className="mainPanel-content">
                                     {panel.controls.map((mainRow, rowIdx) => {
             
                                         return (
                                             <ConfigPageRow 
                                                 contentIdx={contentIdx}
-                                                key={index} 
-                                                onChange={this.setContentValues} 
+                                                                                             onChange={this.setContentValues} 
                                                 row={mainRow} 
                                                 settingIndex={panel.indice}
                                                 controlIndex={rowIdx} 
@@ -255,8 +262,16 @@ class PanelContent extends React.Component {
                         </div>
                         <hr />
                         <div className="container">
+                            <div className="columns">
+                                <div className="column is-half">
+                                    <div className="button is-link fa-chevron-left"></div>
+                                </div>
+                                <div className="column is-half">
+                                    <div className="button is-link fa-chevron-right"></div>
+                                </div>
+                            </div>
                             {subContent.map((subPanel, subContentIdx) => {
-                                return (<div key={`subContent-subPanel.defaultName-${i}`} className="subPanel-content">
+                                return (<div key={`subContent-subPanel.defaultName-${subContentIdx}`} className="subPanel-content">
                                     {subPanel.controls.length > 0 ?
                                         <SubOptions 
                                             subContentIdx={subContentIdx}

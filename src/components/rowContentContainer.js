@@ -5,7 +5,7 @@ class RowContentContainer extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            panelContent = this.props.panelContent
+            panelContent : props.panelContent
         }
     }
 
