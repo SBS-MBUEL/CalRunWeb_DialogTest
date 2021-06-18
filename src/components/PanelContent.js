@@ -4,6 +4,7 @@ import { ConfigPageRow } from './ConfigPageRow';
 import { SubOptions } from './SubOptions';
 import { ErrorPage } from './ErrorPage';
 import { renderGrowl } from '../utils/growl'
+import { PanelNavigation } from './PanelNavigation';
 
 
 class PanelContent extends React.Component {
@@ -232,16 +233,14 @@ class PanelContent extends React.Component {
                     <ConfigurationDisplayHeading key={`${content[0].defaultName}-heading`} handler={handler} heading={content[0].defaultName.toUpperCase()}/>
                     <div className="overflow">
                         <div className="container">
-                            <div className="columns has-text-centered">
-                                <div className="column is-half">
-                                    <div className="button is-link fa fa-chevron-left"></div>
-                                </div>
-                                <div className="column is-half">
-                                    <div className="button is-link fa-chevron-right"></div>
-                                </div>
-                            </div>
                             {mainContent.map((panel, contentIdx) => {
                                 return (<div key={`mainContent-panel.defaultName-${contentIdx}`} className="mainPanel-content">
+                                    {/* TODO: Max Slides should come from content length */}
+                                    <PanelNavigation 
+                                        panel={tabName} 
+                                        optionView={'main'}
+                                        currentPane={contentIdx}
+                                        maxSlides={1} />
                                     {panel.controls.map((mainRow, rowIdx) => {
             
                                         return (
@@ -262,16 +261,14 @@ class PanelContent extends React.Component {
                         </div>
                         <hr />
                         <div className="container">
-                            <div className="columns">
-                                <div className="column is-half">
-                                    <div className="button is-link fa-chevron-left"></div>
-                                </div>
-                                <div className="column is-half">
-                                    <div className="button is-link fa-chevron-right"></div>
-                                </div>
-                            </div>
+
                             {subContent.map((subPanel, subContentIdx) => {
                                 return (<div key={`subContent-subPanel.defaultName-${subContentIdx}`} className="subPanel-content">
+                                    <PanelNavigation 
+                                        panel={tabName} 
+                                        optionView={'sub'}
+                                        currentPane={subContentIdx}
+                                        maxSlides={1} />
                                     {subPanel.controls.length > 0 ?
                                         <SubOptions 
                                             subContentIdx={subContentIdx}

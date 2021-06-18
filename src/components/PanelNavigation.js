@@ -6,7 +6,8 @@ class PanelNavigation extends React.Component {
         this.state = {
             panel : this.props.panel,
             optionView : this.props.optionView,
-            currentPane : this.props.currentPane
+            currentPane : this.props.currentPane,
+            maxSlides : this.props.maxSlides
         }
 
         this.slideLeft = this.slideLeft.bind(this);

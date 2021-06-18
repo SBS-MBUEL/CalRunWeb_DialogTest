@@ -85,6 +85,10 @@ const regex_replacements = [
         regex: /\(0, _growl\.renderGrowl\)/g,
         replace: 'renderGrowl'
     },
+    {
+        regex: /_PanelNavigation\.(|default)/g,
+        replace: ''
+    },
 ]
 
 const root_search_path = path.join(__dirname, '../js');
