@@ -5,10 +5,10 @@ import { PanelContent } from '../components/PanelContent';
 const _configuration_area = 'Mock Control Device';
 
 const _mock_device = [
-	{for:'calibrationOption',
+	{
+        for:'calibrationOption',
 		defaultName:'Mock Control Device',
-		controls:
-	[
+		controls: [
 		{label:'Device', type:'dropdown', list:['item-1', 'item-2'], width:'50px', height:'30px', control:null, value:'drop-list', maxLength:0, titleOrder:0},
 		{label:'SN', type:'text', list:[], width:'50px', height:'30px', control:null, value:'text-input', maxLength:20, titleOrder:1},
 		{label:'Port', type:'textarea', list:[], width:'50px', height:'30px', control:null, value:'textarea-input', maxLength:0, titleOrder:-1},
@@ -16,10 +16,10 @@ const _mock_device = [
         {label:'Copy Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'copy device-button', maxLength:0, titleOrder:-1},
         {label:'Add Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add device-button', maxLength:0, titleOrder:-1},
 	]},
-	{for:'calibrationParameter',
+	{
+        for:'calibrationParameter',
 		defaultName:'Measurand',
-		controls:
-	[
+		controls: [
 		{label:'Measurand-0', type:'dropdown', list:['purple', 'people', 'eater'], width:'100px', height:'30px', control:['purple', 'people', 'eater'], value:'sub-list', maxLength:0, titleOrder:0},
 	]}
 ];

@@ -12,16 +12,37 @@ class PanelContent extends React.Component {
         super(props);
         this.state = {
             tabContent: props.content,
+            calibrationOption: 'calibrationOption',
+            calibrationParameter: 'calibrationParameter'
         }
 
         this.setContentValues = this.setContentValues.bind(this);
         this.buttonHandler = this.buttonHandler.bind(this);
         this.duplicateOrAddRow = this.duplicateOrAddRow.bind(this);
         this.removeRow = this.removeRow.bind(this);
+        this.parseContent = this.parseContent.bind(this);
+        this.filterContent = this.filterContent.bind(this);
+
     }
 
     componentDidMount() {
         
+    }
+
+    /**
+     * filter content object
+     * @param {object} content 
+     * @param {string} filter 
+     * @returns 
+     */
+    filterContent(content, filter) {
+        return content.reduce((sum, cur, i) => {
+            if(cur.for === filter) {
+                cur.indice = i;
+                sum.push(cur);
+            } 
+            return sum;
+        }, []);
     }
 
     /**
@@ -35,19 +56,10 @@ class PanelContent extends React.Component {
 
         if (content && content.length > 0) {
 
-            mainContent = content.reduce((sum, cur) => {
-                if(cur.for === 'calibrationOption') {
-                    sum.push(cur) 
-                } 
-                return sum;
-            }, [])[0].controls.slice();
+            mainContent = this.filterContent(content, this.state.calibrationOption);
 
-            subContent = content.reduce((sum, cur) => {
-                if (cur.for === 'calibrationParameter') {
-                    sum.push(cur)
-                }
-                return sum;
-            }, [])[0].controls.slice();
+            subContent = this.filterContent(content, this.state.calibrationParameter);
+
         }
 
         return {
@@ -65,7 +77,9 @@ class PanelContent extends React.Component {
         // change state from content
         // const fn = 'add';
         let changedControls = JSON.parse(JSON.stringify(subControls));
+
         let newContent = JSON.parse(JSON.stringify(changedControls[changedControls.length - 1]));
+        
         newContent.label = newContent.label.replace(/([0-9][0-9][0-9]|[0-9][0-9]|[0-9])/g, changedControls.length);
         newContent.value = fn === 'add' ? 'Not Set' : newContent.value;
         
@@ -114,20 +128,22 @@ class PanelContent extends React.Component {
      * appropriately process button clicked
      * @param {dom} btn pressed in ButtonItem
      */
-    buttonHandler(btn) {
+    buttonHandler(btn, settingIdx, parameter = '') {
         const btnFunction = btn.children[1].textContent.split(' ')[0];
 
         // Determine path of button press
-        let { subContent } = this.parseContent(this.state.tabContent);
+        let { subContent, mainContent } = this.parseContent(this.state.tabContent);
 
-        if (btnFunction === 'add') {
-            let idx = this.duplicateOrAddRow(subContent, btnFunction);
-        }
-        if (btnFunction === 'copy') {
-            let idx = this.duplicateOrAddRow(subContent, btnFunction);
-        }
-        if (btnFunction === 'remove') {
-            let idx = this.removeRow(subContent, btnFunction);
+        if (parameter = '') {
+            if (btnFunction === 'add') {
+                let idx = this.duplicateOrAddRow(subContent[settingIdx].controls, btnFunction);
+            }
+            if (btnFunction === 'copy') {
+                let idx = this.duplicateOrAddRow(subContent[settingIdx].controls, btnFunction);
+            }
+            if (btnFunction === 'remove') {
+                let idx = this.removeRow(subContent[settingIdx].controls, btnFunction);
+            }
         }
 
     }
@@ -141,6 +157,7 @@ class PanelContent extends React.Component {
      */
     setContentValues(key, val, settingIdx, controlIdx) {
         let changedContent = this.state.tabContent.slice();
+
         changedContent[settingIdx].controls[controlIdx].value = val;
 
         this.props.setContent(key, val, changedContent, this.props.tabName);
@@ -166,34 +183,44 @@ class PanelContent extends React.Component {
                     <ConfigurationDisplayHeading key={`${content[0].defaultName}-heading`} handler={handler} heading={content[0].defaultName.toUpperCase()}/>
                     <div className="overflow">
                         <div className="container">
-                            {mainContent.map((row, index) => {
-    
-                                return (
-                                    <ConfigPageRow 
-                                        key={index} 
-                                        onChange={this.setContentValues} 
-                                        row={row} 
-                                        settingIndex={0}
-                                        controlIndex={index} 
-                                        buttonHandler={this.buttonHandler}
-                                    />
-                                )
-                            })}
+                            {mainContent.map((panel, i) => {
+                                return (<div key={`mainContent-panel.defaultName-${i}`} className="mainPanel-content">
+                                    {panel.controls.map((mainRow, index) => {
+            
+                                        return (
+                                            <ConfigPageRow 
+                                                key={index} 
+                                                onChange={this.setContentValues} 
+                                                row={mainRow} 
+                                                settingIndex={panel.indice}
+                                                controlIndex={index} 
+                                                buttonHandler={this.buttonHandler}
+                                            />
+                                        )
+                                    })}
+                                </div>);
+                            })
+                            }
     
                         </div>
                         <hr />
                         <div className="container">
-                            {subContent.length > 0 ?
-                                <SubOptions 
-                                    onChange={this.setContentValues} 
-                                    subOption={subContent} 
-                                    page={content[0].defaultName.toUpperCase()}
-                                />
-                                :
-                                <React.Fragment>
-                                    {/* Empty div to display nothing */}
-                                </React.Fragment>
-                            }
+                        {subContent.map((subPanel, i) => {
+                            return (<div key={`subContent-subPanel.defaultName-${i}`} className="subPanel-content">
+                                {subPanel.controls.length > 0 ?
+                                    <SubOptions 
+                                        onChange={this.setContentValues} 
+                                        subOption={subPanel.controls} 
+                                        settingIndex={subPanel.indice}
+                                        page={content[0].defaultName.toUpperCase()}
+                                    />
+                                    :
+                                    <React.Fragment>
+                                        {/* Empty div to display nothing */}
+                                    </React.Fragment>
+                                }
+                            </div>);
+                        })}
                         </div>
                         {/* {rows.length > 0 ? rows.map((col, index) => <SubOptions />) : <p>No configs below this.</p>} */}
                     </div>

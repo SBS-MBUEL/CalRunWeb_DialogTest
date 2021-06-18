@@ -24,7 +24,7 @@ import { ErrorRow } from './ErrorRow';
     }
 
     btnClickHandler(btn) {
-        this.props.buttonHandler(btn);
+        this.props.buttonHandler(btn, this.state.settingIndex);
     }
     /**
      * propagates changes up call stack
