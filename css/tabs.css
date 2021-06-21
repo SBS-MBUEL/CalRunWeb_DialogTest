@@ -143,9 +143,9 @@ a:hover, a:focus {
     /* overflow-y: none; */
 }
 
-.overflow-y {
-    overflow-y:scroll;
-    overflow-x: hidden;
+.overflow-x {
+    overflow-y: hidden;
+    overflow-x: scroll;
 }
 
 .slider__btn {

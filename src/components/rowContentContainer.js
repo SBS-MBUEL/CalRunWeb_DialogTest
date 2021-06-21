@@ -8,40 +8,67 @@ class RowContentContainer extends React.Component {
         this.state = {
             panelContent : props.panelContent,
             maxSlides: props.maxSlides,
-            currentPane : 0,
-            activeTab : props.activeTab,
-            activeSlide: props.activeSlide
+            currentView: props.optionView,
         }
 
+        this.slideLeft = this.slideLeft.bind(this);
+        this.slideRight = this.slideRight.bind(this);
     }
+
+    /**
+     * slides the sub panel to the right
+     * position should use state for setting
+    */
+         slideRight() {
+
+            let newSlide = this.props.activeSlide > 0 ? (this.props.activeSlide - 1) : (this.props.maxSlides - 1);
+            
+            
+             
+            console.log(this.state.currentView, newSlide);
+            this.props.changeSlide(this.state.currentView, newSlide);
+            
+        }
+    
+        /**
+         * slides current pane to the left
+        */
+        slideLeft() {
+
+            let newSlide = this.props.activeSlide < (this.state.maxSlides - 1) ? (this.props.activeSlide + 1) : 0;
+            
+
+            console.log(this.state.currentView, newSlide);
+            this.props.changeSlide(this.state.currentView, newSlide);
+
+        }
 
     render() {
         const { index, tabName, handler, optionView } = this.props;
         return (
-            <div key={`${optionView}-${tabName}-${index}`} className="container column is-11 mainPanel-content is-inline" style={{"transform": `translateX(${this.state.activeSlide * 100 * -1}%)`}}>
-                    {/* TODO: Max Slides should be dynamic should come from content length */}
-                    <PanelNavigation 
-                        panel={tabName} 
-                        optionView={optionView}
-                        currentPane={this.state.currentPane}
-                        slideLeft={this.props.slideLeft}
-                        slideRight={this.props.slideRight}
-                    />
-                    {this.state.panelContent.controls.map((row, rowIdx) => {
-                        return (
-                            <div key={`${row.label}-${rowIdx}`}>
-                                <ConfigPageRow 
-                                    contentIdx={rowIdx}
-                                    onChange={this.props.setContentValues} 
-                                    row={row} 
-                                    settingIndex={this.state.panelContent.indice}
-                                    controlIndex={rowIdx} 
-                                    buttonHandler={this.props.buttonHandler}
-                                />
-                            </div>
-                        )
-                    })}
-            </div>
+                    <React.Fragment>
+                        <PanelNavigation 
+                            panel={tabName} 
+                            optionView={optionView}
+                            currentPane={this.props.currentPane}
+                            slideLeft={this.slideLeft}
+                            slideRight={this.slideRight}
+                        />
+                        {this.state.panelContent.controls.map((row, rowIdx) => {
+                            return (
+                                <div key={`${row.label}-${rowIdx}`}>
+                                    <ConfigPageRow 
+                                        contentIdx={rowIdx}
+                                        onChange={this.props.setContentValues} 
+                                        row={row} 
+                                        settingIndex={this.state.panelContent.indice}
+                                        controlIndex={rowIdx} 
+                                        buttonHandler={this.props.buttonHandler}
+                                    />
+                                </div>
+                            )
+                        })}
+                    </React.Fragment>
         );
     }
 

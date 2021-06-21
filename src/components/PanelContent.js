@@ -16,10 +16,8 @@ class PanelContent extends React.Component {
             tabContent: props.content,
             calibrationOption: 'calibrationOption',
             calibrationParameter: 'calibrationParameter',
-            mainActiveTab : 0,
-            mainMaxSlides: 1,
-            subActiveTab: 0,
-            subMaxSlides: 1
+            mainActiveSlide : 0,
+            subActiveSlide: 0,
         }
 
         this.setContentValues = this.setContentValues.bind(this);
@@ -29,30 +27,25 @@ class PanelContent extends React.Component {
         this.parseContent = this.parseContent.bind(this);
         this.filterContent = this.filterContent.bind(this);
         
-        this.slideLeft = this.slideLeft.bind(this);
-        this.slideRight = this.slideRight.bind(this);
+        this.changeSlide = this.changeSlide.bind(this);
     }
 
     componentDidMount() {
-        
+
     }
 
     /**
-     * slides the sub panel to the right
+     * slides the sub panel to the right or left
      * position should use state for setting
     */
-    slideRight() {
-        let newPane = this.state.activeTab < this.state.maxSlides - 1 ? this.state.activeTab + 1 : 0;
-        this.setState({activeTab : newPane});
+    changeSlide(view, newSlide) {
+
+        this.setState({
+            [`${view}ActiveSlide`] : newSlide})
+
     }
 
-    /**
-     * slides current pane to the left
-    */
-    slideLeft() {
-        let newPane = this.state.activeTab > 0 ? this.state.activeTab - 1 : this.state.maxSlides - 1 ;
-        this.setState({activeTab : newPane});
-    }
+
 
     /**
      * filter content object
@@ -221,41 +214,49 @@ class PanelContent extends React.Component {
                     
                 <ConfigurationDisplayHeading key={`${content[0].defaultName}-heading`} handler={handler} heading={content[0].defaultName.toUpperCase()}/>
                 <div className="container overflow">
-                    <div className="container columns overflow-y is-flex">
-                            {mainContent.map((panel, contentIdx) => {
-                                return <RowContentContainer
-                                            activeSlide={this.state.mainActiveTab}
+                    <div className="container columns is-flex">
+                        {mainContent.map((panel, contentIdx, arr) => {
+                            return (
+                                <div key={`${'main'}-${tabName}-${contentIdx}`} className="container column is-11 slide mainPanel-content is-inline" style={{"transform": `translateX(${this.state.mainActiveSlide * 100 * -1}%)`}}>
+                                    {/* TODO: Max Slides should be dynamic should come from content length */}
+                                    <RowContentContainer
+                                            activeSlide={this.state.mainActiveSlide}
                                             buttonHandler={this.buttonHandler}
                                             setContentValues={this.setContentValues}
                                             panelContent={panel}
                                             tabName={tabName}
                                             contentIdx={contentIdx}
                                             onChange={this.setContentValues} 
-                                            slideLeft={this.slideLeft}
-                                            slideRight={this.slideRight}
-                                            currentPane={this.state.mainActiveTab}
+                                            changeSlide={this.changeSlide}
+                                            currentPane={activeTab}
                                             optionView={'main'}
-                                        />
-                            })
-                            }
+                                            maxSlides={arr.length}
+                                    />
+                                </div>)
+
+
+                        })}
                     </div>
                     <hr />
-                    <div className="container columns overflow-y is-flex">
-                            {subContent.map((subPanel, subContentIdx) => {
-                                return <RowContentContainer
-                                            activeSlide={this.state.subActiveTab}
+                    <div className="container columns is-flex">
+                        {subContent.map((subPanel, subContentIdx, arr) => {
+                            return (
+                                <div key={`${'sub'}-${tabName}-${subContentIdx}`} className="container column is-11 slide mainPanel-content is-inline" style={{"transform": `translateX(${this.state.subActiveSlide * 100 * -1}%)`}}>
+                                    <RowContentContainer
+                                            activeSlide={this.state.subActiveSlide}
                                             setContentValues={this.setContentValues}
                                             panelContent={subPanel}
                                             tabName={tabName}
                                             contentIdx={subContentIdx}
                                             onChange={this.setContentValues} 
-                                            slideLeft={this.slideLeft}
-                                            slideRight={this.slideRight}
-                                            currentPane={this.state.mainActiveTab}
-                                            optionView={'subContent'}
-                                        />
-;
-                            })}
+                                            changeSlide={this.changeSlide}
+                                            currentPane={activeTab}
+                                            optionView={'sub'}
+                                            maxSlides={arr.length}
+                                    />
+                                </div>
+                                );
+                        })}
                     </div>
                 </div>
             </div>
@@ -267,11 +268,7 @@ class PanelContent extends React.Component {
             renderGrowl('growl', 'Problem retrieving or displaying tabContent variable. This is likely a bug.', 'danger', 'Unable to Load Page');
         }
 
-        return (
-            <React.Fragment>
-                {display}
-            </React.Fragment>
-        );
+        return display;
     }
 }
 
