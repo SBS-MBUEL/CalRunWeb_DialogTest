@@ -14,7 +14,11 @@ class PanelContent extends React.Component {
         this.state = {
             tabContent: props.content,
             calibrationOption: 'calibrationOption',
-            calibrationParameter: 'calibrationParameter'
+            calibrationParameter: 'calibrationParameter',
+            mainActiveTab : 0,
+            mainMaxSlides: 1,
+            subActiveTab: 0,
+            subMaxSlides: 1
         }
 
         this.setContentValues = this.setContentValues.bind(this);
@@ -23,7 +27,9 @@ class PanelContent extends React.Component {
         this.removeRow = this.removeRow.bind(this);
         this.parseContent = this.parseContent.bind(this);
         this.filterContent = this.filterContent.bind(this);
-
+        
+        this.slideLeft = this.slideLeft.bind(this);
+        this.slideRight = this.slideRight.bind(this);
     }
 
     componentDidMount() {
@@ -31,11 +37,28 @@ class PanelContent extends React.Component {
     }
 
     /**
+     * slides the sub panel to the right
+     * position should use state for setting
+    */
+    slideRight() {
+        let newPane = this.state.activeTab < this.state.maxSlides - 1 ? this.state.activeTab + 1 : 0;
+        this.setState({activeTab : newPane});
+    }
+
+    /**
+     * slides current pane to the left
+    */
+    slideLeft() {
+        let newPane = this.state.activeTab > 0 ? this.state.activeTab - 1 : this.state.maxSlides - 1 ;
+        this.setState({activeTab : newPane});
+    }
+
+    /**
      * filter content object
      * @param {object} content 
      * @param {string} filter 
      * @returns 
-     */
+    */
     filterContent(content, filter) {
         return content.reduce((sum, cur, i) => {
             if(cur.for === filter) {
@@ -50,7 +73,7 @@ class PanelContent extends React.Component {
      * takes content and divides it between main and sub content
      * @param {object} content 
      * @returns 
-     */
+    */
     parseContent(content) {
         let mainContent = undefined;
         let subContent = undefined;
@@ -67,40 +90,6 @@ class PanelContent extends React.Component {
             mainContent, subContent
         }
     }
-
-        /**
-     * adds row to selected subContent
-     * //TODO: this will likely need to be refactored to deal with more complex lists
-     * @param {array} subControls - controls list object
-     * @returns 
-    */
-         duplicateOrAddRow(subControls, fn) {
-            // change state from content
-            // const fn = 'add';
-            let changedControls = JSON.parse(JSON.stringify(subControls));
-    
-            let newContent = JSON.parse(JSON.stringify(changedControls[changedControls.length - 1]));
-            
-            newContent.label = newContent.label.replace(/([0-9][0-9][0-9]|[0-9][0-9]|[0-9])/g, changedControls.length);
-            newContent.value = fn === 'add' ? 'Not Set' : newContent.value;
-            
-            let idx = changedControls.push(newContent) - 1;
-    
-            let setIdx = 1;
-    
-            let newTabContent = this.state.tabContent.slice();
-            newTabContent[setIdx].controls = changedControls;
-            // 1 is for subContent
-            // TODO: this will not work for subcontent with a list of options
-            newTabContent[setIdx].controls = changedControls;
-    
-            let key = newTabContent[setIdx].controls[idx].label
-            let val = newTabContent[setIdx].controls[idx].value
-    
-            this.props.setContent(key, val, newTabContent, this.props.tabName, fn); // TODO: change signature to pass "add" for fn
-    
-            return idx;
-        }
 
     /**
      * adds row to selected subContent
@@ -135,7 +124,6 @@ class PanelContent extends React.Component {
 
         return idx;
     }
-
 
     removeRow(subControls, fn) {
         let changedControls = JSON.parse(JSON.stringify(subControls));
@@ -234,7 +222,8 @@ class PanelContent extends React.Component {
                     <div className="overflow">
                         <div className="container">
                             {mainContent.map((panel, contentIdx) => {
-                                return (<div key={`mainContent-panel.defaultName-${contentIdx}`} className="mainPanel-content">
+                                return (
+                                <div key={`mainContent-${panel.defaultName}-${contentIdx}`} className="mainPanel-content" style={{"transform": `translateX(${this.state.mainActiveTab * 100 * -1}%)`}}>
                                     {/* TODO: Max Slides should come from content length */}
                                     <PanelNavigation 
                                         panel={tabName} 
@@ -246,7 +235,7 @@ class PanelContent extends React.Component {
                                         return (
                                             <ConfigPageRow 
                                                 contentIdx={contentIdx}
-                                                                                             onChange={this.setContentValues} 
+                                                onChange={this.setContentValues} 
                                                 row={mainRow} 
                                                 settingIndex={panel.indice}
                                                 controlIndex={rowIdx} 
@@ -263,7 +252,7 @@ class PanelContent extends React.Component {
                         <div className="container">
 
                             {subContent.map((subPanel, subContentIdx) => {
-                                return (<div key={`subContent-subPanel.defaultName-${subContentIdx}`} className="subPanel-content">
+                                return (<div key={`subContent-${subPanel.defaultName}-${subContentIdx}`} className="subPanel-content">
                                     <PanelNavigation 
                                         panel={tabName} 
                                         optionView={'sub'}

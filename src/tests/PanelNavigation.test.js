@@ -14,8 +14,8 @@ describe('normal input', () => {
         render(<PanelNavigation             
                 panel = {testPanel}
                 optionView = {optionView}
-                activePane = {activePane}
-                currentPane = {currentPane} />);
+                currentPane = {currentPane} 
+                />);
 
         const pane = screen.getByText(/panelNavTest - optionParameter: 1/);
         
@@ -27,8 +27,8 @@ describe('normal input', () => {
         render(<PanelNavigation             
                 panel = {testPanel}
                 optionView = {optionView}
-                activePane = {activePane}
-                currentPane = {currentPane} />);
+                currentPane = {currentPane} 
+                />);
 
         const pane = screen.getByText(/panelNavTest - optionParameter: 1/);
         const clickLeft = pane.parentNode.firstChild.firstChild;
@@ -41,8 +41,8 @@ describe('normal input', () => {
         render(<PanelNavigation             
             panel = {testPanel}
             optionView = {optionView}
-            activePane = {activePane}
-            currentPane = {currentPane} />);
+            currentPane = {currentPane} 
+            />);
 
         const pane = screen.getByText(/panelNavTest - optionParameter: 1/);
         const clickRight = pane.parentNode.lastChild.firstChild;
