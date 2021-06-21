@@ -219,15 +219,12 @@ class PanelContent extends React.Component {
                     id={`${tabName}`}
                 >
                     
-                    <ConfigurationDisplayHeading key={`${content[0].defaultName}-heading`} handler={handler} heading={content[0].defaultName.toUpperCase()}/>
-                    <div className="container overflow">
-                        <div className="columns" >
-                            <div className="column is-12">
-                                {mainContent.map((panel, contentIdx) => {
-                                    return (
-                                        <div key={`mainContent-${panel.defaultName}-${contentIdx}`} className="mainPanel-content column is-12" style={{"transform": `translateX(${this.state.mainActiveTab * 100 * -1}%)`}}>
-                                        {/* TODO: Max Slides should come from content length */}
-                                        <RowContentContainer
+                <ConfigurationDisplayHeading key={`${content[0].defaultName}-heading`} handler={handler} heading={content[0].defaultName.toUpperCase()}/>
+                <div className="container overflow">
+                    <div className="container columns overflow-y is-flex">
+                            {mainContent.map((panel, contentIdx) => {
+                                return <RowContentContainer
+                                            activeSlide={this.state.mainActiveTab}
                                             buttonHandler={this.buttonHandler}
                                             setContentValues={this.setContentValues}
                                             panelContent={panel}
@@ -239,21 +236,14 @@ class PanelContent extends React.Component {
                                             currentPane={this.state.mainActiveTab}
                                             optionView={'main'}
                                         />
-
-                                    </div>);
-                                })
-                                }
-                                
-                            </div>
-
-                        </div>
-                        <hr />
-                        <div className="columns">
-                            <div className="column is-12">
-                                {subContent.map((subPanel, subContentIdx) => {
-                                    return (
-                                    <div key={`subContent-${subPanel.defaultName}-${subContentIdx}`} className="mainPanel-content column is-12" style={{"transform": `translateX(${this.state.mainActiveTab * 100 * -1}%)`}}>
-                                        <RowContentContainer
+                            })
+                            }
+                    </div>
+                    <hr />
+                    <div className="container columns overflow-y is-flex">
+                            {subContent.map((subPanel, subContentIdx) => {
+                                return <RowContentContainer
+                                            activeSlide={this.state.subActiveTab}
                                             setContentValues={this.setContentValues}
                                             panelContent={subPanel}
                                             tabName={tabName}
@@ -264,16 +254,12 @@ class PanelContent extends React.Component {
                                             currentPane={this.state.mainActiveTab}
                                             optionView={'subContent'}
                                         />
-
-                                    </div>);
-                                })}
-
-                            </div>
-                        </div>
-
+;
+                            })}
                     </div>
-
                 </div>
+            </div>
+
             ) : 
             display;
 

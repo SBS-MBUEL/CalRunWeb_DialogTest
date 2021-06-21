@@ -9,7 +9,8 @@ class RowContentContainer extends React.Component {
             panelContent : props.panelContent,
             maxSlides: props.maxSlides,
             currentPane : 0,
-            activeTab : props.activeTab
+            activeTab : props.activeTab,
+            activeSlide: props.activeSlide
         }
 
     }
@@ -17,7 +18,7 @@ class RowContentContainer extends React.Component {
     render() {
         const { index, tabName, handler, optionView } = this.props;
         return (
-            <div key={`${tabName}-${optionView}-${index}`}>
+            <div key={`${optionView}-${tabName}-${index}`} className="container column is-11 mainPanel-content is-inline" style={{"transform": `translateX(${this.state.activeSlide * 100 * -1}%)`}}>
                     {/* TODO: Max Slides should be dynamic should come from content length */}
                     <PanelNavigation 
                         panel={tabName} 

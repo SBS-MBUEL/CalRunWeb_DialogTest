@@ -134,12 +134,18 @@ a:hover, a:focus {
     border-right: 2px #11195c solid;
 }
 
+
 .overflow {
     border: 1px solid black; 
     height: 740px;
     overflow-y: auto;
     overflow-x: hidden;
     /* overflow-y: none; */
+}
+
+.overflow-y {
+    overflow-y:scroll;
+    overflow-x: hidden;
 }
 
 .slider__btn {
