@@ -14,6 +14,7 @@ describe('normal input', () => {
         render(<PanelNavigation             
                 panel = {testPanel}
                 optionView = {optionView}
+                activePane = {activePane}
                 currentPane = {currentPane} />);
 
         const pane = screen.getByText(/panelNavTest - optionParameter: 1/);
@@ -26,6 +27,7 @@ describe('normal input', () => {
         render(<PanelNavigation             
                 panel = {testPanel}
                 optionView = {optionView}
+                activePane = {activePane}
                 currentPane = {currentPane} />);
 
         const pane = screen.getByText(/panelNavTest - optionParameter: 1/);
@@ -39,6 +41,7 @@ describe('normal input', () => {
         render(<PanelNavigation             
             panel = {testPanel}
             optionView = {optionView}
+            activePane = {activePane}
             currentPane = {currentPane} />);
 
         const pane = screen.getByText(/panelNavTest - optionParameter: 1/);

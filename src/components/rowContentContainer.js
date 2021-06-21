@@ -5,20 +5,27 @@ class RowContentContainer extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            panelContent : props.panelContent
+            panelContent : props.panelContent,
+            currentPane : 0
         }
     }
 
     render() {
-
+        const { index, tabName, handler, activeTab } = this.props;
         return (
             <div className="columns">
                 <div className="column"  style={{"transform": `translateX(${this.state.currentPane * 100 * -1}%)`}}>
+                    {/* TODO: Max Slides should be dynamic
+                    ould come from content length */}
+                    <PanelNavigation 
+                        panel={tabName} 
+                        optionView={'main'}
+                        currentPane={this.state.currentPane}
+                        maxSlides={1} />
                     {this.state.panelContent.map((panel, contentIdx) => {
                         return (
                             <div key={`mainContent-panel.defaultName-${i}`} className="mainPanel-content">
                                 {panel.controls.map((mainRow, rowIdx) => {
-
                                     return (
                                         <ConfigPageRow 
                                             contentIdx={contentIdx}
