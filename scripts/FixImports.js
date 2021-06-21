@@ -89,6 +89,10 @@ const regex_replacements = [
         regex: /_PanelNavigation\.(|default)/g,
         replace: ''
     },
+    {
+        regex: /_rowContentContainer\.(|default)/g,
+        replace: ''
+    },
 ]
 
 const root_search_path = path.join(__dirname, '../js');

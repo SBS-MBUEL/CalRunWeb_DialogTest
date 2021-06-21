@@ -133,6 +133,20 @@ describe('test input is correct', () => {
         expect(_sub_item_3.textContent).toBe('eater');
 
     });
+
+    test('main key different from sub key', () => {
+        render(<PanelContent
+                index={0} 
+                content={_mock_device}
+                setContent={processChange}
+                tabName={_configuration_area}
+                handler={clickRouter} 
+            />)
+        const mainContent = screen.getByText(/SN/).parentNode.firstChild;
+        const subContent = screen.getByText(/Measurand-0/).parentNode.firstChild;
+
+        expect(mainContent.textContent).not.toBe(subContent.textContent);
+    });
 });
 
 describe('invalid content packaage renders correct error', () => {

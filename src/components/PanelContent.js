@@ -5,6 +5,7 @@ import { SubOptions } from './SubOptions';
 import { ErrorPage } from './ErrorPage';
 import { renderGrowl } from '../utils/growl'
 import { PanelNavigation } from './PanelNavigation';
+import { RowContentContainer } from './rowContentContainer';
 
 
 class PanelContent extends React.Component {
@@ -225,24 +226,19 @@ class PanelContent extends React.Component {
                                 return (
                                 <div key={`mainContent-${panel.defaultName}-${contentIdx}`} className="mainPanel-content" style={{"transform": `translateX(${this.state.mainActiveTab * 100 * -1}%)`}}>
                                     {/* TODO: Max Slides should come from content length */}
-                                    <PanelNavigation 
-                                        panel={tabName} 
+                                    <RowContentContainer
+                                        buttonHandler={this.buttonHandler}
+                                        setContentValues={this.setContentValues}
+                                        panelContent={panel}
+                                        tabName={tabName}
+                                        contentIdx={contentIdx}
+                                        onChange={this.setContentValues} 
+                                        slideLeft={this.slideLeft}
+                                        slideRight={this.slideRight}
+                                        currentPane={this.state.mainActiveTab}
                                         optionView={'main'}
-                                        currentPane={contentIdx}
-                                        maxSlides={1} />
-                                    {panel.controls.map((mainRow, rowIdx) => {
-            
-                                        return (
-                                            <ConfigPageRow 
-                                                contentIdx={contentIdx}
-                                                onChange={this.setContentValues} 
-                                                row={mainRow} 
-                                                settingIndex={panel.indice}
-                                                controlIndex={rowIdx} 
-                                                buttonHandler={this.buttonHandler}
-                                            />
-                                        )
-                                    })}
+                                    />
+
                                 </div>);
                             })
                             }
@@ -252,25 +248,20 @@ class PanelContent extends React.Component {
                         <div className="container">
 
                             {subContent.map((subPanel, subContentIdx) => {
-                                return (<div key={`subContent-${subPanel.defaultName}-${subContentIdx}`} className="subPanel-content">
-                                    <PanelNavigation 
-                                        panel={tabName} 
-                                        optionView={'sub'}
-                                        currentPane={subContentIdx}
-                                        maxSlides={1} />
-                                    {subPanel.controls.length > 0 ?
-                                        <SubOptions 
-                                            subContentIdx={subContentIdx}
-                                            onChange={this.setContentValues} 
-                                            subOption={subPanel.controls} 
-                                            settingIndex={subPanel.indice}
-                                            page={content[0].defaultName.toUpperCase()}
-                                        />
-                                        :
-                                        <React.Fragment>
-                                            {/* Empty div to display nothing */}
-                                        </React.Fragment>
-                                    }
+                                return (
+                                <div key={`subContent-${subPanel.defaultName}-${subContentIdx}`} className="subPanel-content">
+                                    <RowContentContainer
+                                        setContentValues={this.setContentValues}
+                                        panelContent={subPanel}
+                                        tabName={tabName}
+                                        contentIdx={subContentIdx}
+                                        onChange={this.setContentValues} 
+                                        slideLeft={this.slideLeft}
+                                        slideRight={this.slideRight}
+                                        currentPane={this.state.mainActiveTab}
+                                        optionView={'subContent'}
+                                    />
+
                                 </div>);
                             })}
                         </div>

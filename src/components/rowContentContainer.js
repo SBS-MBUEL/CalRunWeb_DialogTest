@@ -1,5 +1,6 @@
 import React from 'react';
-import ConfigPageRow from './ConfigPageRow';
+import { ConfigPageRow } from './ConfigPageRow';
+import { PanelNavigation } from './PanelNavigation';
 
 class RowContentContainer extends React.Component {
     constructor(props) {
@@ -14,38 +15,33 @@ class RowContentContainer extends React.Component {
     }
 
     render() {
-        const { index, tabName, handler } = this.props;
+        const { index, tabName, handler, optionView } = this.props;
         return (
-            <React.Fragment>
+            <div key={`${tabName}-${optionView}-${index}`}>
                     {/* TODO: Max Slides should be dynamic should come from content length */}
                     <PanelNavigation 
                         panel={tabName} 
-                        optionView={'main'}
+                        optionView={optionView}
                         currentPane={this.state.currentPane}
                         slideLeft={this.props.slideLeft}
                         slideRight={this.props.slideRight}
                     />
-                    {this.state.panelContent.map((panel, contentIdx) => {
+                    {this.state.panelContent.controls.map((row, rowIdx) => {
                         return (
-                            <div key={`mainContent-panel.defaultName-${i}`} className="mainPanel-content">
-                                {panel.controls.map((mainRow, rowIdx) => {
-                                    return (
-                                        <ConfigPageRow 
-                                            contentIdx={contentIdx}
-                                            key={index} 
-                                            onChange={this.props.setContentValues} 
-                                            row={mainRow} 
-                                            settingIndex={panel.indice}
-                                            controlIndex={rowIdx} 
-                                            buttonHandler={this.props.buttonHandler}
-                                        />
-                                    )
-                                })}
+                            <div key={`${row.label}-${rowIdx}`}>
+                                <ConfigPageRow 
+                                    contentIdx={rowIdx}
+                                    onChange={this.props.setContentValues} 
+                                    row={row} 
+                                    settingIndex={this.state.panelContent.indice}
+                                    controlIndex={rowIdx} 
+                                    buttonHandler={this.props.buttonHandler}
+                                />
                             </div>
-                        );
+                        )
                     })}
-        </React.Fragment>
-        )
+            </div>
+        );
     }
 
 }
