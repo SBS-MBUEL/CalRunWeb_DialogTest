@@ -33,10 +33,10 @@ div.tab-pane>div>div.column {
     margin: 0 auto !important;
     z-index: 10;
 }
-.columns.content:nth-child(even) {
+.content:nth-child(even) {
     background-color: #fafbfb;
 }
-.columns.content:nth-child(odd) {
+.content:nth-child(odd) {
     background-color: #cdd4e9;
 }
 

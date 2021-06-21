@@ -68,11 +68,7 @@ import { ErrorRow } from './ErrorRow';
                 </div> ) 
         }
         
-        return (
-            <React.Fragment>
-                {content}
-            </React.Fragment>
-        );
+        return content;
     }
 }
 
