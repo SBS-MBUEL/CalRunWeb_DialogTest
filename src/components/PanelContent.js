@@ -13,6 +13,7 @@ class PanelContent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            tabName: props.tabName,
             tabContent: props.content,
             calibrationOption: 'calibrationOption',
             calibrationParameter: 'calibrationParameter',
@@ -40,8 +41,10 @@ class PanelContent extends React.Component {
     */
     changeSlide(view, newSlide) {
 
-        this.setState({
-            [`${view}ActiveSlide`] : newSlide})
+        if (this.state.tabName.match(/device/i)) {
+            this.setState({[`${view}ActiveSlide`] : newSlide});
+            this.setState({subActiveSlide: newSlide});
+        }
 
     }
 

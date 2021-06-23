@@ -34,6 +34,7 @@ DONE: Object is not filtering correctly - everything gone, when I filter externa
 // TODO: formatting for rows is now broken, all the same color
 // TODO: need to better align content.
 
-// TODO: Connect sliding of Device to slide measurands connected to it.
+// DONE: Connect sliding of Device to slide measurands connected to it.
 // TODO: Change label of displayed device to match selected device?
 // TODO: add measurand section when creating a duplicate of the upper section
+// BUG : adding measurand now adds it to the device portion, not the correct index
