@@ -56,7 +56,7 @@ class RowContentContainer extends React.Component {
                         />
                         {this.state.panelContent.controls.map((row, rowIdx) => {
                             return (
-                                <div key={`${row.label}-${rowIdx}`}>
+                                <div className="column content" key={`${row.label}-${rowIdx}`}>
                                     <ConfigPageRow 
                                         contentIdx={rowIdx}
                                         onChange={this.props.setContentValues} 
