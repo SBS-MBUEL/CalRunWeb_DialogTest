@@ -63,7 +63,7 @@ describe('test input is correct', () => {
                 handler={clickRouter} 
             /> );
 
-        const _drop_list = screen.getByText(/drop-list/);
+        const _drop_list = screen.getAllByText(/drop-list/)[1];
         const _text_input = screen.getByDisplayValue(/text-input/);
         const _textarea = screen.getByDisplayValue(/textarea-input/);
         const _remove_button = screen.getByText(/remove device-button/)

@@ -154,10 +154,6 @@ class PanelContent extends React.Component {
         // Determine path of button press
         let { subContent, mainContent } = this.parseContent(this.state.tabContent);
 
-
-        console.log('choosing path?' + parameter);
-        console.log('indice: ' + subContent[this.state.subActiveSlide].indice);
-
         // TODO: need to determine which panel is currently displayed and appropriately copy / remove / duplicate it or rows in it.
         if (parameter === '') {
             if (btnFunction === 'add') {
@@ -223,17 +219,17 @@ class PanelContent extends React.Component {
                                 <div key={`${'main'}-${tabName}-${contentIdx}`} className="container column is-11 slide mainPanel-content is-inline" style={{"transform": `translateX(${this.state.mainActiveSlide * 100 * -1}%)`}}>
                                     {/* TODO: Max Slides should be dynamic should come from content length */}
                                     <RowContentContainer
-                                            activeSlide={this.state.mainActiveSlide}
-                                            buttonHandler={this.buttonHandler}
-                                            setContentValues={this.setContentValues}
-                                            panelContent={panel}
-                                            tabName={tabName}
-                                            contentIdx={contentIdx}
-                                            onChange={this.setContentValues} 
-                                            changeSlide={this.changeSlide}
-                                            currentPane={activeTab}
-                                            optionView={'main'}
-                                            maxSlides={arr.length}
+                                        activeSlide={this.state.mainActiveSlide}
+                                        buttonHandler={this.buttonHandler}
+                                        setContentValues={this.setContentValues}
+                                        panelContent={panel}
+                                        tabName={tabName}
+                                        contentIdx={contentIdx}
+                                        onChange={this.setContentValues} 
+                                        changeSlide={this.changeSlide}
+                                        currentPane={activeTab}
+                                        optionView={panel.controls[0].value}
+                                        maxSlides={arr.length}
                                     />
                                 </div>)
 

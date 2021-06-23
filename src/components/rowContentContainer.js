@@ -8,11 +8,30 @@ class RowContentContainer extends React.Component {
         this.state = {
             panelContent : props.panelContent,
             maxSlides: props.maxSlides,
-            currentView: props.optionView,
+            currentView: props.optionView
+            
         }
 
         this.slideLeft = this.slideLeft.bind(this);
         this.slideRight = this.slideRight.bind(this);
+        this.setContentValues = this.setContentValues.bind(this);
+    }
+
+        /**
+     * 
+     * @param {string} key "header" that helps locate the item in the control list
+     * @param {string} val value to add to the table
+     * @param {number} settingIdx whether upper (main) or lower (sub)
+     * @param {number} controlIdx numeric position in control list
+     */
+    setContentValues(key, val, settingIdx, controlIdx) {
+        if (settingIdx === 0 && controlIdx === 0) {
+            this.setState({
+                currentView : val
+            });
+        }
+
+        this.props.setContentValues(key, val, settingIdx, controlIdx);
     }
 
     /**
@@ -49,7 +68,7 @@ class RowContentContainer extends React.Component {
                     <React.Fragment>
                         <PanelNavigation 
                             panel={tabName} 
-                            optionView={optionView}
+                            optionView={this.state.currentView}
                             currentPane={this.props.currentPane}
                             slideLeft={this.slideLeft}
                             slideRight={this.slideRight}
@@ -59,7 +78,7 @@ class RowContentContainer extends React.Component {
                                 <div className="column content" key={`${row.label}-${rowIdx}`}>
                                     <ConfigPageRow 
                                         contentIdx={rowIdx}
-                                        onChange={this.props.setContentValues} 
+                                        onChange={this.setContentValues} 
                                         row={row} 
                                         settingIndex={this.state.panelContent.indice}
                                         controlIndex={rowIdx} 
