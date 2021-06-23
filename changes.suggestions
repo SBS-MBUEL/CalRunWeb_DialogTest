@@ -38,3 +38,4 @@ DONE: Object is not filtering correctly - everything gone, when I filter externa
 // TODO: Change label of displayed device to match selected device?
 // TODO: add measurand section when creating a duplicate of the upper section
 // BUG : adding measurand now adds it to the device portion, not the correct index
+// BUG: need to fix specs after making changes to mock

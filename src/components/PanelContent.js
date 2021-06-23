@@ -42,8 +42,10 @@ class PanelContent extends React.Component {
     changeSlide(view, newSlide) {
 
         if (this.state.tabName.match(/device/i)) {
-            this.setState({[`${view}ActiveSlide`] : newSlide});
+            this.setState({mainActiveSlide : newSlide});
             this.setState({subActiveSlide: newSlide});
+        } else {
+            this.setState({[`${view}ActiveSlide`] : newSlide});
         }
 
     }
@@ -154,30 +156,26 @@ class PanelContent extends React.Component {
         // Determine path of button press
         let { subContent, mainContent } = this.parseContent(this.state.tabContent);
 
-        console.log(parameter, btnFunction, settingIdx, subContent[0].indice);
-
         // TODO: need to determine which panel is currently displayed and appropriately copy / remove / duplicate it or rows in it.
         if (parameter === '') {
-            console.dir(subContent);
-            console.dir(subContent[subContent[0].indice]);
             if (btnFunction === 'add') {
-                let idx = this.duplicateOrAddRow(subContent[0].controls, btnFunction);
+                let idx = this.duplicateOrAddRow(subContent[this.state.subActiveSlide].controls, btnFunction);
             }
             if (btnFunction === 'copy') {
-                let idx = this.duplicateOrAddRow(subContent[0].controls, btnFunction);
+                let idx = this.duplicateOrAddRow(subContent[this.state.subActiveSlide].controls, btnFunction);
             }
             if (btnFunction === 'remove') {
-                let idx = this.removeRow(subContent[0].controls, btnFunction);
+                let idx = this.removeRow(subContent[this.state.subActiveSlide].controls, btnFunction);
             }
         } else if (parameter === 'device') {
             if (btnFunction === 'add') {
-                let idx = this.duplicateOrAddContent(subContent[settingIdx].controls, btnFunction);
+                let idx = this.duplicateOrAddContent(subContent[this.state.subActiveSlide].controls, btnFunction);
             }
             if (btnFunction === 'copy') {
-                let idx = this.duplicateOrAddContent(subContent[settingIdx].controls, btnFunction);
+                let idx = this.duplicateOrAddContent(subContent[this.state.subActiveSlide].controls, btnFunction);
             }
             if (btnFunction === 'remove') {
-                let idx = this.removeContent(subContent[settingIdx].controls, btnFunction);
+                let idx = this.removeContent(subContent[this.state.subActiveSlide].controls, btnFunction);
             }
         }
 
