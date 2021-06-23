@@ -96,7 +96,7 @@ class PanelContent extends React.Component {
      * @param {array} subControls - controls list object
      * @returns 
     */
-    duplicateOrAddRow(subControls, fn) {
+    duplicateOrAddRow(subControls, fn, subIdx) {
         // change state from content
         // const fn = 'add';
         let changedControls = JSON.parse(JSON.stringify(subControls));
@@ -108,28 +108,26 @@ class PanelContent extends React.Component {
         
         let idx = changedControls.push(newContent) - 1;
 
-        let setIdx = 1;
-
         let newTabContent = this.state.tabContent.slice();
-        newTabContent[setIdx].controls = changedControls;
+        newTabContent[subIdx].controls = changedControls;
         // 1 is for subContent
         // TODO: this will not work for subcontent with a list of options
-        newTabContent[setIdx].controls = changedControls;
+        newTabContent[subIdx].controls = changedControls;
 
-        let key = newTabContent[setIdx].controls[idx].label
-        let val = newTabContent[setIdx].controls[idx].value
+        let key = newTabContent[subIdx].controls[idx].label
+        let val = newTabContent[subIdx].controls[idx].value
 
         this.props.setContent(key, val, newTabContent, this.props.tabName, fn); // TODO: change signature to pass "add" for fn
 
         return idx;
     }
 
-    removeRow(subControls, fn) {
+    removeRow(subControls, fn, subIdx) {
         let changedControls = JSON.parse(JSON.stringify(subControls));
 
         let newTabContent = this.state.tabContent.slice();
 
-        let setIdx = 1;
+        let setIdx = subIdx;
         let idx = changedControls.length - 1
         
         if (changedControls.length > 1) {
@@ -156,28 +154,30 @@ class PanelContent extends React.Component {
         // Determine path of button press
         let { subContent, mainContent } = this.parseContent(this.state.tabContent);
 
+
         console.log('choosing path?' + parameter);
+        console.log('indice: ' + subContent[this.state.subActiveSlide].indice);
 
         // TODO: need to determine which panel is currently displayed and appropriately copy / remove / duplicate it or rows in it.
         if (parameter === '') {
             if (btnFunction === 'add') {
-                let idx = this.duplicateOrAddRow(subContent[this.state.subActiveSlide].controls, btnFunction);
+                let idx = this.duplicateOrAddRow(subContent[this.state.subActiveSlide].controls, btnFunction, subContent[this.state.subActiveSlide].indice);
             }
             if (btnFunction === 'copy') {
-                let idx = this.duplicateOrAddRow(subContent[this.state.subActiveSlide].controls, btnFunction);
+                let idx = this.duplicateOrAddRow(subContent[this.state.subActiveSlide].controls, btnFunction, subContent[this.state.subActiveSlide].indice);
             }
             if (btnFunction === 'remove') {
-                let idx = this.removeRow(subContent[this.state.subActiveSlide].controls, btnFunction);
+                let idx = this.removeRow(subContent[this.state.subActiveSlide].controls, btnFunction, subContent[this.state.subActiveSlide].indice);
             }
         } else if (parameter === 'device') {
             if (btnFunction === 'add') {
-                let idx = this.duplicateOrAddContent(subContent[this.state.subActiveSlide].controls, btnFunction);
+                let idx = this.duplicateOrAddContent(subContent[this.state.subActiveSlide].controls, btnFunction, subContent[this.state.subActiveSlide].indice);
             }
             if (btnFunction === 'copy') {
-                let idx = this.duplicateOrAddContent(subContent[this.state.subActiveSlide].controls, btnFunction);
+                let idx = this.duplicateOrAddContent(subContent[this.state.subActiveSlide].controls, btnFunction, subContent[this.state.subActiveSlide].indice);
             }
             if (btnFunction === 'remove') {
-                let idx = this.removeContent(subContent[this.state.subActiveSlide].controls, btnFunction);
+                let idx = this.removeContent(subContent[this.state.subActiveSlide].controls, btnFunction, subContent[this.state.subActiveSlide].indice);
             }
         }
 
