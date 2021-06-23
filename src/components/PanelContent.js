@@ -156,6 +156,8 @@ class PanelContent extends React.Component {
         // Determine path of button press
         let { subContent, mainContent } = this.parseContent(this.state.tabContent);
 
+        console.log('choosing path?' + parameter);
+
         // TODO: need to determine which panel is currently displayed and appropriately copy / remove / duplicate it or rows in it.
         if (parameter === '') {
             if (btnFunction === 'add') {
