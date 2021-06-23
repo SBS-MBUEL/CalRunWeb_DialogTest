@@ -44,7 +44,7 @@ const _reference = [
 const _device = [
 	{
 		for:'calibrationOption',
-		defaultName:'Control Device',
+		defaultName:'Control Device-0',
 		controls:
 		[
 			{label:'Device', type:'dropdown', list:['Not Set', 'AC-S', 'ECOV2', 'Keithley', 'SBE3', 'SBE4', 'SBE63', 'SKR-MINI', 'SNTL', 'SparkFun', 'UNO'], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:0},
@@ -66,7 +66,7 @@ const _device = [
 	},
 	{
 		for:'calibrationOption',
-		defaultName:'Control Device',
+		defaultName:'Control Device-1',
 		controls:
 		[
 			{label:'Device', type:'dropdown', list:['Not Set', 'AC-S', 'ECOV2', 'Keithley', 'SBE3', 'SBE4', 'SBE63', 'SKR-MINI', 'SNTL', 'SparkFun', 'UNO'], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:0},
@@ -91,9 +91,18 @@ const _device = [
 		defaultName:'Measurand',
 		controls:
 		[
-			{label:'Measurand-0', type:'dropdown', list:['Not Set',	'Backscatter', 'Chlorophyll',	'Conductivity',	'FDOM',	'FLPC',	'FLPE',	'FLRH',	'FLUR',	'NTU',	'Oxygen',	'Phenanthrene', 'Pressure',	'Temperature',	'Voltage',	'pH'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:0},
+			{label:'Measurand-0', type:'dropdown', list:['Not Set',	'Backscatter', 'Chlorophyll',	'Conductivity',	'FDOM',	'FLPC',	'FLPE',	'FLRH',	'FLUR',	'NTU',	'Oxygen',	'Phenanthrene', 'Pressure',	'Temperature',	'Voltage',	'pH'], width:'100px', height:'30px', control:"Control Device-0", value:'Not Set', maxLength:0, titleOrder:0},
+		]
+	},
+	{
+		for:'calibrationParameter',
+		defaultName:'Measurand',
+		controls:
+		[
+			{label:'Measurand-0', type:'dropdown', list:['Not Set',	'Backscatter', 'Chlorophyll',	'Conductivity',	'FDOM',	'FLPC',	'FLPE',	'FLRH',	'FLUR',	'NTU',	'Oxygen',	'Phenanthrene', 'Pressure',	'Temperature',	'Voltage',	'pH'], width:'100px', height:'30px', control:"Control Device-1", value:'Not Set', maxLength:0, titleOrder:0},
 		]
 	}
+	
 ];
 const _datapoint = [
 	{
