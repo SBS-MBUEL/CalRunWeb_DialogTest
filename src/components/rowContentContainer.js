@@ -17,13 +17,13 @@ class RowContentContainer extends React.Component {
         this.setContentValues = this.setContentValues.bind(this);
     }
 
-        /**
-     * 
+    /**
+     * Sets the content values locally then passes up the chain to change the object in the database and localstorage
      * @param {string} key "header" that helps locate the item in the control list
      * @param {string} val value to add to the table
      * @param {number} settingIdx whether upper (main) or lower (sub)
      * @param {number} controlIdx numeric position in control list
-     */
+    */
     setContentValues(key, val, settingIdx, controlIdx) {
         if (settingIdx === 0 && controlIdx === 0) {
             this.setState({
@@ -38,29 +38,29 @@ class RowContentContainer extends React.Component {
      * slides the sub panel to the right
      * position should use state for setting
     */
-         slideRight() {
+    slideRight() {
 
-            let newSlide = this.props.activeSlide > 0 ? (this.props.activeSlide - 1) : (this.props.maxSlides - 1);
+        let newSlide = this.props.activeSlide > 0 ? (this.props.activeSlide - 1) : (this.props.maxSlides - 1);
+        
+        
             
-            
-             
-            console.log(this.state.currentView, newSlide);
-            this.props.changeSlide(this.state.currentView, newSlide);
-            
-        }
-    
-        /**
-         * slides current pane to the left
-        */
-        slideLeft() {
+        console.log(this.state.currentView, newSlide);
+        this.props.changeSlide(this.state.currentView, newSlide);
+        
+    }
+        
+    /**
+     * slides current pane to the left
+    */
+    slideLeft() {
 
-            let newSlide = this.props.activeSlide < (this.state.maxSlides - 1) ? (this.props.activeSlide + 1) : 0;
-            
+        let newSlide = this.props.activeSlide < (this.state.maxSlides - 1) ? (this.props.activeSlide + 1) : 0;
+        
 
-            console.log(this.state.currentView, newSlide);
-            this.props.changeSlide(this.state.currentView, newSlide);
+        console.log(this.state.currentView, newSlide);
+        this.props.changeSlide(this.state.currentView, newSlide);
 
-        }
+    }
 
     render() {
         const { index, tabName, handler, optionView } = this.props;
@@ -97,8 +97,7 @@ class RowContentContainer extends React.Component {
  * Code to make these functions visible in NODE.JS for testing
  * module.exports is Node specific so we need to test for it's existence
  */
- if(typeof module !== 'undefined' && typeof module.exports !== 'undefined')
- {
+ if(typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
      module.exports = {
         RowContentContainer: RowContentContainer
      };

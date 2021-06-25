@@ -21,9 +21,7 @@
 
 }
 
-div.tab-pane>div>div.column {
-    border-bottom: 1px solid black;
-}
+
 
 .button {
     height: 85% !important;
@@ -47,16 +45,13 @@ a:hover, a:focus {
 
 .tab-pane.is-active {
     width: 100%;
+    display: inline;
     animation-name: swipe;
     animation-duration: 400ms;
 }
 
 .tab-pane {
     display: none;
-}
-
-.tab-pane.is-active {
-    display: inline;
 }
 
 .panel-tabs li.tab-select {

@@ -15,11 +15,6 @@ class TabPanels extends React.Component {
         super(props);
 
         this.getContent = this.getContent.bind(this);
-        this.setContent = this.setContent.bind(this);
-    }
-
-    setContent(key, val, content, tabName, fn) {
-        this.props.setContent(key, val, content, tabName, fn);
     }
 
     getContent() {
@@ -39,7 +34,7 @@ class TabPanels extends React.Component {
                             <PanelContent 
                                 index={i} 
                                 content={content[`_${tab.ConfigurationArea}`]}
-                                setContent={this.setContent}
+                                setContent={this.props.setContent}
                                 tabName={tab.ConfigurationArea}
                                 handler={clickRouter}
                                 activeTab={i == activeTab}

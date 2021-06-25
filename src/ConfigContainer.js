@@ -73,22 +73,19 @@ class ConfigContainer extends React.Component {
      * @param {object} content 
      * @param {string} tabName 
      * @param {string} fn - default is update mode / options "update", "delete", "add" (copy is dealt with as an add)
+     * @param {string} mode - default is update single / options "single" (copy / add single element), "panel" (copy or add entire grouping)
     */
-    setContent(key, value, content, tabName, fn='update') {
+    setContent(key, value, content, tabName, fn='update', mode='single') {
         let changedContent = JSON.parse(JSON.stringify(this.state.content));
 
         changedContent[`_${tabName}`] = JSON.parse(JSON.stringify(content));
-
-        this.setState({
-            content: changedContent
-        });
-
+        
         let copiedSettings = JSON.parse(JSON.stringify(this.state.settings.slice()));
         let successfulUpdate = false;
-
+        
         if (fn === 'update') {
             let index = copiedSettings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
-
+            
             if (index) {
                 copiedSettings[index].value = value; // TODO: this needs error checking so it's not trying to set something that doesn't exist
                 successfulUpdate = true;
@@ -110,38 +107,59 @@ class ConfigContainer extends React.Component {
                 console.log(index);
             }
         }
-
+        
         if (fn === 'add' || fn === 'copy') {
             let index = copiedSettings.map((el, index) => el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
-
+            
+            
             // Copy object
             let copiedObject = JSON.parse(JSON.stringify(copiedSettings[index]));
-
-            // Change copied object
-            copiedObject.ItemName = key;
-            copiedObject.value = value;
-
-            // Add copied object to copiedSettings
-            copiedSettings.push(copiedObject);
+            
+            if (mode === 'single') {
+                // update individual field
+                // Change copied object
+                copiedObject.ItemName = key;
+                copiedObject.value = value;
+                
+                // Add copied object to copiedSettings
+                let settingIndex = copiedSettings.push(copiedObject);
+                changedContent[`_${tabName}`][changedContent[`_${tabName}`].length - 1].controls[changedContent[`_${tabName}`][changedContent[`_${tabName}`].length - 1].controls.length - 1].settingIndex = settingIndex;
+            } else if (mode === 'panel') {
+                // Change grouped object
+                changedContent[`_${tabName}`][changedContent[`_${tabName}`].length - 1].controls.map((el) => {
+                    let field = JSON.parse(JSON.stringify(copiedObject));
+                    field.ItemName = el.label;
+                    field.value = el.value;
+                    let settingIndex = copiedSettings.push(field);
+                    copiedObject.settingIndex = settingIndex;
+                });
+            }
+            
+            
             successfulUpdate = true;
         }
-
+        
         if (fn === 'remove') {
             let index = copiedSettings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
-
+            
             copiedSettings = [...copiedSettings.splice(0, index), ...copiedSettings.splice(index - 1)];
             successfulUpdate = true;
         }
-
-        this.setState({
-            settings: copiedSettings
-        });
-
+        
+        
         if (successfulUpdate) {
+            this.setState({
+                settings: copiedSettings
+            });
+
+            this.setState({
+                content: changedContent
+            });
+
             // TODO: need "SystemName" to be dynamic
             setLocalStorage('SystemName-Settings', copiedSettings);
             setLocalStorage('SystemName-Config', changedContent);
-
+            
         }
     }
 
