@@ -75,10 +75,10 @@ class ConfigContainer extends React.Component {
      * @param {string} fn - default is update mode / options "update", "delete", "add" (copy is dealt with as an add)
      * @param {string} mode - default is update single / options "single" (copy / add single element), "panel" (copy or add entire grouping)
     */
-    setContent(key, value, content, tabName, fn='update', mode='single') {
+    setContent(key, value, panelContent, tabName, fn='update', mode='single') {
         let changedContent = JSON.parse(JSON.stringify(this.state.content));
 
-        changedContent[`_${tabName}`] = JSON.parse(JSON.stringify(content));
+        changedContent[`_${tabName}`] = JSON.parse(JSON.stringify(panelContent));
         
         let copiedSettings = JSON.parse(JSON.stringify(this.state.settings.slice()));
         let successfulUpdate = false;
@@ -111,7 +111,8 @@ class ConfigContainer extends React.Component {
         if (fn === 'add' || fn === 'copy') {
             let index = copiedSettings.map((el, index) => el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
             
-            
+            const last_position = changedContent[`_${tabName}`].length - 1;
+            const control_list_length = changedContent[`_${tabName}`][last_position].controls.length - 1;
             // Copy object
             let copiedObject = JSON.parse(JSON.stringify(copiedSettings[index]));
             
@@ -123,15 +124,14 @@ class ConfigContainer extends React.Component {
                 
                 // Add copied object to copiedSettings
                 let settingIndex = copiedSettings.push(copiedObject);
-                changedContent[`_${tabName}`][changedContent[`_${tabName}`].length - 1].controls[changedContent[`_${tabName}`][changedContent[`_${tabName}`].length - 1].controls.length - 1].settingIndex = settingIndex;
+                changedContent[`_${tabName}`][last_position].controls[control_list_length].settingIndex = settingIndex;
             } else if (mode === 'panel') {
                 // Change grouped object
-                changedContent[`_${tabName}`][changedContent[`_${tabName}`].length - 1].controls.map((el) => {
+                changedContent[`_${tabName}`][last_position].controls.map((el) => {
                     let field = JSON.parse(JSON.stringify(copiedObject));
                     field.ItemName = el.label;
                     field.value = el.value;
-                    let settingIndex = copiedSettings.push(field);
-                    copiedObject.settingIndex = settingIndex;
+                    el.settingIndex = copiedSettings.push(field) - 1;
                 });
             }
             
