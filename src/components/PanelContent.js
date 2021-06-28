@@ -22,7 +22,7 @@ class PanelContent extends React.Component {
             mainMaxSlides: mainContent && mainContent.length,
             subActiveSlide: 0,
             subMaxSlides: subContent && subContent.length
-        }
+        };
 
         this.setContentValues = this.setContentValues.bind(this);
         this.buttonHandler = this.buttonHandler.bind(this);
@@ -220,6 +220,36 @@ class PanelContent extends React.Component {
         this.props.setContent(key, val, newTabContent, this.props.tabName, fn);
     }
 
+    duplicatePanelContent(btnFunction, mainContent, subContent) {
+        let currentLength = this.state.tabContent.length;
+        let idx = this.duplicateOrAddContent(subContent[this.state.subActiveSlide], btnFunction, subContent[this.state.subActiveSlide].indice);
+        if (idx) {
+            let timeout = null;
+            let interval = setInterval(() => {
+                if (currentLength === this.state.tabContent.length) {
+                    return;
+                } else {
+                    clearTimeout(timeout);
+                    timeout = null;
+                    clearInterval(interval);
+                    interval = null;
+                    idx = this.duplicateOrAddContent(mainContent[this.state.mainActiveSlide], btnFunction, mainContent[this.state.mainActiveSlide].indice);
+
+                    this.setState({
+                        mainMaxSlides: this.state.mainMaxSlides + 1,
+                        subMaxSlides: this.state.subMaxSlides + 1
+                    });
+                }
+            }, 15);
+
+            timeout = setTimeout(() => {
+                clearInterval(interval);
+                interval = null;
+                console.error('unable to add content');
+            }, 2000);
+        }
+    }
+
     /**
      * appropriately process button clicked
      * @param {dom} btn pressed in ButtonItem
@@ -236,55 +266,18 @@ class PanelContent extends React.Component {
 
         // TODO: need to determine which panel is currently displayed and appropriately copy / remove / duplicate it or rows in it.
         if (parameter !== 'device' || this.state.tabName.match(/device/) === null ) {
-            if (btnFunction === 'add') {
+            if (btnFunction === 'add' || btnFunction === 'copy') {
                 let idx = this.duplicateOrAddRow(subContent[this.state.subActiveSlide].controls, btnFunction, subContent[this.state.subActiveSlide].indice);
-            }
-            if (btnFunction === 'copy') {
-                let idx = this.duplicateOrAddRow(subContent[this.state.subActiveSlide].controls, btnFunction, subContent[this.state.subActiveSlide].indice);
-            }
-            if (btnFunction === 'remove') {
+            } else if (btnFunction === 'remove') {
                 let idx = this.removeRow(subContent[this.state.subActiveSlide].controls, btnFunction, subContent[this.state.subActiveSlide].indice);
             }
         } else if (parameter === 'device' && this.state.tabName.match(/device/) !== null) {
-            if (btnFunction === 'add') {
-                let currentLength = this.state.tabContent.length;
-                let idx = this.duplicateOrAddContent(subContent[this.state.subActiveSlide], btnFunction, subContent[this.state.subActiveSlide].indice);
-                if (idx) {
-                    let timeout = null;
-                    let interval = setInterval(() => {
-                        if (currentLength === this.state.tabContent.length) {
-                            return;
-                        } else {
-                            clearTimeout(timeout);
-                            timeout = null;
-                            clearInterval(interval);
-                            interval = null;
-                            idx = this.duplicateOrAddContent(mainContent[this.state.mainActiveSlide], btnFunction, mainContent[this.state.mainActiveSlide].indice);
-
-                            this.setState({
-                                mainMaxSlides: this.state.mainMaxSlides + 1,
-                                subMaxSlides: this.state.subMaxSlides + 1
-                            });
-                        }
-                    }, 15);
-
-                    timeout = setTimeout(() => {
-                        clearInterval(interval);
-                        interval = null;
-                        console.error('unable to add content');
-                    }, 2000);
-                }
-            }
-            if (btnFunction === 'copy') {
-                let idx = this.duplicateOrAddContent(subContent[this.state.subActiveSlide], btnFunction, subContent[this.state.subActiveSlide].indice);
-                if (idx) {
-                    idx = this.duplicateOrAddContent(mainContent[this.state.mainActiveSlide], btnFunction, mainContent[this.state.mainActiveSlide].indice);
-                }
-            }
-            if (btnFunction === 'remove') {
+            if (btnFunction === 'add' || btnFunction === 'copy') {
+                this.duplicatePanelContent(btnFunction, mainContent, subContent);
+            } else if (btnFunction === 'remove') {
                 let idx = this.removeContent(subContent[this.state.subActiveSlide], btnFunction, subContent[this.state.subActiveSlide].indice);
                 if (idx) {
-                    idx = this.duplicateOrAddContent(mainContent[this.state.mainActiveSlide], btnFunction, mainContent[this.state.mainActiveSlide].indice);
+                    idx = this.removeContent(mainContent[this.state.mainActiveSlide], btnFunction, mainContent[this.state.mainActiveSlide].indice);
                 }
             }
         }

@@ -31,7 +31,7 @@ import { ErrorRow } from './ErrorRow';
      * propagates changes up call stack
      * @param {string} key of item in setting object
      * @param {string} val value to replace
-     */
+    */
     trackChanges(key, val) {
         // Propagate up to save to database
         this.props.onChange(key, val, this.state.settingIndex, this.state.controlIndex); // (0 is setting index)

@@ -54,7 +54,7 @@ class RowContentContainer extends React.Component {
     */
     slideLeft() {
 
-        let newSlide = this.props.activeSlide < (this.state.maxSlides - 1) ? (this.props.activeSlide + 1) : 0;
+        let newSlide = this.props.activeSlide < (this.props.maxSlides - 1) ? (this.props.activeSlide + 1) : 0;
         
 
         console.log(this.state.currentView, newSlide);
