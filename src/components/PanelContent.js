@@ -13,15 +13,15 @@ class PanelContent extends React.Component {
     constructor(props) {
         super(props);
 
-        let {mainContent, subContent} = this.parseContent(props.content);
+        let { mainContent, subContent } = this.parseContent(props.content);
 
         this.state = {
             tabName: props.tabName,
             tabContent: props.content,
             mainActiveSlide : 0,
-            mainMaxSlides: mainContent.length,
+            mainMaxSlides: mainContent && mainContent.length,
             subActiveSlide: 0,
-            subMaxSlides: subContent.length
+            subMaxSlides: subContent && subContent.length
         }
 
         this.setContentValues = this.setContentValues.bind(this);
