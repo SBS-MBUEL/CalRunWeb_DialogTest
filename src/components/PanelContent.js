@@ -157,9 +157,13 @@ class PanelContent extends React.Component {
         let key = newTabContent[subIdx].controls[idx].label
         let val = newTabContent[subIdx].controls[idx].value
 
+        this.setState({
+            tabContent : newTabContent
+        });
+
         this.props.setContent(key, val, newTabContent, this.props.tabName, fn); // TODO: change signature to pass "add" for fn
 
-        return idx;
+        return newTabContent;
     }
 
     /**
@@ -170,23 +174,12 @@ class PanelContent extends React.Component {
      * @returns 
      */
     removeContent(content, fn, subIdx) {
-        let panelContent = JSON.parse(JSON.stringify(content));
-
         let newTabContent = this.state.tabContent.slice();
+        
+        newTabContent = [...newTabContent.splice(0, subIdx), ...newTabContent.splice(subIdx - 1)];
 
-        let setIdx = subIdx;
-        let idx = panelContent.length - 1
-        
-        if (panelContent.length > 1) {
-            panelContent.pop();
-        } else {
-            renderGrowl('growl', 'There must be at least one option in the sub option list below.', 'warning');
-            return;
-        }
-        
-        let key = newTabContent[setIdx].controls[idx].label
-        let val = newTabContent[setIdx].controls[idx].value
-        newTabContent[setIdx] = panelContent;
+        let key = 'Not Set';
+        let val = 'Not Set';
 
         this.props.setContent(key, val, newTabContent, this.props.tabName, fn);
     }
@@ -275,9 +268,10 @@ class PanelContent extends React.Component {
             if (btnFunction === 'add' || btnFunction === 'copy') {
                 this.duplicatePanelContent(btnFunction, mainContent, subContent);
             } else if (btnFunction === 'remove') {
-                let idx = this.removeContent(subContent[this.state.subActiveSlide], btnFunction, subContent[this.state.subActiveSlide].indice);
-                if (idx) {
-                    idx = this.removeContent(mainContent[this.state.mainActiveSlide], btnFunction, mainContent[this.state.mainActiveSlide].indice);
+                let cntnt = this.removeContent(subContent[this.state.subActiveSlide], btnFunction, subContent[this.state.subActiveSlide].indice);
+                if (cntnt) {
+                    let { mainContent } = this.parseContent(cntnt);
+                    cntnt = this.removeContent(mainContent[this.state.mainActiveSlide], btnFunction, mainContent[this.state.mainActiveSlide].indice);
                 }
             }
         }
