@@ -163,22 +163,22 @@ class PanelContent extends React.Component {
     }
 
     /**
-     * 
-     * @param {*} subControls 
+     * remove panel content
+     * @param {*} content 
      * @param {*} fn 
      * @param {*} subIdx 
      * @returns 
      */
-    removeContent(subControls, fn, subIdx) {
-        let changedControls = JSON.parse(JSON.stringify(subControls));
+    removeContent(content, fn, subIdx) {
+        let panelContent = JSON.parse(JSON.stringify(content));
 
         let newTabContent = this.state.tabContent.slice();
 
         let setIdx = subIdx;
-        let idx = changedControls.length - 1
+        let idx = panelContent.length - 1
         
-        if (changedControls.length > 1) {
-            changedControls.pop();
+        if (panelContent.length > 1) {
+            panelContent.pop();
         } else {
             renderGrowl('growl', 'There must be at least one option in the sub option list below.', 'warning');
             return;
@@ -186,7 +186,7 @@ class PanelContent extends React.Component {
         
         let key = newTabContent[setIdx].controls[idx].label
         let val = newTabContent[setIdx].controls[idx].value
-        newTabContent[setIdx].controls = changedControls;
+        newTabContent[setIdx] = panelContent;
 
         this.props.setContent(key, val, newTabContent, this.props.tabName, fn);
     }

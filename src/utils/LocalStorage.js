@@ -1,5 +1,7 @@
 'use strict';
 
+const { renderGrowl } = require("./growl");
+
 /**
  * takes key / value pair and stores data to localstorage after JSON.stringify is applied
  * @param {string} key - string to identify item being stored
@@ -10,8 +12,12 @@ function setLocalStorage(key, value) {
         // console.error(`Not storing anything to Local Storage.\nkey: ${JSON.stringify(key)}\nvalue: ${JSON.stringify(value)}`);
         return null;
     }
-
-    localStorage.setItem(key, JSON.stringify(value));
+    try {
+        localStorage.setItem(key, JSON.stringify(value));
+    } catch(ex) {
+        console.error(ex);
+        renderGrowl('LocalStorage', 'Problem setting local storage', 'danger');
+    }
 }
 
 /**
@@ -24,14 +30,19 @@ function getLocalStorage(key) {
         // console.error(`Cannot retrieve Local Storage with an empty key value\nkey: ${JSON.stringify(key)}`);
         return null;
     }
-
-    const results = JSON.parse(localStorage.getItem(key));
-
-    if (!results) {
-        // console.warn(`The provided key does not exist in local storage`);
+    try {
+        const results = JSON.parse(localStorage.getItem(key));
+        if (!results) {
+            // console.warn(`The provided key does not exist in local storage`);
+        }
+    
+        return results;
+    } catch (ex) {
+        console.error(ex);
+        renderGrowl('LocalStorage', 'Problem getting local storage', 'danger');
+        return null;
     }
 
-    return results;
 }
 
 /**

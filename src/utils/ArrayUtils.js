@@ -16,7 +16,12 @@ function RemoveItemFromArray(array, index) {
 
     return results;
 }
-
+/**
+ * searched the document for the passed in element, and the returns a filtered array of those objects with the regex text content
+ * @param {DOM element name (class or Element type)} element can be the class '.class' or the element 'div' to filter on
+ * @param {RegExp} regex the regex to filter on
+ * @returns 
+ */
 function FilterElementsOnTextContent(element, regex) {
     const results = Array.from(document.querySelectorAll(element))
         .reduce((acc, el) => {
@@ -27,6 +32,7 @@ function FilterElementsOnTextContent(element, regex) {
         }, []);
     return results;
 }
+
 
 function ArrayUtils() {
     return {
@@ -39,8 +45,7 @@ function ArrayUtils() {
  * Code to make these functions visible in NODE.JS for testing
  * module.exports is Node specific so we need to test for it's existence
  */
- if(typeof module !== 'undefined' && typeof module.exports !== 'undefined')
- {
+ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
 
     module.default = ArrayUtils;
     module.exports = {
