@@ -1,6 +1,6 @@
 'use strict';
 
-const { renderGrowl } = require("./growl");
+import { renderGrowl } from "./growl";
 
 /**
  * takes key / value pair and stores data to localstorage after JSON.stringify is applied

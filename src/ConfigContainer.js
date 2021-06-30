@@ -75,11 +75,12 @@ class ConfigContainer extends React.Component {
      * @param {string} tabName 
      * @param {string} fn - default is update mode / options "update", "delete", "add" (copy is dealt with as an add)
      * @param {string} mode - default is update single / options "single" (copy / add single element), "panel" (copy or add entire grouping)
-    */
+     */
     setContent(key, value, panelContent, tabName, fn='update', mode='single') {
         let changedContent = JSON.parse(JSON.stringify(this.state.content));
-
-        changedContent[`_${tabName}`] = JSON.parse(JSON.stringify(panelContent));
+        
+        const last_position = changedContent[`_${tabName}`].length - 1;
+        
         
         let copiedSettings = JSON.parse(JSON.stringify(this.state.settings.slice()));
         let successfulUpdate = false;
@@ -112,7 +113,6 @@ class ConfigContainer extends React.Component {
         if (fn === 'add' || fn === 'copy') {
             let index = copiedSettings.map((el, index) => el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
             
-            const last_position = changedContent[`_${tabName}`].length - 1;
             const control_list_length = changedContent[`_${tabName}`][last_position].controls.length - 1;
             // Copy object
             let copiedObject = JSON.parse(JSON.stringify(copiedSettings[index]));
@@ -127,6 +127,7 @@ class ConfigContainer extends React.Component {
                 let settingIndex = copiedSettings.push(copiedObject);
                 changedContent[`_${tabName}`][last_position].controls[control_list_length].settingIndex = settingIndex;
             } else if (mode === 'panel') {
+
                 // Change grouped object
                 changedContent[`_${tabName}`][last_position].controls.map((el) => {
                     let field = JSON.parse(JSON.stringify(copiedObject));
@@ -141,10 +142,19 @@ class ConfigContainer extends React.Component {
         
         // This is for removing a single item from the array
         if (fn === 'remove') {
-            let index = copiedSettings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
-            copiedSettings = RemoveItemFromArray(copiedSettings, index);
-            successfulUpdate = true;
+            if (mode === 'single') {
+                let index = copiedSettings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
+                copiedSettings = RemoveItemFromArray(copiedSettings, index);
+                successfulUpdate = true;
+            } else if (mode === 'panel') {
+                // Change grouped object
+                panelContent[last_position].map((el) => {
+                    copiedSettings = RemoveItemFromArray(copiedSettings, el);
+                });
+                panelContent.pop();
+            }
         }
+        changedContent[`_${tabName}`] = JSON.parse(JSON.stringify(panelContent));
         
         if (successfulUpdate) {
             this.setState({
@@ -160,6 +170,9 @@ class ConfigContainer extends React.Component {
             setLocalStorage('SystemName-Config', changedContent);
             
         }
+
+        return panelContent;
+
     }
 
 

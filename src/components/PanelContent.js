@@ -1,11 +1,9 @@
 import React from 'react';
 import { ConfigurationDisplayHeading } from './ConfigurationDisplayHeading';
-import { ConfigPageRow } from './ConfigPageRow';
-import { SubOptions } from './SubOptions';
 import { ErrorPage } from './ErrorPage';
 import { renderGrowl } from '../utils/growl'
-import { PanelNavigation } from './PanelNavigation';
 import { RowContentContainer } from './rowContentContainer';
+import { RemoveItemFromArray } from './utils/ArrayUtils';
 
 
 class PanelContent extends React.Component {
@@ -174,14 +172,28 @@ class PanelContent extends React.Component {
      * @returns 
      */
     removeContent(content, fn, subIdx) {
-        let newTabContent = this.state.tabContent.slice();
-        
-        newTabContent = [...newTabContent.splice(0, subIdx), ...newTabContent.splice(subIdx - 1)];
+        let newTabContent = RemoveItemFromArray(this.state.tabContent, subIdx).map((item, index) => {
+            item.indice = index;
+            return item;
+        });
+
+        this.setState({
+            tabContent : newTabContent
+        });
+
+        let indicesToRemove = this.state.tabContent[subIdx].controls.reduce((acc, _, index) => {
+            acc.push(_.settingIndex);
+            return acc;
+        }, []);
 
         let key = 'Not Set';
         let val = 'Not Set';
 
-        this.props.setContent(key, val, newTabContent, this.props.tabName, fn);
+        newTabContent.push(indicesToRemove);
+
+        newTabContent = this.props.setContent(key, val, newTabContent, this.props.tabName, fn, 'panel');
+
+        return newTabContent;
     }
 
     /**
@@ -285,6 +297,13 @@ class PanelContent extends React.Component {
                 if (cntnt) {
                     let { mainContent } = this.parseContent(cntnt);
                     cntnt = this.removeContent(mainContent[this.state.mainActiveSlide], btnFunction, mainContent[this.state.mainActiveSlide].indice);
+
+                    this.setState({
+                        mainMaxSlides: this.state.mainMaxSlides - 1,
+                        subMaxSlides: this.state.subMaxSlides - 1,
+                        mainActiveSlide: 0,
+                        subActiveSlide: 0
+                    });
                 }
             }
         }

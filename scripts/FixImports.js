@@ -94,6 +94,10 @@ const regex_replacements = [
         replace: ''
     },
     {
+        regex: /\(0, _ArrayUtils\.RemoveItemFromArray\)(|\.default)/g,
+        replace: 'RemoveItemFromArray'
+    },
+    {
         regex: /_RemoveItemFromArray\.(|default)/g,
         replace: 'RemoveItemFromArray'
     },
