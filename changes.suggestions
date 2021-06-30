@@ -28,14 +28,16 @@ DONE: mock tab slider not working (may need to look at prior projects for exampl
 DONE: Object is not filtering correctly - everything gone, when I filter external from function it works as expected
 
 // CONTROL devices
+// TODO: unit tests are failing again - need to fix that
+// TODO: need to refactor object to have corresponding indice numbers to settings array
 // TODO: capture if add / copy / or remove contains 'device' if it does appropriately route that change to the appropriate function in the container
-// TODO: container needs to know if there is more than one position in the array. If there is, appropriately render
 // TODO: make sure copied object/ added object has correct information
-// TODO: formatting for rows is now broken, all the same color
 // TODO: need to better align content.
 // TODO: Change label of displayed device to match selected device?
 // TODO: add measurand section when creating a duplicate of the upper section
 
+// FIXED: formatting for rows is now broken, all the same color
+// DONE: container needs to know if there is more than one position in the array. If there is, appropriately render
 // DONE: Connect sliding of Device to slide measurands connected to it.
 // FIXED : adding measurand now adds it to the device portion, not the correct index
 // FIXED: need to fix specs after making changes to mock

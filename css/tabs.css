@@ -25,6 +25,10 @@
     height: 85% !important;
 }
 
+.button.row {
+    width: 85% !important;
+}
+
 .content {
     margin: 0 auto !important;
     z-index: 10;
