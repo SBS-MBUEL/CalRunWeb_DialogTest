@@ -93,6 +93,10 @@ const regex_replacements = [
         regex: /_rowContentContainer\.(|default)/g,
         replace: ''
     },
+    {
+        regex: /_RemoveItemFromArray\.(|default)/g,
+        replace: 'RemoveItemFromArray'
+    },
 ]
 
 const root_search_path = path.join(__dirname, '../js');

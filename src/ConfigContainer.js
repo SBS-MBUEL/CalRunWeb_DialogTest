@@ -7,6 +7,7 @@ import React from 'react';
 import { setLocalStorage, getLocalStorage } from './utils/LocalStorage'
 import { TabLinkContainer } from './components/TabLinkContainer';
 import { TabPanels } from './components/TabPanels';
+import { RemoveItemFromArray } from './utils/ArrayUtils';
 
 /**
  * ConfigContainer is the main launching point to construct the tabbed configuration screen
@@ -135,17 +136,15 @@ class ConfigContainer extends React.Component {
                 });
             }
             
-            
             successfulUpdate = true;
         }
         
+        // This is for removing a single item from the array
         if (fn === 'remove') {
             let index = copiedSettings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
-            
-            copiedSettings = [...copiedSettings.splice(0, index), ...copiedSettings.splice(index - 1)];
+            copiedSettings = RemoveItemFromArray(copiedSettings, index);
             successfulUpdate = true;
         }
-        
         
         if (successfulUpdate) {
             this.setState({

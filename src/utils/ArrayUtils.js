@@ -10,15 +10,18 @@ function RemoveItemFromArray(array, index) {
     if (!array || index < 0 || array.length < index) {
         return -1;
     }
-    const copiedArray = array.slice('');
-
-    const results = [...copiedArray.splice(0, index), ...copiedArray.splice(index - 1)];
-
+    const copiedArray = array.slice();
+    let results;
+    results = copiedArray.filter((item, idx) => {
+        if (idx !== index) {
+            return item;
+        }
+    })
     return results;
 }
 /**
  * searched the document for the passed in element, and the returns a filtered array of those objects with the regex text content
- * @param {DOM element name (class or Element type)} element can be the class '.class' or the element 'div' to filter on
+ * @param {string} element can be the class '.class' or the element 'div' to filter on
  * @param {RegExp} regex the regex to filter on
  * @returns 
  */

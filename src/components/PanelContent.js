@@ -210,9 +210,19 @@ class PanelContent extends React.Component {
         let val = newTabContent[setIdx].controls[idx].value
         newTabContent[setIdx].controls = changedControls;
 
+        this.setState({
+            tabContent : newTabContent
+        });
+
         this.props.setContent(key, val, newTabContent, this.props.tabName, fn);
     }
 
+    /**
+     * controller to duplicate or copy panel
+     * @param {string} btnFunction 
+     * @param {object} mainContent 
+     * @param {object} subContent 
+     */
     duplicatePanelContent(btnFunction, mainContent, subContent) {
         let currentLength = this.state.tabContent.length;
         let idx = this.duplicateOrAddContent(subContent[this.state.subActiveSlide], btnFunction, subContent[this.state.subActiveSlide].indice);
@@ -230,7 +240,9 @@ class PanelContent extends React.Component {
 
                     this.setState({
                         mainMaxSlides: this.state.mainMaxSlides + 1,
-                        subMaxSlides: this.state.subMaxSlides + 1
+                        subMaxSlides: this.state.subMaxSlides + 1,
+                        mainActiveSlide: this.state.mainMaxSlides,
+                        subActiveSlide: this.state.subMaxSlides
                     });
                 }
             }, 15);
@@ -244,8 +256,9 @@ class PanelContent extends React.Component {
     }
 
     /**
-     * appropriately process button clicked
+     * appropriately process button clicked to add / copy or remove sub panel or whole panel
      * @param {dom} btn pressed in ButtonItem
+     * @param {number} settingIdx
      */
     buttonHandler(btn, settingIdx) {
         const btnFunction = btn.children[1].textContent.split(' ')[0];
