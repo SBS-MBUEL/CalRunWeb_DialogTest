@@ -201,7 +201,7 @@ describe('Can change sub item', () => {
         
         const _sub_list = screen.getAllByText(/Measurand-[0-9]/);
 
-        expect(_sub_list.length).toBe(1);
+        expect(_sub_list.length).toBe(2);
     });
 
     // at this stage does not add yet to the display
@@ -221,7 +221,7 @@ describe('Can change sub item', () => {
         
         const _sub_list = screen.getAllByText(/Measurand-[0-9]/);
 
-        expect(_sub_list.length).toBe(2); // TODO: not really certain why this is 2?
+        expect(_sub_list.length).toBe(3); // TODO: not really certain why this is 2?
         
     });
 
@@ -243,7 +243,7 @@ describe('Can change sub item', () => {
             
             const _sub_list = screen.getAllByText(/Measurand-[0-9]/);
     
-            expect(_sub_list.length).toBe(3); // TODO: not really certain why this is 3?
+            expect(_sub_list.length).toBe(2); // TODO: not really certain why this is 3?
             
         });
 });

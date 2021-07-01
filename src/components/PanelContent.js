@@ -1,9 +1,9 @@
 import React from 'react';
-import { ConfigurationDisplayHeading } from './ConfigurationDisplayHeading';
-import { ErrorPage } from './ErrorPage';
 import { renderGrowl } from '../utils/growl'
+import { RemoveItemFromArray } from '../utils/ArrayUtils';
+import { ConfigurationDisplayHeading } from './ConfigurationDisplayHeading';
 import { RowContentContainer } from './rowContentContainer';
-import { RemoveItemFromArray } from './utils/ArrayUtils';
+import { ErrorPage } from './ErrorPage';
 
 
 class PanelContent extends React.Component {

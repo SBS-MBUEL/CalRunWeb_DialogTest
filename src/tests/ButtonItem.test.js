@@ -36,7 +36,7 @@ describe('rendering with add device works', () => {
         render(<ButtonItem value={testSetup([],undefined,'add device').value} handler={processClick} /> );
     
         const getButton = screen.getByText(/add device/).parentNode;
-        expect(getButton.className).toBe('button is-success');
+        expect(getButton.className).toBe('button is-success row');
     });
 });
 
@@ -59,7 +59,7 @@ describe('rendering with remove button works', () => {
         render(<ButtonItem value={testSetup([],undefined,'remove device').value} handler={processClick} /> );
     
         const getButton = screen.getByText(/remove device/).parentNode;
-        expect(getButton.className).toBe('button is-danger');
+        expect(getButton.className).toBe('button is-danger row');
     });
 });
 
@@ -82,14 +82,14 @@ describe('rendering with custom text works', () => {
         render(<ButtonItem value={testSetup([],undefined,'custom device').value} handler={processClick} /> );
     
         const getButton = screen.getByText(/custom device/).parentNode;
-        expect(getButton.className).toBe('button is-info');
+        expect(getButton.className).toBe('button is-info row');
     });
 });
 
 describe('Button clicks work as expected', () => {
     test('Button event propagates correct object back when span for text is clicked', () => {
         render(<ButtonItem value={testSetup([],undefined,'custom device').value} handler={(e) => {
-                expect(e.className).toBe('button is-info');
+                expect(e.className).toBe('button is-info row');
             }
          } /> );
     
@@ -100,7 +100,7 @@ describe('Button clicks work as expected', () => {
     });
     test('Button event propagates correct object back when span for icon is clicked', () => {
         render(<ButtonItem value={testSetup([],undefined,'custom device').value} handler={(e) => {
-                expect(e.className).toBe('button is-info');
+                expect(e.className).toBe('button is-info row');
             }
          } /> );
     
@@ -111,7 +111,7 @@ describe('Button clicks work as expected', () => {
     });
     test('Button event propagates correct object back when div for button is clicked', () => {
         render(<ButtonItem value={testSetup([],undefined,'custom device').value} handler={(e) => {
-                expect(e.className).toBe('button is-info');
+                expect(e.className).toBe('button is-info row');
             }
         } /> );
 

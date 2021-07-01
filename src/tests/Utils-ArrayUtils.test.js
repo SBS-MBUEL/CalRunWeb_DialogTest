@@ -2334,7 +2334,7 @@ describe('remove position zero correct item', ()=> {
         const expected = ['test2', 'test3', 'test4', 'test5'];
 
         const results = RemoveItemFromArray(test_array, 0);
-
+        console.log(results);
         for (let i = 0; i < expected.length; i++) {
             expect(results[i]).toBe(expected[i]);
         }

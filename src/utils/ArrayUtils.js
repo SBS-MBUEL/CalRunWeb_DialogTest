@@ -7,19 +7,15 @@
  * @returns copied array with index removed / returns -1 for invalid slicing operation
  */
 function RemoveItemFromArray(array, index) {
-    if (!array || !index || index < 0 || array.length < index) {
+    if (!array || index < 0 || array.length < index) {
         return -1;
     }
     
     const copiedArray = array.slice();
-    let results = [];
-    for (let idx = 0; idx < copiedArray.length; idx++) {
-        if (idx !== index) {
-            results.push(copiedArray[idx]);
-
-        }
-        
-    }
+    let results = array.filter(function(item, idx) {
+        if(idx != index) //index you want to remove
+        return item;
+    });
 
     return results;
 }
