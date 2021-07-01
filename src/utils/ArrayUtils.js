@@ -3,20 +3,24 @@
 /**
  * RemoveItemFromArray - removes the specified index from the array and returns a COPY of the array. It does NOT modify the original array.
  * @param {array} array 
- * @param {number} index 
+ * @param {number} index -location
  * @returns copied array with index removed / returns -1 for invalid slicing operation
  */
 function RemoveItemFromArray(array, index) {
-    if (!array || index < 0 || array.length < index) {
+    if (!array || !index || index < 0 || array.length < index) {
         return -1;
     }
+    
     const copiedArray = array.slice();
-    let results;
-    results = copiedArray.filter((item, idx) => {
+    let results = [];
+    for (let idx = 0; idx < copiedArray.length; idx++) {
         if (idx !== index) {
-            return item;
+            results.push(copiedArray[idx]);
+
         }
-    })
+        
+    }
+
     return results;
 }
 /**

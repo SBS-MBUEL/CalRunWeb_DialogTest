@@ -22,11 +22,16 @@
 }
 
 .button {
+    box-shadow: inset 0.1em 0.1em darkslategrey;
     height: 85% !important;
 }
 
 .button.row {
-    width: 85% !important;
+    width: 65% !important;
+}
+
+.button:hover {
+    box-shadow: 0.1em 0.1em 0.1em darkslategrey;
 }
 
 .content {

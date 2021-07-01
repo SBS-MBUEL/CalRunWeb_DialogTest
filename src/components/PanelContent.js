@@ -171,8 +171,13 @@ class PanelContent extends React.Component {
      * @param {*} subIdx 
      * @returns 
      */
-    removeContent(content, fn, subIdx) {
-        let newTabContent = RemoveItemFromArray(this.state.tabContent, subIdx).map((item, index) => {
+    removeContent(panelContent, fn, subIdx) {
+        let indicesToRemove = panelContent[subIdx].controls.reduce((acc, _, index) => {
+            acc.push(_.settingIndex);
+            return acc;
+        }, []);
+        
+        let newTabContent = RemoveItemFromArray(panelContent, subIdx).map((item, index) => {
             item.indice = index;
             return item;
         });
@@ -181,10 +186,6 @@ class PanelContent extends React.Component {
             tabContent : newTabContent
         });
 
-        let indicesToRemove = this.state.tabContent[subIdx].controls.reduce((acc, _, index) => {
-            acc.push(_.settingIndex);
-            return acc;
-        }, []);
 
         let key = 'Not Set';
         let val = 'Not Set';
@@ -293,10 +294,10 @@ class PanelContent extends React.Component {
             if (btnFunction === 'add' || btnFunction === 'copy') {
                 this.duplicatePanelContent(btnFunction, mainContent, subContent);
             } else if (btnFunction === 'remove') {
-                let cntnt = this.removeContent(subContent[this.state.subActiveSlide], btnFunction, subContent[this.state.subActiveSlide].indice);
+                let cntnt = this.removeContent(this.state.tabContent.slice(), btnFunction, subContent[this.state.subActiveSlide].indice);
                 if (cntnt) {
                     let { mainContent } = this.parseContent(cntnt);
-                    cntnt = this.removeContent(mainContent[this.state.mainActiveSlide], btnFunction, mainContent[this.state.mainActiveSlide].indice);
+                    cntnt = this.removeContent(cntnt, btnFunction, mainContent[this.state.mainActiveSlide].indice);
 
                     this.setState({
                         mainMaxSlides: this.state.mainMaxSlides - 1,
