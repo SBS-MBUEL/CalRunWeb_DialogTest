@@ -86,10 +86,10 @@ class PanelContent extends React.Component {
             subContent = this.filterContent(content, 'calibrationParameter');
 
         }
-
-        return {
-            mainContent, subContent
-        }
+        return null;
+        // return {
+        //     mainContent, subContent
+        // }
     }
 
     /**
