@@ -1,14 +1,14 @@
 import { fireEvent, render, screen, userEvent } from '@testing-library/react';
-import { ConfigurationSetup } from '../components/ConfigurationSetup';
+import { PanelContent } from '../components/PanelContent';
 
 
 const _configuration_area = 'Mock Control Device';
 
 const _mock_device = [
-	{for:'calibrationOption',
+	{
+        for:'calibrationOption',
 		defaultName:'Mock Control Device',
-		controls:
-	[
+		controls: [
 		{label:'Device', type:'dropdown', list:['item-1', 'item-2'], width:'50px', height:'30px', control:null, value:'drop-list', maxLength:0, titleOrder:0},
 		{label:'SN', type:'text', list:[], width:'50px', height:'30px', control:null, value:'text-input', maxLength:20, titleOrder:1},
 		{label:'Port', type:'textarea', list:[], width:'50px', height:'30px', control:null, value:'textarea-input', maxLength:0, titleOrder:-1},
@@ -16,10 +16,10 @@ const _mock_device = [
         {label:'Copy Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'copy device-button', maxLength:0, titleOrder:-1},
         {label:'Add Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add device-button', maxLength:0, titleOrder:-1},
 	]},
-	{for:'calibrationParameter',
+	{
+        for:'calibrationParameter',
 		defaultName:'Measurand',
-		controls:
-	[
+		controls: [
 		{label:'Measurand-0', type:'dropdown', list:['purple', 'people', 'eater'], width:'100px', height:'30px', control:['purple', 'people', 'eater'], value:'sub-list', maxLength:0, titleOrder:0},
 	]}
 ];
@@ -55,7 +55,7 @@ const clickRouter = (key, val, changedContent, tabName, fn) => {
 
 describe('test input is correct', () => {
     test('renders correct items', () => {
-        render(<ConfigurationSetup                                                 
+        render(<PanelContent                                                 
                 index={0} 
                 content={_mock_device}
                 setContent={processChange}
@@ -63,7 +63,7 @@ describe('test input is correct', () => {
                 handler={clickRouter} 
             /> );
 
-        const _drop_list = screen.getByText(/drop-list/);
+        const _drop_list = screen.getAllByText(/drop-list/)[1];
         const _text_input = screen.getByDisplayValue(/text-input/);
         const _textarea = screen.getByDisplayValue(/textarea-input/);
         const _remove_button = screen.getByText(/remove device-button/)
@@ -76,7 +76,7 @@ describe('test input is correct', () => {
     });
 
     test('list has valid items', () => {
-        render(<ConfigurationSetup                                                 
+        render(<PanelContent                                                 
                 index={0} 
                 content={_mock_device}
                 setContent={processChange}
@@ -95,7 +95,7 @@ describe('test input is correct', () => {
 
     });
     test('sub list renders', () => {
-        render(<ConfigurationSetup                                                 
+        render(<PanelContent                                                 
             index={0} 
             content={_mock_device}
             setContent={processChange}
@@ -112,7 +112,7 @@ describe('test input is correct', () => {
 
     test('sub list has valid items', () => {
         _global_setting_index = 1;
-        render(<ConfigurationSetup                                                 
+        render(<PanelContent                                                 
             index={0} 
             content={_mock_device}
             setContent={processChange}
@@ -133,11 +133,25 @@ describe('test input is correct', () => {
         expect(_sub_item_3.textContent).toBe('eater');
 
     });
+
+    test('main key different from sub key', () => {
+        render(<PanelContent
+                index={0} 
+                content={_mock_device}
+                setContent={processChange}
+                tabName={_configuration_area}
+                handler={clickRouter} 
+            />)
+        const mainContent = screen.getByText(/SN/).parentNode.firstChild;
+        const subContent = screen.getByText(/Measurand-0/).parentNode.firstChild;
+
+        expect(mainContent.textContent).not.toBe(subContent.textContent);
+    });
 });
 
 describe('invalid content packaage renders correct error', () => {
     test('error page rendered with incorrect content', () => {
-        render(<ConfigurationSetup                                                 
+        render(<PanelContent                                                 
             index={0} 
             content={undefined}
             setContent={processChange}
@@ -153,7 +167,7 @@ describe('invalid content packaage renders correct error', () => {
 
 describe('Can change sub item', () => {
     test('change sub item propagates, has no undefined values.', () => {
-        render(<ConfigurationSetup                                                 
+        render(<PanelContent                                                 
                 index={0} 
                 content={_mock_device}
                 setContent={processChange}
@@ -173,7 +187,7 @@ describe('Can change sub item', () => {
     
     // at this stage does not add yet to the display
     test('add sub item propagates, has no undefined values.', () => {
-        render(<ConfigurationSetup                                                 
+        render(<PanelContent                                                 
                 index={0} 
                 content={_mock_device}
                 setContent={clickRouter}
@@ -187,12 +201,12 @@ describe('Can change sub item', () => {
         
         const _sub_list = screen.getAllByText(/Measurand-[0-9]/);
 
-        expect(_sub_list.length).toBe(1);
+        expect(_sub_list.length).toBe(2);
     });
 
     // at this stage does not add yet to the display
     test('copy sub item propagates, has existing value of last entry.', () => {
-        render(<ConfigurationSetup                                                 
+        render(<PanelContent                                                 
                 index={0} 
                 content={_mock_device}
                 setContent={clickRouter}
@@ -207,7 +221,7 @@ describe('Can change sub item', () => {
         
         const _sub_list = screen.getAllByText(/Measurand-[0-9]/);
 
-        expect(_sub_list.length).toBe(2); // TODO: not really certain why this is 2?
+        expect(_sub_list.length).toBe(3); // TODO: not really certain why this is 2?
         
     });
 
@@ -215,7 +229,7 @@ describe('Can change sub item', () => {
         // at this stage does not remove from the display
         test('remove sub item propagates, has existing value of last entry.', () => {
             globalFN = 'remove';
-            render(<ConfigurationSetup                                                 
+            render(<PanelContent                                                 
                     index={0} 
                     content={_mock_device}
                     setContent={clickRouter}
@@ -229,7 +243,7 @@ describe('Can change sub item', () => {
             
             const _sub_list = screen.getAllByText(/Measurand-[0-9]/);
     
-            expect(_sub_list.length).toBe(3); // TODO: not really certain why this is 3?
+            expect(_sub_list.length).toBe(2); // TODO: not really certain why this is 3?
             
         });
 });

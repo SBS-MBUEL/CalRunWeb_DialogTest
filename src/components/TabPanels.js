@@ -1,5 +1,11 @@
+/*
+    TabPanels is the container for the inner tab content
+    created: Morris Buel
+    Owner: Sea-Bird Scientific
+    License: proprietary
+*/
 import React from 'react';
-import { ConfigurationSetup } from './ConfigurationSetup';
+import { PanelContent } from './PanelContent';
 import createGUID from '../utils/createGUID';
 import { ErrorPage } from './ErrorPage';
 import { renderGrowl } from '../utils/growl'
@@ -9,11 +15,6 @@ class TabPanels extends React.Component {
         super(props);
 
         this.getContent = this.getContent.bind(this);
-        this.setContent = this.setContent.bind(this);
-    }
-
-    setContent(key, val, content, tabName, fn) {
-        this.props.setContent(key, val, content, tabName, fn);
     }
 
     getContent() {
@@ -29,24 +30,14 @@ class TabPanels extends React.Component {
             if (content) {
                 main = tabs.map((tab, i) => {
                     return (
-                        <div 
-                            key={`${tab.ConfigurationArea}-panel`} 
-                            role="tabpanel" 
-                            className={`tab-pane ${i == activeTab ? 'fade in is-active show' : 'fade out'}`}  
-                            id={`${tab.ConfigurationArea}`}
-                        >
-                            {/* {this.content = content}
-                            {this.tab = tab.ConfigurationArea}
-                            {this.filterOptions = 'calibrationOptions'}
-                            {this.mainContent = this.getContent.apply(this)}
-                            {this.filterOptions = 'calibrationParameter'}
-                            {this.subContent = this.getContent.apply(this)} */}
-                            <ConfigurationSetup 
+                        <div key={`panel-content-${tab.ConfigurationArea}`} className="panel-content">
+                            <PanelContent 
                                 index={i} 
                                 content={content[`_${tab.ConfigurationArea}`]}
-                                setContent={this.setContent}
+                                setContent={this.props.setContent}
                                 tabName={tab.ConfigurationArea}
                                 handler={clickRouter}
+                                activeTab={i == activeTab}
                             />
                         </div>
                     );
@@ -61,9 +52,7 @@ class TabPanels extends React.Component {
         return (
             <div className="columns ">
                 <div className="column">
-                    <div className="panel-content">
-                        { main }
-                    </div>
+                    { main }
                 </div>
             </div>
         )

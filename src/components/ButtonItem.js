@@ -24,7 +24,7 @@ class ButtonItem extends React.Component {
         const { value } = this.props;
 
         return (
-            <div onClick={this.handleClick} className={`button is-${value.includes('add') ? "success" : value.includes('remove') ? 'danger' : 'info'}`}>
+            <div onClick={this.handleClick} className={`button is-${value.includes('add') ? "success" : value.includes('remove') ? 'danger' : 'info'} row`}>
                 <span
                     className={`fa fa-${value.includes('add') ? "plus" : value.includes('remove') ? 'remove' : 'save'}`}
                 >

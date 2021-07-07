@@ -17,20 +17,21 @@ import { ErrorRow } from './ErrorRow';
         this.state = {
             userValue: props && props.row && props.row.value ? props.row.value : undefined,
             settingIndex: props.settingIndex,
-            controlIndex: props.controlIndex
+            controlIndex: props.controlIndex,
+            objectIndex: props.contentIdx
         }
         this.trackChanges = this.trackChanges.bind(this);
         this.btnClickHandler = this.btnClickHandler.bind(this);
     }
 
     btnClickHandler(btn) {
-        this.props.buttonHandler(btn);
+        this.props.buttonHandler(btn, this.state.settingIndex);
     }
     /**
      * propagates changes up call stack
      * @param {string} key of item in setting object
      * @param {string} val value to replace
-     */
+    */
     trackChanges(key, val) {
         // Propagate up to save to database
         this.props.onChange(key, val, this.state.settingIndex, this.state.controlIndex); // (0 is setting index)
@@ -57,7 +58,7 @@ import { ErrorRow } from './ErrorRow';
                     <ButtonItem value={row.value} handler={this.btnClickHandler} />;
         
             content = ( 
-                <div key={`${row.label}-row-data`} className="columns content font-weight-bold is-vcentered">
+                <div key={`${row.label}-row-data`} className="columns font-weight-bold is-vcentered">
                     <div key={`${row.label}`} className={`column pr-1 heading is-half text-right`}>
                         {row.label}
                     </div>
@@ -67,11 +68,7 @@ import { ErrorRow } from './ErrorRow';
                 </div> ) 
         }
         
-        return (
-            <React.Fragment>
-                {content}
-            </React.Fragment>
-        );
+        return content;
     }
 }
 
