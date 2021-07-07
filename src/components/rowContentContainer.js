@@ -38,7 +38,7 @@ class RowContentContainer extends React.Component {
      * slides the sub panel to the right
      * position should use state for setting
     */
-    slideRight() {
+    slideLeft() {
 
         let newSlide = this.props.activeSlide > 0 ? (this.props.activeSlide - 1) : (this.props.maxSlides - 1);
         
@@ -52,7 +52,7 @@ class RowContentContainer extends React.Component {
     /**
      * slides current pane to the left
     */
-    slideLeft() {
+    slideRight() {
 
         let newSlide = this.props.activeSlide < (this.props.maxSlides - 1) ? (this.props.activeSlide + 1) : 0;
         
@@ -70,8 +70,8 @@ class RowContentContainer extends React.Component {
                             panel={tabName} 
                             optionView={this.state.currentView}
                             currentPane={this.props.currentPane}
-                            slideLeft={this.slideLeft}
-                            slideRight={this.slideRight}
+                            leftArrow={this.slideLeft}
+                            rightArrow={this.slideRight}
                         />
                         {this.state.panelContent.controls.map((row, rowIdx) => {
                             return (

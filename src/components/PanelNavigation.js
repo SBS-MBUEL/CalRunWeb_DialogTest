@@ -15,13 +15,13 @@ class PanelNavigation extends React.Component {
         return (
             <div key={`${this.state.currentPane} - ${this.state.optionView}: ${this.state.currentPane + 1}`} className="columns has-text-centered">
                 <div className="column is-third">
-                    <div onClick={this.props.slideLeft} className="button is-link fa fa-chevron-left"></div>
+                    <div onClick={this.props.leftArrow} className="button is-link fa fa-chevron-left"></div>
                 </div>
                 <div className="column is-third">
                     {`${this.state.panel} - ${this.state.optionView}: ${this.state.currentPane + 1}`}
                 </div>
                 <div className="column is-third">
-                    <div onClick={this.props.slideRight} className="button is-link fa fa-chevron-right"></div>
+                    <div onClick={this.props.rightArrow} className="button is-link fa fa-chevron-right"></div>
                 </div>
             </div>
         );
