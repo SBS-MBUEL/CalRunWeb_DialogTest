@@ -211,8 +211,14 @@ class PanelContent extends React.Component {
 
         let setIdx = subIdx;
         let idx = changedControls.length - 1
+
+        let filteredControls = changedControls.filter((control, ind, array) => {
+            if (control.type !== 'button') {
+                return control;
+            }
+        });
         
-        if (changedControls.length > 1) {
+        if (filteredControls.length > 1) {
             changedControls.pop();
         } else {
             renderGrowl('growl', 'There must be at least one option in the sub option list below.', 'warning');
@@ -375,6 +381,7 @@ class PanelContent extends React.Component {
                                 <div key={`${'sub'}-${tabName}-${subContentIdx}`} className="container column is-11 slide mainPanel-content is-inline" style={{"transform": `translateX(${this.state.subActiveSlide * 100 * -1}%)`}}>
                                     <RowContentContainer
                                         activeSlide={this.state.subActiveSlide}
+                                        buttonHandler={this.buttonHandler}
                                         setContentValues={this.setContentValues}
                                         panelContent={subPanel}
                                         tabName={tabName}
