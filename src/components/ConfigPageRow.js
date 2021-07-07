@@ -10,6 +10,7 @@ import { ErrorRow } from './ErrorRow';
 /**
  * ConfigPageRow - renders each row of the config page
  * setup in a "key/value" pair arrangement - pop ups are still generic, need to be mapped to an object
+ * // TODO: don't need to track indice in state object
  */
  class ConfigPageRow extends React.Component {
     constructor(props) {

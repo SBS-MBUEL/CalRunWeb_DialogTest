@@ -1,6 +1,7 @@
 import React from 'react';
 
-
+// TODO: needs comments
+// TODO: purpose
 export default function Growl(props) {
 
     return (

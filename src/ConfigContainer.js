@@ -1,7 +1,7 @@
 // Production version of code needs this remarked out
 
-// TODO: try traditional require?
 // TODO: check if React module is loaded before importing?
+// TODO: can I use LoDash for some of these functions?
 
 import React from 'react';
 import { setLocalStorage, getLocalStorage } from './utils/LocalStorage'
@@ -75,6 +75,9 @@ class ConfigContainer extends React.Component {
      * @param {string} tabName 
      * @param {string} fn - default is update mode / options "update", "delete", "add" (copy is dealt with as an add)
      * @param {string} mode - default is update single / options "single" (copy / add single element), "panel" (copy or add entire grouping)
+     * // TODO: try /catch
+     * 
+     * // TODO: refactor to be more atomic
      */
     setContent(key, value, panelContent, tabName, fn='update', mode='single') {
         let changedContent = JSON.parse(JSON.stringify(this.state.content));
@@ -222,6 +225,7 @@ class ConfigContainer extends React.Component {
         this.setState({activeTab:tab});
     }
 
+    //TODO: remove unused functions
     clickRouter(e) {
         console.log('modify row - add / remove / update / copy');
         console.log(e);

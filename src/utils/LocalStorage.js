@@ -24,6 +24,7 @@ function setLocalStorage(key, value) {
  * getLocalStorage, retrieves item from localStorage
  * @param {string} key - string to retrieve item
  * @returns null for error, object/string/array for valid value
+ * // TODO: add check if key exists before pulling result
  */
 function getLocalStorage(key) {
     if (!key) {

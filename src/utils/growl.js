@@ -8,6 +8,10 @@
  * @param {string} msg message in growl
  * @param {string} level info, success, warning, danger
  * @param {string} title optional parameter that displays title of growl
+ * 
+ * // TODO: forgot to add timeout to params
+ * // TODO: needs try / catch
+ * // TODO: investigate react-growl
  */
 function renderGrowl(elementID, msg, level, title = '', timeout = true) {
 
