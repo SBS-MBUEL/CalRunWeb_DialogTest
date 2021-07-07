@@ -59,12 +59,13 @@ function FindUniqueIndexInSettings(settings, key1, value1, key2, value2) {
         return -1;
     }
     try {
-        let indice = settings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined);
+        let indice = settings.map((el, index) => el[key1].toLowerCase() === value1.toLowerCase() && el[key2].toLowerCase() === value2.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined);
 
-        if (indice.length > 1) {
+        if (!indice[0] || indice.length > 1) {
             // search query is not returning a unique result.
             return -1; 
         }
+        console.log(indice);
         return indice[0];
     } catch (er) {
         return -1;
