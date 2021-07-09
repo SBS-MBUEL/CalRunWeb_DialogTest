@@ -175,7 +175,7 @@ class PanelContent extends React.Component {
         let indicesToRemove = panelContent[subIdx].controls.reduce((acc, _, index) => {
             acc.push(_.settingIndex);
             return acc;
-        }, []);
+        }, []).filter((a, b) => a !== undefined);
         
         let newTabContent = RemoveItemFromArray(panelContent, subIdx).map((item, index) => {
             item.indice = index;
