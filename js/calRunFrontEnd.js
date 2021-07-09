@@ -149,6 +149,11 @@ function showConfigurationDialog()
 {
 	let popUp = showPopUpDialog('Calibration Configuration', '60%', '95%');
 
+	// Make sure latest bits are reflected in fields
+	// TODO: this was being updated when making changes in the setup fields. This was causing issues in test, the test wasn't able to find the variables.
+	localSettings = getLocalStorage('SystemName-Settings');
+	localConfig = getLocalStorage('SystemName-Config');
+
 	renderConfig(popUp.contentArea.id, databaseTabs, localSettings, localConfig);
 }
 

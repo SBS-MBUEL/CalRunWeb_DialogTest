@@ -1,20 +1,35 @@
 //TODO: move import to this file
 import { render, screen, fireEvent } from '@testing-library/react';
-import { link } from 'fs';
+import databaseMockContent, { databaseContent, databaseTabs } from '../mocks/databaseMockContent';
+import configMocks, { objectCollection } from '../mocks/configMocks'
+import { getLocalStorage, setLocalStorage } from '../utils/LocalStorage';
 
 import App from '../App';
+
+var localSettings = getLocalStorage('SystemName-Settings');
+var localConfig = getLocalStorage('SystemName-Config');
 
 function setup() {
     localStorage.clear('SystemName-Config');
 
     localStorage.clear('SystemName-Settings');
+
+    if (!localSettings) { // retrieve database immediately
+        setLocalStorage('SystemName-Settings', databaseContent);
+        localSettings = databaseContent;
+    }
+
+    if (!localConfig) { // retrieve configuration from database
+        setLocalStorage('SystemName-Config', objectCollection);
+        localConfig = objectCollection;
+    }
 }
 
 // Basic render test, renders the whole configuration stack
 
 describe('value errors not popping up.', () => {
     test('changing sub option 0 propagates appropriately with no errors.', () => {
-
+        setup();
         render(<App /> );
 
         const _sub_drop_items = screen.getAllByText(/Not Set/);
