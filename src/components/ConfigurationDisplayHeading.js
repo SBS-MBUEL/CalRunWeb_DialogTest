@@ -17,28 +17,7 @@ import createGUID from '../utils/createGUID';
                         <h1 className="title is-2 has-text-centered">{heading}</h1>
                     </div>
                 </div>
-                {/* <div key={createGUID()} className="columns is-centered">
-                    <div key={createGUID()} className={`column is-one-fifth`}>
-                    </div>
-                    {buttonMap.map((el, index) => {
-                        return (
-                            <div key={createGUID()} className={`column has-text-centered is-one-fourth`}>
-                                <div onClick={handler} className={`button is-${el.type}`}>
-                                    <span
-                                        
-                                        className={`fa fa-${el.icon}`}
-                                    >
-                                        &nbsp;
-                                    </span>
-                                    {el.text}
 
-                                </div>
-                            </div>
-                        )
-                    })}
-                    <div key={createGUID()} className={`column is-one-fifth`}>
-                    </div>
-                </div> */}
             </React.Fragment>
         )
     }

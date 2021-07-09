@@ -13,7 +13,7 @@ describe('golden path functionality', () => {
         const growl = screen.getByText(/info-test/);
 
         expect(growl.textContent).toBe('info-test');
-        expect(growl.parentNode.className).toBe('tile is-child notification is-info growling removed')
+        expect(growl.parentNode.className).toBe('tile is-child notification is-info growling ')
     });
 
     test('level === warning', () => {

@@ -96,20 +96,20 @@ class ConfigContainer extends React.Component {
                 successfulUpdate = true;
             } else {
                 console.error(`Error trying to set value:`);
-                console.log(`key:`);
-                console.log(key);
-                console.log(`value:`);
-                console.log(value);
-                console.log(`content:`);
-                console.log(changedContent);
-                console.log(`settings:`);
-                console.log(copiedSettings);
-                console.log(`tabName:`);
-                console.log(tabName);
-                console.log(`fn:`);
-                console.log(fn);
-                console.log(`index:`);
-                console.log(index);
+                // console.log(`key:`);
+                // console.log(key);
+                // console.log(`value:`);
+                // console.log(value);
+                // console.log(`content:`);
+                // console.log(changedContent);
+                // console.log(`settings:`);
+                // console.log(copiedSettings);
+                // console.log(`tabName:`);
+                // console.log(tabName);
+                // console.log(`fn:`);
+                // console.log(fn);
+                // console.log(`index:`);
+                // console.log(index);
             }
         }
         
