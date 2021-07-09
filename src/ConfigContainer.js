@@ -8,6 +8,7 @@ import { setLocalStorage, getLocalStorage } from './utils/LocalStorage'
 import { TabLinkContainer } from './components/TabLinkContainer';
 import { TabPanels } from './components/TabPanels';
 import { RemoveItemFromArray } from './utils/ArrayUtils';
+import { databaseTabs } from './mocks/databaseMockContent';
 
 /**
  * ConfigContainer is the main launching point to construct the tabbed configuration screen
@@ -82,10 +83,6 @@ class ConfigContainer extends React.Component {
     setContent(key, value, panelContent, tabName, fn='update', mode='single') {
         let changedContent = JSON.parse(JSON.stringify(this.state.content));
         
-        const last_position = panelContent.length - 1;
-        // const last_position = changedContent[`_${tabName}`].length - 1;
-        
-        
         let copiedSettings = JSON.parse(JSON.stringify(this.state.settings.slice()));
         let successfulUpdate = false;
         
@@ -116,7 +113,7 @@ class ConfigContainer extends React.Component {
         
         if (fn === 'add' || fn === 'copy') {
             let index = copiedSettings.map((el, index) => el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
-            
+            let last_position = changedContent[`_${tabName}`].length - 1;
             const control_list_length = changedContent[`_${tabName}`][last_position].controls.length - 1;
             // Copy object
             let copiedObject = JSON.parse(JSON.stringify(copiedSettings[index]));
@@ -146,6 +143,7 @@ class ConfigContainer extends React.Component {
         
         // This is for removing a single item from the array
         if (fn === 'remove') {
+            let last_position = panelContent.length - 1;
             if (mode === 'single') {
                 let index = copiedSettings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
                 copiedSettings = RemoveItemFromArray(copiedSettings, index);
@@ -156,6 +154,7 @@ class ConfigContainer extends React.Component {
                     copiedSettings = RemoveItemFromArray(copiedSettings, el);
                 });
                 panelContent.pop();
+                successfulUpdate = true;
             }
         }
         changedContent[`_${tabName}`] = JSON.parse(JSON.stringify(panelContent));
@@ -172,6 +171,10 @@ class ConfigContainer extends React.Component {
             // TODO: need "SystemName" to be dynamic
             setLocalStorage('SystemName-Settings', copiedSettings);
             setLocalStorage('SystemName-Config', changedContent);
+
+            localSettings = getLocalStorage('SystemName-Settings');
+                        
+            localConfig = getLocalStorage('SystemName-Config');
             
         }
 

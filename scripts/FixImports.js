@@ -98,8 +98,8 @@ const regex_replacements = [
         replace: 'RemoveItemFromArray'
     },
     {
-        regex: /_RemoveItemFromArray\.(|default)/g,
-        replace: 'RemoveItemFromArray'
+        regex: /\(0, setLocalStorage\)(|\.default)/g,
+        replace: 'setLocalStorage'
     },
 ]
 
