@@ -82,7 +82,8 @@ class ConfigContainer extends React.Component {
     setContent(key, value, panelContent, tabName, fn='update', mode='single') {
         let changedContent = JSON.parse(JSON.stringify(this.state.content));
         
-        const last_position = changedContent[`_${tabName}`].length - 1;
+        const last_position = panelContent.length - 1;
+        // const last_position = changedContent[`_${tabName}`].length - 1;
         
         
         let copiedSettings = JSON.parse(JSON.stringify(this.state.settings.slice()));

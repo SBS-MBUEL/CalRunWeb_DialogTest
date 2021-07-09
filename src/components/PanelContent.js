@@ -300,6 +300,10 @@ class PanelContent extends React.Component {
             if (btnFunction === 'add' || btnFunction === 'copy') {
                 this.duplicatePanelContent(btnFunction, mainContent, subContent);
             } else if (btnFunction === 'remove') {
+                if (mainContent.length === 1 && subContent.length === 1) {
+                    renderGrowl('growl', 'Unable to remove the last device.', 'warning');
+                    return;
+                }
                 let cntnt = this.removeContent(this.state.tabContent.slice(), btnFunction, subContent[this.state.subActiveSlide].indice);
                 if (cntnt) {
                     let { mainContent } = this.parseContent(cntnt);

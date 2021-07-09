@@ -118,8 +118,9 @@ const files_to_delete = [
     root_search_path + '/ConfigContainer.js'
 ];
 
-dirs_to_delete.forEach(dir => { removeDir(dir); });
-files_to_delete.forEach(file => { removeFile(file); });
+// TODO: need to do a bit more work to get these working correctly
+// dirs_to_delete.forEach(dir => { removeDir(dir); });
+// files_to_delete.forEach(file => { removeFile(file); });
 
 iterate(root_search_path)
     .then(function(results) {
@@ -228,13 +229,9 @@ function readFileSync(file) {
 }
 
 function removeDir(dir) {
-    await fs.rmAsync(dir, function(res) {
-        console.log(res);
-    });
+    fs.rmdirSync(dir);
 }
 
 function removeFile(file) {
-    await fs.unlinkAsync(file, function(res) {
-        console.log(res);
-    });
+    fs.unlinkSync(file);
 }
