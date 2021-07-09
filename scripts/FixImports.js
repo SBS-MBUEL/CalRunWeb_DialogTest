@@ -228,13 +228,13 @@ function readFileSync(file) {
 }
 
 function removeDir(dir) {
-    fs.rmdir(dir, function(res) {
+    await fs.rmAsync(dir, function(res) {
         console.log(res);
     });
 }
 
 function removeFile(file) {
-    fs.unlink(file, function(res) {
+    await fs.unlinkAsync(file, function(res) {
         console.log(res);
     });
 }
