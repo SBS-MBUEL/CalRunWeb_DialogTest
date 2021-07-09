@@ -1,12 +1,13 @@
 // Production version of code needs this remarked out
 
-// TODO: try traditional require?
 // TODO: check if React module is loaded before importing?
+// TODO: can I use LoDash for some of these functions?
 
 import React from 'react';
 import { setLocalStorage, getLocalStorage } from './utils/LocalStorage'
 import { TabLinkContainer } from './components/TabLinkContainer';
 import { TabPanels } from './components/TabPanels';
+import { RemoveItemFromArray } from './utils/ArrayUtils';
 
 /**
  * ConfigContainer is the main launching point to construct the tabbed configuration screen
@@ -73,77 +74,108 @@ class ConfigContainer extends React.Component {
      * @param {object} content 
      * @param {string} tabName 
      * @param {string} fn - default is update mode / options "update", "delete", "add" (copy is dealt with as an add)
-    */
-    setContent(key, value, content, tabName, fn='update') {
-        console.log(key, value, content, tabName, fn);
+     * @param {string} mode - default is update single / options "single" (copy / add single element), "panel" (copy or add entire grouping)
+     * // TODO: try /catch
+     * 
+     * // TODO: refactor to be more atomic
+     */
+    setContent(key, value, panelContent, tabName, fn='update', mode='single') {
         let changedContent = JSON.parse(JSON.stringify(this.state.content));
-
-        changedContent[`_${tabName}`] = JSON.parse(JSON.stringify(content));
-
-        this.setState({
-            content: changedContent
-        });
-
+        
+        const last_position = changedContent[`_${tabName}`].length - 1;
+        
+        
         let copiedSettings = JSON.parse(JSON.stringify(this.state.settings.slice()));
         let successfulUpdate = false;
-
+        
         if (fn === 'update') {
             let index = copiedSettings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
-
+            
             if (index) {
                 copiedSettings[index].value = value; // TODO: this needs error checking so it's not trying to set something that doesn't exist
                 successfulUpdate = true;
             } else {
                 console.error(`Error trying to set value:`);
-                console.log(`key:`);
-                console.log(key);
-                console.log(`value:`);
-                console.log(value);
-                console.log(`content:`);
-                console.log(changedContent);
-                console.log(`settings:`);
-                console.log(copiedSettings);
-                console.log(`tabName:`);
-                console.log(tabName);
-                console.log(`fn:`);
-                console.log(fn);
-                console.log(`index:`);
-                console.log(index);
+                // console.log(`key:`);
+                // console.log(key);
+                // console.log(`value:`);
+                // console.log(value);
+                // console.log(`content:`);
+                // console.log(changedContent);
+                // console.log(`settings:`);
+                // console.log(copiedSettings);
+                // console.log(`tabName:`);
+                // console.log(tabName);
+                // console.log(`fn:`);
+                // console.log(fn);
+                // console.log(`index:`);
+                // console.log(index);
             }
         }
-
+        
         if (fn === 'add' || fn === 'copy') {
             let index = copiedSettings.map((el, index) => el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
-
+            
+            const control_list_length = changedContent[`_${tabName}`][last_position].controls.length - 1;
             // Copy object
             let copiedObject = JSON.parse(JSON.stringify(copiedSettings[index]));
+            
+            if (mode === 'single') {
+                // update individual field
+                // Change copied object
+                copiedObject.ItemName = key;
+                copiedObject.value = value;
+                
+                // Add copied object to copiedSettings
+                let settingIndex = copiedSettings.push(copiedObject);
+                changedContent[`_${tabName}`][last_position].controls[control_list_length].settingIndex = settingIndex;
+            } else if (mode === 'panel') {
 
-            // Change copied object
-            copiedObject.ItemName = key;
-            copiedObject.value = value;
-
-            // Add copied object to copiedSettings
-            copiedSettings.push(copiedObject);
+                // Change grouped object
+                changedContent[`_${tabName}`][last_position].controls.map((el) => {
+                    let field = JSON.parse(JSON.stringify(copiedObject));
+                    field.ItemName = el.label;
+                    field.value = el.value;
+                    el.settingIndex = copiedSettings.push(field) - 1;
+                });
+            }
+            
             successfulUpdate = true;
         }
-
+        
+        // This is for removing a single item from the array
         if (fn === 'remove') {
-            let index = copiedSettings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
-
-            copiedSettings = [...copiedSettings.splice(0, index), ...copiedSettings.splice(index - 1)];
-            successfulUpdate = true;
+            if (mode === 'single') {
+                let index = copiedSettings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
+                copiedSettings = RemoveItemFromArray(copiedSettings, index);
+                successfulUpdate = true;
+            } else if (mode === 'panel') {
+                // Change grouped object
+                panelContent[last_position].map((el) => {
+                    copiedSettings = RemoveItemFromArray(copiedSettings, el);
+                });
+                panelContent.pop();
+            }
         }
-
-        this.setState({
-            settings: copiedSettings
-        });
-
+        changedContent[`_${tabName}`] = JSON.parse(JSON.stringify(panelContent));
+        
         if (successfulUpdate) {
+            this.setState({
+                settings: copiedSettings
+            });
+
+            this.setState({
+                content: changedContent
+            });
+
             // TODO: need "SystemName" to be dynamic
             setLocalStorage('SystemName-Settings', copiedSettings);
             setLocalStorage('SystemName-Config', changedContent);
-
+            
         }
+
+        return panelContent;
+
     }
 
 
@@ -193,6 +225,7 @@ class ConfigContainer extends React.Component {
         this.setState({activeTab:tab});
     }
 
+    //TODO: remove unused functions
     clickRouter(e) {
         console.log('modify row - add / remove / update / copy');
         console.log(e);

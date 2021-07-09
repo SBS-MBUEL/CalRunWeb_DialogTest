@@ -26,7 +26,7 @@ const regex_replacements = [
         replace: 'createGUID'
     },
     {
-        regex: /_ConfigurationSetup\./g,
+        regex: /_PanelContent\./g,
         replace: ''
     },
     {
@@ -80,6 +80,26 @@ const regex_replacements = [
     {
         regex: /_ErrorRow\.(|default)/g,
         replace: ''
+    },
+    {
+        regex: /\(0, _growl\.renderGrowl\)/g,
+        replace: 'renderGrowl'
+    },
+    {
+        regex: /_PanelNavigation\.(|default)/g,
+        replace: ''
+    },
+    {
+        regex: /_rowContentContainer\.(|default)/g,
+        replace: ''
+    },
+    {
+        regex: /\(0, _ArrayUtils\.RemoveItemFromArray\)(|\.default)/g,
+        replace: 'RemoveItemFromArray'
+    },
+    {
+        regex: /_RemoveItemFromArray\.(|default)/g,
+        replace: 'RemoveItemFromArray'
     },
 ]
 

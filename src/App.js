@@ -3,6 +3,7 @@ import { ConfigContainer } from './ConfigContainer';
 import { databaseContent, databaseTabs } from './mocks/databaseMockContent';
 import { objectCollection } from './mocks/configMocks'
 import { getLocalStorage, setLocalStorage } from './utils/LocalStorage';
+import Growl from './utils/growl-containter';
 
 export default function App(props) {
     var localSettings = getLocalStorage('SystemName-Settings');
@@ -19,10 +20,14 @@ export default function App(props) {
     }
 
     return (
-        <ConfigContainer 
-            tabs={databaseTabs} 
-            settings={localSettings}
-            configurations={localConfig}
-        />
+        <div>
+            <ConfigContainer 
+                tabs={databaseTabs} 
+                settings={localSettings}
+                configurations={localConfig}
+            />
+            {/* <!-- This is required for the growl to display correctly --> */}
+            <Growl />
+        </div>
     )
 }
