@@ -8,6 +8,11 @@
  * @param {string} msg message in growl
  * @param {string} level info, success, warning, danger
  * @param {string} title optional parameter that displays title of growl
+ * @param {boolean} timeout optional, passing in false will make the div for the growl permanent
+ * 
+ * // TODO: forgot to add timeout to params
+ * // TODO: needs try / catch
+ * // TODO: investigate react-growl
  */
 function renderGrowl(elementID, msg, level, title = '', timeout = true) {
 
@@ -28,7 +33,7 @@ function renderGrowl(elementID, msg, level, title = '', timeout = true) {
     }
     
     const article = document.createElement('article');
-    article.className = `tile is-child notification is-${level} growling removed`;
+    article.className = `tile is-child notification is-${level} growling ${timeout ? 'removed' : ''}`;
 
     const growlContent = document.createElement('p');
     growlContent.className = 'subtitle';

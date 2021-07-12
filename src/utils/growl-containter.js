@@ -1,6 +1,7 @@
 import React from 'react';
 
-
+// TODO: needs comments
+// The purpose of this function is to create a container for the unit tests on the Growl functions
 export default function Growl(props) {
 
     return (

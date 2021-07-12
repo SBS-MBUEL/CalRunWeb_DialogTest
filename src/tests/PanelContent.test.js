@@ -9,19 +9,21 @@ const _mock_device = [
         for:'calibrationOption',
 		defaultName:'Mock Control Device',
 		controls: [
-		{label:'Device', type:'dropdown', list:['item-1', 'item-2'], width:'50px', height:'30px', control:null, value:'drop-list', maxLength:0, titleOrder:0},
-		{label:'SN', type:'text', list:[], width:'50px', height:'30px', control:null, value:'text-input', maxLength:20, titleOrder:1},
-		{label:'Port', type:'textarea', list:[], width:'50px', height:'30px', control:null, value:'textarea-input', maxLength:0, titleOrder:-1},
-        {label:'Remove Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove device-button', maxLength:0, titleOrder:-1},
-        {label:'Copy Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'copy device-button', maxLength:0, titleOrder:-1},
-        {label:'Add Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add device-button', maxLength:0, titleOrder:-1},
-	]},
+            {label:'Remove Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove device-button', maxLength:0, titleOrder:-1},
+            {label:'Copy Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'copy device-button', maxLength:0, titleOrder:-1},
+            {label:'Add Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add device-button', maxLength:0, titleOrder:-1},
+            {label:'Device', type:'dropdown', list:['item-1', 'item-2'], width:'50px', height:'30px', control:null, value:'drop-list', maxLength:0, titleOrder:0},
+            {label:'SN', type:'text', list:[], width:'50px', height:'30px', control:null, value:'text-input', maxLength:20, titleOrder:1},
+            {label:'Port', type:'textarea', list:[], width:'50px', height:'30px', control:null, value:'textarea-input', maxLength:0, titleOrder:-1},
+	    ]
+    },
 	{
         for:'calibrationParameter',
 		defaultName:'Measurand',
 		controls: [
-		{label:'Measurand-0', type:'dropdown', list:['purple', 'people', 'eater'], width:'100px', height:'30px', control:['purple', 'people', 'eater'], value:'sub-list', maxLength:0, titleOrder:0},
-	]}
+		    {label:'Measurand-0', type:'dropdown', list:['purple', 'people', 'eater'], width:'100px', height:'30px', control:['purple', 'people', 'eater'], value:'sub-list', maxLength:0, titleOrder:0},
+	    ]
+    }
 ];
 
 let _global_value = 'Not Set';
@@ -50,7 +52,6 @@ const processChange = (key, val, content, tabName, fn) => {
 let globalFN = '';
 const clickRouter = (key, val, changedContent, tabName, fn) => {
     expect(fn).toBe(globalFN);
-    
 }
 
 describe('test input is correct', () => {
@@ -63,16 +64,31 @@ describe('test input is correct', () => {
                 handler={clickRouter} 
             /> );
 
-        const _drop_list = screen.getAllByText(/drop-list/)[1];
+        const _drop_list = screen.getAllByText(/drop-list/)[0];
         const _text_input = screen.getByDisplayValue(/text-input/);
         const _textarea = screen.getByDisplayValue(/textarea-input/);
-        const _remove_button = screen.getByText(/remove device-button/)
-        const _add_button = screen.getByText(/add device-button/)
+        const _remove_button = screen.getAllByText(/remove device-button/)[0];
+        const _add_button = screen.getAllByText(/add device-button/)[0];
         
-        expect(_drop_list.textContent).toBe('drop-list');
-        expect(_text_input.value).toBe('text-input');
-        expect(_remove_button.textContent).toBe('remove device-button');
-        expect(_add_button.textContent).toBe('add device-button');
+        expect(_drop_list.textContent).toContain('drop-list');
+        expect(_text_input.value).toContain('text-input');
+        expect(_remove_button.textContent).toContain('remove device-button');
+        expect(_add_button.textContent).toContain('add device-button');
+    });
+
+    test('renders correct name for grouping', () => {
+        render(<PanelContent                                                 
+            index={0} 
+            content={_mock_device}
+            setContent={processChange}
+            tabName={_configuration_area}
+            handler={clickRouter} 
+        /> );
+
+        const getMainTitle = screen.getAllByText(/Mock Control Device/i)[1]; // Main Panel title
+
+        expect(getMainTitle.textContent).toBe('MOCK CONTROL DEVICE - 1: drop-list');
+
     });
 
     test('list has valid items', () => {
@@ -149,7 +165,7 @@ describe('test input is correct', () => {
     });
 });
 
-describe('invalid content packaage renders correct error', () => {
+describe('invalid content package renders correct error', () => {
     test('error page rendered with incorrect content', () => {
         render(<PanelContent                                                 
             index={0} 
@@ -237,11 +253,11 @@ describe('Can change sub item', () => {
                     handler={clickRouter} 
                 /> );
     
-            const _sub_item = screen.getByText(/remove device-button/);
+            const _sub_item = screen.getAllByText(/remove device-button/)[0];
 
             fireEvent.click(_sub_item);
             
-            const _sub_list = screen.getAllByText(/Measurand-[0-9]/);
+            const _sub_list = screen.getAllByText(/Measurand/i);
     
             expect(_sub_list.length).toBe(2); // TODO: not really certain why this is 3?
             

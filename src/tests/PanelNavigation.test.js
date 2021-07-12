@@ -17,9 +17,9 @@ describe('normal input', () => {
                 currentPane = {currentPane} 
                 />);
 
-        const pane = screen.getByText(/panelNavTest - optionParameter: 1/);
+        const pane = screen.getByText(/panelNavTest - 1: optionParameter/);
         
-        expect(pane.textContent).toBe('panelNavTest - optionParameter: 1');
+        expect(pane.textContent).toBe('panelNavTest - 1: optionParameter');
 
     });
 
@@ -30,7 +30,7 @@ describe('normal input', () => {
                 currentPane = {currentPane} 
                 />);
 
-        const pane = screen.getByText(/panelNavTest - optionParameter: 1/);
+        const pane = screen.getByText(/panelNavTest - 1: optionParameter/);
         const clickLeft = pane.parentNode.firstChild.firstChild;
         
         expect(clickLeft.className).toBe('button is-link fa fa-chevron-left');
@@ -44,7 +44,7 @@ describe('normal input', () => {
             currentPane = {currentPane} 
             />);
 
-        const pane = screen.getByText(/panelNavTest - optionParameter: 1/);
+        const pane = screen.getByText(/panelNavTest - 1: optionParameter/);
         const clickRight = pane.parentNode.lastChild.firstChild;
         
         expect(clickRight.className).toBe('button is-link fa fa-chevron-right');

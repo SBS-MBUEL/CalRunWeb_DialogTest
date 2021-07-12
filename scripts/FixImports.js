@@ -98,13 +98,29 @@ const regex_replacements = [
         replace: 'RemoveItemFromArray'
     },
     {
-        regex: /_RemoveItemFromArray\.(|default)/g,
-        replace: 'RemoveItemFromArray'
+        regex: /\(0, setLocalStorage\)(|\.default)/g,
+        replace: 'setLocalStorage'
     },
 ]
 
 const root_search_path = path.join(__dirname, '../js');
 
+const dirs_to_delete = [
+    root_search_path + '/api',
+    root_search_path + '/components',
+    root_search_path + '/mocks',
+    root_search_path + '/tests',
+    root_search_path + '/utils',
+];
+
+const files_to_delete = [
+    root_search_path + '/App.js',
+    root_search_path + '/ConfigContainer.js'
+];
+
+// TODO: need to do a bit more work to get these working correctly
+// dirs_to_delete.forEach(dir => { removeDir(dir); });
+// files_to_delete.forEach(file => { removeFile(file); });
 
 iterate(root_search_path)
     .then(function(results) {
@@ -210,4 +226,12 @@ function saveFileSync(file, txt) {
  */
 function readFileSync(file) {
     return file && fs.readFileSync(file, {encoding:'utf8', flag:'r'});
+}
+
+function removeDir(dir) {
+    fs.rmdirSync(dir);
+}
+
+function removeFile(file) {
+    fs.unlinkSync(file);
 }

@@ -1,13 +1,14 @@
 // Production version of code needs this remarked out
 
-// TODO: try traditional require?
 // TODO: check if React module is loaded before importing?
+// TODO: can I use LoDash for some of these functions?
 
 import React from 'react';
 import { setLocalStorage, getLocalStorage } from './utils/LocalStorage'
 import { TabLinkContainer } from './components/TabLinkContainer';
 import { TabPanels } from './components/TabPanels';
 import { RemoveItemFromArray } from './utils/ArrayUtils';
+import { databaseTabs } from './mocks/databaseMockContent';
 
 /**
  * ConfigContainer is the main launching point to construct the tabbed configuration screen
@@ -75,12 +76,12 @@ class ConfigContainer extends React.Component {
      * @param {string} tabName 
      * @param {string} fn - default is update mode / options "update", "delete", "add" (copy is dealt with as an add)
      * @param {string} mode - default is update single / options "single" (copy / add single element), "panel" (copy or add entire grouping)
+     * // TODO: try /catch
+     * 
+     * // TODO: refactor to be more atomic
      */
     setContent(key, value, panelContent, tabName, fn='update', mode='single') {
         let changedContent = JSON.parse(JSON.stringify(this.state.content));
-        
-        const last_position = changedContent[`_${tabName}`].length - 1;
-        
         
         let copiedSettings = JSON.parse(JSON.stringify(this.state.settings.slice()));
         let successfulUpdate = false;
@@ -93,26 +94,26 @@ class ConfigContainer extends React.Component {
                 successfulUpdate = true;
             } else {
                 console.error(`Error trying to set value:`);
-                console.log(`key:`);
-                console.log(key);
-                console.log(`value:`);
-                console.log(value);
-                console.log(`content:`);
-                console.log(changedContent);
-                console.log(`settings:`);
-                console.log(copiedSettings);
-                console.log(`tabName:`);
-                console.log(tabName);
-                console.log(`fn:`);
-                console.log(fn);
-                console.log(`index:`);
-                console.log(index);
+                // console.log(`key:`);
+                // console.log(key);
+                // console.log(`value:`);
+                // console.log(value);
+                // console.log(`content:`);
+                // console.log(changedContent);
+                // console.log(`settings:`);
+                // console.log(copiedSettings);
+                // console.log(`tabName:`);
+                // console.log(tabName);
+                // console.log(`fn:`);
+                // console.log(fn);
+                // console.log(`index:`);
+                // console.log(index);
             }
         }
         
         if (fn === 'add' || fn === 'copy') {
             let index = copiedSettings.map((el, index) => el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
-            
+            let last_position = changedContent[`_${tabName}`].length - 1;
             const control_list_length = changedContent[`_${tabName}`][last_position].controls.length - 1;
             // Copy object
             let copiedObject = JSON.parse(JSON.stringify(copiedSettings[index]));
@@ -142,6 +143,7 @@ class ConfigContainer extends React.Component {
         
         // This is for removing a single item from the array
         if (fn === 'remove') {
+            let last_position = panelContent.length - 1;
             if (mode === 'single') {
                 let index = copiedSettings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
                 copiedSettings = RemoveItemFromArray(copiedSettings, index);
@@ -152,6 +154,7 @@ class ConfigContainer extends React.Component {
                     copiedSettings = RemoveItemFromArray(copiedSettings, el);
                 });
                 panelContent.pop();
+                successfulUpdate = true;
             }
         }
         changedContent[`_${tabName}`] = JSON.parse(JSON.stringify(panelContent));
@@ -222,6 +225,7 @@ class ConfigContainer extends React.Component {
         this.setState({activeTab:tab});
     }
 
+    //TODO: remove unused functions
     clickRouter(e) {
         console.log('modify row - add / remove / update / copy');
         console.log(e);

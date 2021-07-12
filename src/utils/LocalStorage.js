@@ -3,7 +3,7 @@
 import { renderGrowl } from "./growl";
 
 /**
- * takes key / value pair and stores data to localstorage after JSON.stringify is applied
+ * Takes key / value pair and stores data to localstorage after JSON.stringify is applied
  * @param {string} key - string to identify item being stored
  * @param {object} value - could be object, string, array - cannot be an undefined, null, empty string or empty array
  */
@@ -22,6 +22,8 @@ function setLocalStorage(key, value) {
 
 /**
  * getLocalStorage, retrieves item from localStorage
+ * The standard way to determine if there is a key in the store is to see if getItem returns "null"
+ * https://stackoverflow.com/questions/49109780/localstorage-getitem-check-if-a-key-exists
  * @param {string} key - string to retrieve item
  * @returns null for error, object/string/array for valid value
  */

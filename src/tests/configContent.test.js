@@ -1,20 +1,35 @@
 //TODO: move import to this file
 import { render, screen, fireEvent } from '@testing-library/react';
-import { link } from 'fs';
+import databaseMockContent, { databaseContent, databaseTabs } from '../mocks/databaseMockContent';
+import configMocks, { objectCollection } from '../mocks/configMocks'
+import { getLocalStorage, setLocalStorage } from '../utils/LocalStorage';
 
 import App from '../App';
+
+var localSettings = getLocalStorage('SystemName-Settings');
+var localConfig = getLocalStorage('SystemName-Config');
 
 function setup() {
     localStorage.clear('SystemName-Config');
 
     localStorage.clear('SystemName-Settings');
+
+    if (!localSettings) { // retrieve database immediately
+        setLocalStorage('SystemName-Settings', databaseContent);
+        localSettings = databaseContent;
+    }
+
+    if (!localConfig) { // retrieve configuration from database
+        setLocalStorage('SystemName-Config', objectCollection);
+        localConfig = objectCollection;
+    }
 }
 
 // Basic render test, renders the whole configuration stack
 
 describe('value errors not popping up.', () => {
     test('changing sub option 0 propagates appropriately with no errors.', () => {
-
+        setup();
         render(<App /> );
 
         const _sub_drop_items = screen.getAllByText(/Not Set/);
@@ -45,7 +60,7 @@ describe('normal functions', () => {
         setup();
 
         render(<App /> );
-        const linkElement = screen.getByText(/SYSTEM/);
+        const linkElement = screen.getAllByText(/SYSTEM/)[0];
     
         expect(linkElement).toBeDefined();
     });
@@ -77,7 +92,7 @@ describe('normal functions', () => {
         render(<App /> );
 
         let _sub_drop_items = screen.getAllByText(/Not Set/);
-        expect(_sub_drop_items.length).toBe(61);
+        expect(_sub_drop_items.length).toBe(50);
 
         const _sub_drop_item = _sub_drop_items[5];
 
@@ -96,7 +111,7 @@ describe('normal functions', () => {
         _sub_drop_items = screen.getAllByText(/Not Set/);
 
         expect(_sub_item_list.length).toBe(2);
-        expect(_sub_drop_items.length).toBe(61);
+        expect(_sub_drop_items.length).toBe(50);
 
         const _add_item = screen.getAllByText(/add device/)[0];
         fireEvent.click(_add_item);
@@ -106,7 +121,7 @@ describe('normal functions', () => {
         _sub_drop_items = screen.getAllByText(/Not Set/);
 
         expect(_sub_item_list.length).toBe(3);
-        expect(_sub_drop_items.length).toBe(63);
+        expect(_sub_drop_items.length).toBe(52);
         
     });
 
@@ -120,12 +135,12 @@ describe('normal functions', () => {
         const _sub_item = screen.getAllByText(/add device/)[0];
         fireEvent.click(_sub_item);
         
-        const _sub_list = screen.getAllByText(/Device-[0-9]/);
+        const _sub_list = screen.getAllByText(/Device/);
 
-        expect(_sub_list.length).toBe(3);
+        expect(_sub_list.length).toBe(16);
 
         _sub_list.forEach((el, i) => {
-            expect(el.textContent).toBe("Device-" + i);
+            expect(el.textContent).toMatch(/Device/i);
         });
     });
 
@@ -142,17 +157,17 @@ describe('normal functions', () => {
         fireEvent.click(_copy_button);
 
         expect(_sub_item_list.length).toBe(4);
-        expect(_sub_drop_items.length).toBe(65);
+        expect(_sub_drop_items.length).toBe(54);
         
-        const _sub_list = screen.getAllByText(/Device-[0-9]/);
+        const _sub_list = screen.getAllByText(/Device/);
 
-        expect(_sub_list.length).toBe(4);
+        expect(_sub_list.length).toBe(17);
 
         _sub_item_list = screen.getAllByText(/DeepSeapHoxV2/);
         _sub_drop_items = screen.getAllByText(/Not Set/);
 
         expect(_sub_item_list.length).toBe(5);
-        expect(_sub_drop_items.length).toBe(67);
+        expect(_sub_drop_items.length).toBe(56);
     });
 
     // at this stage it does add it to the list
@@ -165,12 +180,13 @@ describe('normal functions', () => {
         const _sub_item = screen.getAllByText(/copy device/)[0];
         fireEvent.click(_sub_item);
         
-        const _sub_list = screen.getAllByText(/Device-[0-9]/);
+        const _sub_list = screen.getAllByText(/Device/);
 
-        expect(_sub_list.length).toBe(5);
+        expect(_sub_list.length).toBe(18);
 
         _sub_list.forEach((el, i) => {
-            expect(el.textContent).toBe("Device-" + i);
+            console.log('devices' + el.textContent);
+            expect(el.textContent).toMatch(/Device/i);
         });
         
     });
@@ -184,9 +200,9 @@ describe('normal functions', () => {
         const _sub_item = screen.getAllByText(/remove device/)[0];
         fireEvent.click(_sub_item);
         
-        const _sub_list = screen.getAllByText(/Device-[0-9]/);
+        const _sub_list = screen.getAllByText(/Device/);
 
-        expect(_sub_list.length).toBe(4);
+        expect(_sub_list.length).toBe(17);
     });
 
     // at this stage it does add it to the list
@@ -198,12 +214,12 @@ describe('normal functions', () => {
         const _sub_item = screen.getAllByText(/remove device/)[0];
         fireEvent.click(_sub_item);
         
-        const _sub_list = screen.getAllByText(/Device-[0-9]/);
+        const _sub_list = screen.getAllByText(/Device/);
 
-        expect(_sub_list.length).toBe(3);
+        expect(_sub_list.length).toBe(16);
 
         _sub_list.forEach((el, i) => {
-            expect(el.textContent).toBe("Device-" + i);
+            expect(el.textContent).toMatch(/Device/i);
         });
     });
 

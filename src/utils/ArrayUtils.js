@@ -10,30 +10,66 @@ function RemoveItemFromArray(array, index) {
     if (!array || index < 0 || array.length < index) {
         return -1;
     }
-    
-    const copiedArray = array.slice();
-    let results = array.filter(function(item, idx) {
-        if(idx != index) //index you want to remove
-        return item;
-    });
+    try {
+        const results = array.filter(function(item, idx) {
+            if(idx != index) //index you want to remove
+            return item;
+        });
+        return results;
 
-    return results;
+    } catch (ex) {
+        // TODO: not sure what error could happen from above, need to research - try to catch with testing
+        return -1;
+    }
 }
 /**
- * searched the document for the passed in element, and the returns a filtered array of those objects with the regex text content
- * @param {string} element can be the class '.class' or the element 'div' to filter on
+ * Searched the document for the passed in element, and the returns a filtered array of those objects with the regex text content
+ * @param {string} query can be the css selector '.class' or the element 'div' to filter on
  * @param {RegExp} regex the regex to filter on
+ * // TODO: explain background for this function, reason it exists
  * @returns 
  */
-function FilterElementsOnTextContent(element, regex) {
-    const results = Array.from(document.querySelectorAll(element))
-        .reduce((acc, el) => {
-            if (el.textContent.match(regex) !== null) {
-                acc.push(el);
-            }
-            return acc;
-        }, []);
+function FilterElementsOnTextContent(query, regex) {
+    try {
+        const results = Array.from(document.querySelectorAll(query))
+            .reduce((acc, el) => {
+                if (el.textContent.match(regex) !== null) {
+                    acc.push(el);
+                }
+                return acc;
+            }, []);
+    } catch (ex) {
+        // TODO: need to try and define error and capture / test for
+    }
     return results;
+}
+
+/**
+ * The goal of this method is to find a unique index in the settings object by supplying two key value pairs.
+ * @param {object} settings object
+ * @param {string} key1 field name, for example label
+ * @param {string} value1 of field1
+ * @param {string} key2 field name, for example value
+ * @param {string} value2 of field2
+ * @return {number}
+ */
+function FindUniqueIndexInSettings(settings, key1, value1, key2, value2) {
+    if ((!settings && typeof(settings) !== 'object') || (!key1 && typeof(key1) !== 'string') || (!key2 && typeof(key2) !== 'string') || (!value1 && typeof(value1) !== 'string') || (!value2 && typeof(value2) !== 'string') ) {
+        // problem with arguments
+        return -1;
+    }
+    try {
+        let indice = settings.map((el, index) => el[key1].toLowerCase() === value1.toLowerCase() && el[key2].toLowerCase() === value2.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined);
+
+        if (!indice[0] || indice.length > 1) {
+            // search query is not returning a unique result.
+            return -1; 
+        }
+        console.log(indice);
+        return indice[0];
+    } catch (er) {
+        return -1;
+    }
 }
 
 

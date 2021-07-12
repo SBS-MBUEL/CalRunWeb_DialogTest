@@ -115,6 +115,15 @@ const databaseContent = [
     {
         "ConfigurationID": "882",
         "ConfigurationName": "DryChloro",
+        "ConfigurationArea": "device",
+        "OptionIndex": "0",
+        "ParameterIndex": "0",
+        "ItemName": "Measurand",
+        "ItemValue": "Not Set"
+    },
+    {
+        "ConfigurationID": "882",
+        "ConfigurationName": "DryChloro",
         "ConfigurationArea": "dataPoint",
         "OptionIndex": "0",
         "ParameterIndex": "0",

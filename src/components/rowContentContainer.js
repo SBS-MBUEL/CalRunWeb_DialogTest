@@ -1,6 +1,5 @@
 import React from 'react';
 import { ConfigPageRow } from './ConfigPageRow';
-import { PanelNavigation } from './PanelNavigation';
 
 class RowContentContainer extends React.Component {
     constructor(props) {
@@ -12,8 +11,6 @@ class RowContentContainer extends React.Component {
             
         }
 
-        this.slideLeft = this.slideLeft.bind(this);
-        this.slideRight = this.slideRight.bind(this);
         this.setContentValues = this.setContentValues.bind(this);
     }
 
@@ -34,45 +31,17 @@ class RowContentContainer extends React.Component {
         this.props.setContentValues(key, val, settingIdx, controlIdx);
     }
 
-    /**
-     * slides the sub panel to the right
-     * position should use state for setting
-    */
-    slideRight() {
-
-        let newSlide = this.props.activeSlide > 0 ? (this.props.activeSlide - 1) : (this.props.maxSlides - 1);
-        
-        
-            
-        console.log(this.state.currentView, newSlide);
-        this.props.changeSlide(this.state.currentView, newSlide);
-        
-    }
-        
-    /**
-     * slides current pane to the left
-    */
-    slideLeft() {
-
-        let newSlide = this.props.activeSlide < (this.props.maxSlides - 1) ? (this.props.activeSlide + 1) : 0;
-        
-
-        console.log(this.state.currentView, newSlide);
-        this.props.changeSlide(this.state.currentView, newSlide);
-
-    }
-
     render() {
         const { index, tabName, handler, optionView } = this.props;
         return (
                     <React.Fragment>
-                        <PanelNavigation 
+                        {/* <PanelNavigation 
                             panel={tabName} 
                             optionView={this.state.currentView}
                             currentPane={this.props.currentPane}
-                            slideLeft={this.slideLeft}
-                            slideRight={this.slideRight}
-                        />
+                            leftArrow={this.slideLeft}
+                            rightArrow={this.slideRight}
+                        /> */}
                         {this.state.panelContent.controls.map((row, rowIdx) => {
                             return (
                                 <div className="column content" key={`${row.label}-${rowIdx}`}>
