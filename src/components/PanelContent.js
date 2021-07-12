@@ -21,8 +21,6 @@ class PanelContent extends React.Component {
             panelName: '',
             mainActiveSlide : 0,
             mainMaxSlides: mainContent && mainContent.length,
-            subActiveSlide: 0,
-            subMaxSlides: subContent && subContent.length
         };
 
         this.setContentValues = this.setContentValues.bind(this);
@@ -70,7 +68,6 @@ class PanelContent extends React.Component {
 
         if (this.state.tabName.match(/device/i)) {
             this.setState({mainActiveSlide : newSlide});
-            this.setState({subActiveSlide: newSlide});
         } else {
             this.setState({mainActiveSlide : newSlide});
         }
@@ -271,7 +268,7 @@ class PanelContent extends React.Component {
     */
     duplicatePanelContent(btnFunction, mainContent, subContent) {
         let currentLength = this.state.tabContent.length;
-        let idx = this.duplicateOrAddContent(subContent[this.state.subActiveSlide], btnFunction, subContent[this.state.subActiveSlide].indice);
+        let idx = this.duplicateOrAddContent(subContent[this.state.mainActiveSlide], btnFunction, subContent[this.state.mainActiveSlide].indice);
         if (idx) {
             let timeout = null;
             let interval = setInterval(() => {
@@ -286,9 +283,7 @@ class PanelContent extends React.Component {
 
                     this.setState({
                         mainMaxSlides: this.state.mainMaxSlides + 1,
-                        subMaxSlides: this.state.subMaxSlides + 1,
                         mainActiveSlide: this.state.mainMaxSlides,
-                        subActiveSlide: this.state.subMaxSlides
                     });
                 }
             }, 15);
@@ -365,10 +360,10 @@ class PanelContent extends React.Component {
 
                     this.setState({
                         mainMaxSlides: this.state.mainMaxSlides - 1,
-                        subMaxSlides: this.state.subMaxSlides - 1,
                         mainActiveSlide: 0,
-                        subActiveSlide: 0
                     });
+
+                    this.setPanelName(this.state.mainActiveSlide - 1);
                 }
             }
         }
