@@ -24,7 +24,7 @@ import React from 'react';
                 className={(index == activeTab ? 'tab-select is-active' : 'tab-select')} 
                 onClick={changeTab}
                 data-tab={index}
-                role="presentation">
+                role="Pseudo HTML">
                 <a href={`#${tab.ConfigurationArea}`} >
                     <i className={`${tab.Icon}`}></i> 
                     {tab.ConfigurationArea}

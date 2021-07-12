@@ -31,7 +31,7 @@ test('renders TabPanels with functional data', () => {
     let result = '';
     render(<TabPanels tabs={getTabs()} content={objectCollection} activeTab={0} clickRouter={(e) => result = e.target.classList}  /> );
 
-    const tabPanel = screen.getAllByRole(/tabpanel/i)[0];
+    const tabPanel = screen.getAllByRole(/Landmark/i)[0];
 
     expect(tabPanel.className).toMatch(/is-active/);
     
@@ -41,8 +41,8 @@ test('renders ErrorPage with tabs null', () => {
     let result = '';
     render(<TabPanels tabs={undefined} content={objectCollection} activeTab={0} clickRouter={(e) => result = e.target.classList}  /> );
 
-    const tabPanel = screen.getAllByText(/CalRun Configuration Page/i)[0];
-
+    const tabPanel = screen.getAllByText(/CalRun Configuration Page/i)[1];
+    console.log(tabPanel);
     expect(tabPanel.textContent).toMatch(/CalRun Configuration Page/);
     
 });

@@ -397,7 +397,7 @@ class PanelContent extends React.Component {
             display = content[0].defaultName ? (
                 <div 
                     key={`${tabName}-panel`} 
-                    role="tabpanel" 
+                    role="Landmark" 
                     className={`tab-pane ${activeTab ? 'is-active show fade-in' : 'fade-out'}`}  
                     id={`${tabName}`}
                 >

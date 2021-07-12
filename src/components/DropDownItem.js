@@ -38,7 +38,7 @@ class DropDownItem extends React.Component {
                     <div key={`${index}-dropList-${i}`} className="container is-clearfix is-centered ml-1 mr-1 mb-1">
                         <a
                             href="#"
-                            role="drop-item"
+                            role="Pseudo HTML"
                             key={item + i} 
                             onClick={this.changeDropItem} 
                             className={`button is-info ${this.state.userValue === item ? '' : 'is-outlined'} popup-link dropdown-item has-text-centered pl-1 pr-1`}>
