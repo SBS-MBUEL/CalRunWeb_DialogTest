@@ -4,6 +4,8 @@ import { RemoveItemFromArray } from '../utils/ArrayUtils';
 import { ConfigurationDisplayHeading } from './ConfigurationDisplayHeading';
 import { RowContentContainer } from './rowContentContainer';
 import { ErrorPage } from './ErrorPage';
+import { PanelNavigation } from './PanelNavigation';
+
 
 
 class PanelContent extends React.Component {
@@ -16,6 +18,7 @@ class PanelContent extends React.Component {
         this.state = {
             tabName: props.tabName,
             tabContent: props.content,
+            panelName: '',
             mainActiveSlide : 0,
             mainMaxSlides: mainContent && mainContent.length,
             subActiveSlide: 0,
@@ -31,9 +34,31 @@ class PanelContent extends React.Component {
         this.parseContent = this.parseContent.bind(this);
         this.filterContent = this.filterContent.bind(this);
         this.changeSlide = this.changeSlide.bind(this);
+        this.slideLeft = this.slideLeft.bind(this);
+        this.slideRight = this.slideRight.bind(this);
+        this.setPanelName = this.setPanelName.bind(this);
     }
 
     componentDidMount() {
+        this.setPanelName(this.state.mainActiveSlide);
+    }
+
+    setPanelName(activeSlide) {
+        let { mainContent } = this.parseContent(this.state.tabContent);
+        if (mainContent) {
+            for(let i = 0; i < mainContent[activeSlide].controls.length; i++) {
+                if (mainContent[activeSlide].controls[i].type !== 'button') {
+                    this.setState({
+                        panelName : mainContent[activeSlide].controls[i].value
+                    });
+                    break;
+                }
+            }
+        } else {
+            this.setState({
+                panelName: undefined
+            })
+        }
 
     }
 
@@ -41,14 +66,16 @@ class PanelContent extends React.Component {
      * slides the sub panel to the right or left
      * position should use state for setting
     */
-    changeSlide(view, newSlide) {
+    changeSlide(newSlide) {
 
         if (this.state.tabName.match(/device/i)) {
             this.setState({mainActiveSlide : newSlide});
             this.setState({subActiveSlide: newSlide});
         } else {
-            this.setState({[`${view}ActiveSlide`] : newSlide});
+            this.setState({mainActiveSlide : newSlide});
         }
+
+        this.setPanelName(newSlide);
 
     }
 
@@ -170,7 +197,7 @@ class PanelContent extends React.Component {
      * @param {*} fn 
      * @param {*} subIdx 
      * @returns 
-     */
+    */
     removeContent(panelContent, fn, subIdx) {
         let indicesToRemove = panelContent[subIdx].controls.reduce((acc, _, index) => {
             acc.push(_.settingIndex);
@@ -203,7 +230,7 @@ class PanelContent extends React.Component {
      * @param {*} fn 
      * @param {*} subIdx 
      * @returns 
-     */
+    */
     removeRow(subControls, fn, subIdx) {
         let changedControls = JSON.parse(JSON.stringify(subControls));
 
@@ -241,7 +268,7 @@ class PanelContent extends React.Component {
      * @param {string} btnFunction 
      * @param {object} mainContent 
      * @param {object} subContent 
-     */
+    */
     duplicatePanelContent(btnFunction, mainContent, subContent) {
         let currentLength = this.state.tabContent.length;
         let idx = this.duplicateOrAddContent(subContent[this.state.subActiveSlide], btnFunction, subContent[this.state.subActiveSlide].indice);
@@ -273,6 +300,33 @@ class PanelContent extends React.Component {
             }, 2000);
         }
     }
+    /**
+     * slides the sub panel to the right
+     * position should use state for setting
+    */
+    slideLeft() {
+
+        let newSlide = this.state.mainActiveSlide > 0 ? (this.state.mainActiveSlide - 1) : (this.state.mainMaxSlides - 1);
+        
+        
+            
+        console.log(this.state.mainActiveSlide, newSlide);
+        this.changeSlide(newSlide);
+        
+    }
+        
+    /**
+     * slides current pane to the left
+    */
+    slideRight() {
+
+        let newSlide = this.state.mainActiveSlide < (this.state.mainMaxSlides - 1) ? (this.state.mainActiveSlide + 1) : 0;
+        
+
+        console.log(this.state.mainActiveSlide, newSlide);
+        this.changeSlide(newSlide);
+
+    }
 
     /**
      * appropriately process button clicked to add / copy or remove sub panel or whole panel
@@ -292,9 +346,9 @@ class PanelContent extends React.Component {
         // TODO: need to determine which panel is currently displayed and appropriately copy / remove / duplicate it or rows in it.
         if (parameter !== 'device' || this.state.tabName.match(/device/) === null ) {
             if (btnFunction === 'add' || btnFunction === 'copy') {
-                let idx = this.duplicateOrAddRow(subContent[this.state.subActiveSlide].controls, btnFunction, subContent[this.state.subActiveSlide].indice);
+                let idx = this.duplicateOrAddRow(subContent[this.state.mainActiveSlide].controls, btnFunction, subContent[this.state.mainActiveSlide].indice);
             } else if (btnFunction === 'remove') {
-                let idx = this.removeRow(subContent[this.state.subActiveSlide].controls, btnFunction, subContent[this.state.subActiveSlide].indice);
+                let idx = this.removeRow(subContent[this.state.mainActiveSlide].controls, btnFunction, subContent[this.state.mainActiveSlide].indice);
             }
         } else if (parameter === 'device' && this.state.tabName.match(/device/) !== null) {
             if (btnFunction === 'add' || btnFunction === 'copy') {
@@ -304,7 +358,7 @@ class PanelContent extends React.Component {
                     renderGrowl('growl', 'Unable to remove the last device.', 'warning');
                     return;
                 }
-                let cntnt = this.removeContent(this.state.tabContent.slice(), btnFunction, subContent[this.state.subActiveSlide].indice);
+                let cntnt = this.removeContent(this.state.tabContent.slice(), btnFunction, subContent[this.state.mainActiveSlide].indice);
                 if (cntnt) {
                     let { mainContent } = this.parseContent(cntnt);
                     cntnt = this.removeContent(cntnt, btnFunction, mainContent[this.state.mainActiveSlide].indice);
@@ -332,7 +386,7 @@ class PanelContent extends React.Component {
         let changedContent = this.state.tabContent.slice();
 
         changedContent[settingIdx].controls[controlIdx].value = val;
-
+        this.setPanelName(this.state.mainActiveSlide);
         this.props.setContent(key, val, changedContent, this.props.tabName);
     }
 
@@ -353,7 +407,14 @@ class PanelContent extends React.Component {
                     id={`${tabName}`}
                 >
                     
-                <ConfigurationDisplayHeading key={`${content[0].defaultName}-heading`} handler={handler} heading={content[0].defaultName.toUpperCase()}/>
+                <ConfigurationDisplayHeading key={`${content[0].defaultName}-heading`} handler={handler} heading={mainContent[0].defaultName.toUpperCase()} />
+                <PanelNavigation 
+                            panel={mainContent[0].defaultName.toUpperCase()} 
+                            optionView={this.state.panelName}
+                            currentPane={this.state.mainActiveSlide}
+                            leftArrow={this.slideLeft}
+                            rightArrow={this.slideRight}
+                        />
                 <div className="container overflow">
                     <div className="container columns is-flex">
                         {mainContent.map((panel, contentIdx, arr) => {
@@ -382,9 +443,9 @@ class PanelContent extends React.Component {
                     <div className="container columns is-flex">
                         {subContent.map((subPanel, subContentIdx, arr) => {
                             return (
-                                <div key={`${'sub'}-${tabName}-${subContentIdx}`} className="container column is-11 slide mainPanel-content is-inline" style={{"transform": `translateX(${this.state.subActiveSlide * 100 * -1}%)`}}>
+                                <div key={`${'sub'}-${tabName}-${subContentIdx}`} className="container column is-11 slide mainPanel-content is-inline" style={{"transform": `translateX(${this.state.mainActiveSlide * 100 * -1}%)`}}>
                                     <RowContentContainer
-                                        activeSlide={this.state.subActiveSlide}
+                                        activeSlide={this.state.mainActiveSlide}
                                         buttonHandler={this.buttonHandler}
                                         setContentValues={this.setContentValues}
                                         panelContent={subPanel}
@@ -394,7 +455,7 @@ class PanelContent extends React.Component {
                                         changeSlide={this.changeSlide}
                                         currentPane={activeTab}
                                         optionView={'sub'}
-                                        maxSlides={this.state.subMaxSlides}
+                                        maxSlides={this.state.mainMaxSlides}
                                     />
                                 </div>
                                 );

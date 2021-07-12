@@ -85,7 +85,9 @@ describe('test input is correct', () => {
             handler={clickRouter} 
         /> );
 
-        const getTitle = screen.getAllByText(/device/i);
+        const getMainTitle = screen.getAllByText(/Mock Control Device/i)[1]; // Main Panel title
+
+        expect(getMainTitle.textContent).toBe('MOCK CONTROL DEVICE - 1: drop-list');
 
     });
 
@@ -163,7 +165,7 @@ describe('test input is correct', () => {
     });
 });
 
-describe('invalid content packaage renders correct error', () => {
+describe('invalid content package renders correct error', () => {
     test('error page rendered with incorrect content', () => {
         render(<PanelContent                                                 
             index={0} 
@@ -257,7 +259,7 @@ describe('Can change sub item', () => {
             
             const _sub_list = screen.getAllByText(/Measurand/i);
     
-            expect(_sub_list.length).toBe(3); // TODO: not really certain why this is 3?
+            expect(_sub_list.length).toBe(2); // TODO: not really certain why this is 3?
             
         });
 });
