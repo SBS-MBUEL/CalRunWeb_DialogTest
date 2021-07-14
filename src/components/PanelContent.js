@@ -363,7 +363,7 @@ class PanelContent extends React.Component {
                         mainActiveSlide: 0,
                     });
 
-                    this.setPanelName(this.state.mainActiveSlide - 1);
+                    this.setPanelName(0);
                 }
             }
         }
@@ -409,6 +409,7 @@ class PanelContent extends React.Component {
                             currentPane={this.state.mainActiveSlide}
                             leftArrow={this.slideLeft}
                             rightArrow={this.slideRight}
+                            length={mainContent.length}
                         />
                 <div className="container overflow">
                     <div className="container columns is-flex">
