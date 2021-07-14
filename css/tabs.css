@@ -36,7 +36,6 @@
 
 .content {
     margin: 0 auto !important;
-    z-index: 10;
 }
 .content:nth-child(even) {
     background-color: #fafbfb;
@@ -122,6 +121,7 @@ a:hover, a:focus {
 }
 
 .modalPopUp {
+    position: absolute;
     border-radius: 5px;
     border: 1px solid  #00ADDD;
     background-color: white;
@@ -148,38 +148,6 @@ a:hover, a:focus {
 .overflow-x {
     overflow-y: hidden;
     overflow-x: scroll;
-}
-
-.slider__btn {
-    position: absolute;
-    top: 90%;
-    z-index: 100;
-    border: none;
-    background: rgba(5, 189, 235, 0.705);
-    font-family: inherit;
-    color: #333;
-    height: 3.5rem;
-    width: 3.5rem;
-    font-size: 3.25rem;
-    cursor: pointer;
-    padding-bottom: 20px;
-    border: 1px solid #00ADDD;
-}
-
-.slider__btn:hover {
-    background: rgba(23, 219, 219, 0.836);
-}
-
-.slider__btn--left {
-    left: 6%;
-    transform: translate(-50%, -50%);
-    border-radius: 50% 0 0 50%;
-}
-  
-.slider__btn--right {
-    right: 6%;
-    transform: translate(50%, -50%);
-    border-radius: 0 50% 50% 0;
 }
 
 .active--dot {
