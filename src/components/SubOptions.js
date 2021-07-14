@@ -73,43 +73,7 @@ import createGUID from '../utils/createGUID';
                                 />
                         );
                     })}
-                    {/* TODO: Don't like styling of these  */}
-                    {/* TODO: Make sure they only display if the instrument has sub configs - makes a tab confusing */}
-                    {/* TODO: This is not working the way it should - remarked it out to rethink design and layout. Need to rethink mock object when I get to Datapoints */}
-                    {/* {(subOption.length > 1 ? 
-                        <React.Fragment>
-                            <button key={page+createGUID()} onClick={this.slideLeft} className="slider__btn slider__btn--left">
-                                <span className="fa fa-arrow-left"></span>
-                            </button>
-                            <button key={page+createGUID()} onClick={this.slideRight} className="slider__btn slider__btn--right">
-                                <span className="fa fa-arrow-right"></span>
-                            </button>
-                            <div className="columns" >
-                                <div key={page+createGUID()} className="column has-text-centered dots">
-                                    {subOption.map((pane, index) => {
-                                        return (
-                                            <span key={pane + index} className={`${(index === this.state.currentPane) ? 'active' : 'inactive'}--dot fa fa-circle`}></span>
-                                        );
 
-                                    })}
-                                </div>
-                            </div>
-                        </React.Fragment>
-                    :
-                        <React.Fragment>
-                            {subOption.map((_, index) => {
-                                return (
-                                    <div className="columns" key={_ + index}>
-                                        <div className="column has-text-centered dots">
-                                            <span className={`${(index === this.state.currentPane) ? 'active' : 'inactive'}--dot fa fa-circle`}></span>
-
-                                        </div>
-                                    </div>
-                                );
-
-                            })}
-                        </React.Fragment>
-                    )} */}
 
                 </div>
             </div>

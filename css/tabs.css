@@ -34,9 +34,12 @@
     box-shadow: 0.1em 0.1em 0.1em rgb(47, 52, 79);
 }
 
+.container.panels {
+    z-index: 0 !important;
+}
 .content {
     margin: 0 auto !important;
-    z-index: 10;
+    z-index: 1 !important;
 }
 .content:nth-child(even) {
     background-color: #fafbfb;
@@ -126,7 +129,7 @@ a:hover, a:focus {
     border: 1px solid  #00ADDD;
     background-color: white;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    z-index: 1000;
+    z-index: 2500;
 }
 
 .heading {
@@ -150,37 +153,6 @@ a:hover, a:focus {
     overflow-x: scroll;
 }
 
-.slider__btn {
-    position: absolute;
-    top: 90%;
-    z-index: 100;
-    border: none;
-    background: rgba(5, 189, 235, 0.705);
-    font-family: inherit;
-    color: #333;
-    height: 3.5rem;
-    width: 3.5rem;
-    font-size: 3.25rem;
-    cursor: pointer;
-    padding-bottom: 20px;
-    border: 1px solid #00ADDD;
-}
-
-.slider__btn:hover {
-    background: rgba(23, 219, 219, 0.836);
-}
-
-.slider__btn--left {
-    left: 6%;
-    transform: translate(-50%, -50%);
-    border-radius: 50% 0 0 50%;
-}
-  
-.slider__btn--right {
-    right: 6%;
-    transform: translate(50%, -50%);
-    border-radius: 0 50% 50% 0;
-}
 
 .active--dot {
     color: #00ADDD;

@@ -410,11 +410,11 @@ class PanelContent extends React.Component {
                             leftArrow={this.slideLeft}
                             rightArrow={this.slideRight}
                         />
-                <div className="container overflow">
+                <div className="container panels overflow">
                     <div className="container columns is-flex">
                         {mainContent.map((panel, contentIdx, arr) => {
                             return (
-                                <div key={`${'main'}-${tabName}-${contentIdx}`} className="container column is-11 slide mainPanel-content is-inline" style={{"transform": `translateX(${this.state.mainActiveSlide * 100 * -1}%)`}}>
+                                <div key={`${'main'}-${tabName}-${contentIdx}`} className="container column is-11 slide panel-container is-inline" style={{"transform": `translateX(${this.state.mainActiveSlide * 100 * -1}%)`}}>
                                     {/* TODO: Max Slides should be dynamic should come from content length */}
                                     <RowContentContainer
                                         activeSlide={this.state.mainActiveSlide}
@@ -438,7 +438,7 @@ class PanelContent extends React.Component {
                     <div className="container columns is-flex">
                         {subContent.map((subPanel, subContentIdx, arr) => {
                             return (
-                                <div key={`${'sub'}-${tabName}-${subContentIdx}`} className="container column is-11 slide mainPanel-content is-inline" style={{"transform": `translateX(${this.state.mainActiveSlide * 100 * -1}%)`}}>
+                                <div key={`${'sub'}-${tabName}-${subContentIdx}`} className="container column is-11 slide panel-container is-inline" style={{"transform": `translateX(${this.state.mainActiveSlide * 100 * -1}%)`}}>
                                     <RowContentContainer
                                         activeSlide={this.state.mainActiveSlide}
                                         buttonHandler={this.buttonHandler}
