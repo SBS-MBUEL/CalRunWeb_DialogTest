@@ -21,6 +21,8 @@ class PanelContent extends React.Component {
             panelName: '',
             mainActiveSlide : 0,
             mainMaxSlides: mainContent && mainContent.length,
+            subActiveSlide: 0,
+            subMaxSlides: subContent && subContent.filter((a, b) => a.master === 0).length
         };
 
         this.setContentValues = this.setContentValues.bind(this);
@@ -34,6 +36,8 @@ class PanelContent extends React.Component {
         this.changeSlide = this.changeSlide.bind(this);
         this.slideLeft = this.slideLeft.bind(this);
         this.slideRight = this.slideRight.bind(this);
+        this.subSlideLeft = this.subSlideLeft.bind(this);
+        this.subSlideRight = this.subSlideRight.bind(this);
         this.setPanelName = this.setPanelName.bind(this);
     }
 
@@ -41,6 +45,10 @@ class PanelContent extends React.Component {
         this.setPanelName(this.state.mainActiveSlide);
     }
 
+    /**
+     * set panel name
+     * @param {number} activeSlide 
+     */
     setPanelName(activeSlide) {
         let { mainContent } = this.parseContent(this.state.tabContent);
         if (mainContent) {
@@ -299,6 +307,28 @@ class PanelContent extends React.Component {
      * slides the sub panel to the right
      * position should use state for setting
     */
+    subSlideLeft() {
+
+        let newSlide = this.state.mainActiveSlide > 0 ? (this.state.mainActiveSlide - 1) : (this.state.mainMaxSlides - 1);
+        
+        this.changeSlide(newSlide);
+        
+    }
+        
+    /**
+     * slides current pane to the left
+    */
+    subSlideRight() {
+
+        let newSlide = this.state.mainActiveSlide < (this.state.mainMaxSlides - 1) ? (this.state.mainActiveSlide + 1) : 0;
+        
+        this.changeSlide(newSlide);
+
+    }
+    /**
+     * slides the sub panel to the right
+     * position should use state for setting
+    */
     slideLeft() {
 
         let newSlide = this.state.mainActiveSlide > 0 ? (this.state.mainActiveSlide - 1) : (this.state.mainMaxSlides - 1);
@@ -429,33 +459,43 @@ class PanelContent extends React.Component {
                                         optionView={panel.controls[0].value}
                                         maxSlides={this.state.mainMaxSlides}
                                     />
+                                    <hr />
+                                    
+                                    {subContent.map((subPanel, subContentIdx, arr) => {
+                                    if (subPanel.master === contentIdx) {
+                                        return (
+                                            <div key={`${'sub'}-${tabName}-${subContentIdx}`} className="container column is-11 slide mainPanel-content is-inline" style={{"transform": `translateY(${this.state.subActiveSlide * 100 * -1}%)`}}>
+                                                <PanelNavigation 
+                                                    panel={subPanel.defaultName.toUpperCase()} 
+                                                    optionView={subPanel.defaultName.toUpperCase()}
+                                                    currentPane={this.state.subActiveSlide}
+                                                    leftArrow={this.subSlideLeft}
+                                                    rightArrow={this.subSlideRight}
+                                                />
+                                                <RowContentContainer
+                                                    activeSlide={this.state.mainActiveSlide}
+                                                    buttonHandler={this.buttonHandler}
+                                                    setContentValues={this.setContentValues}
+                                                    panelContent={subPanel}
+                                                    tabName={tabName}
+                                                    contentIdx={subContentIdx}
+                                                    onChange={this.setContentValues} 
+                                                    changeSlide={this.changeSlide}
+                                                    currentPane={activeTab}
+                                                    optionView={'sub'}
+                                                    maxSlides={this.state.mainMaxSlides}
+                                                />
+                                            </div>
+                                        );
+                                    }
+                                    })}
                                 </div>)
 
 
                         })}
                     </div>
-                    <hr />
-                    <div className="container columns is-flex">
-                        {subContent.map((subPanel, subContentIdx, arr) => {
-                            return (
-                                <div key={`${'sub'}-${tabName}-${subContentIdx}`} className="container column is-11 slide mainPanel-content is-inline" style={{"transform": `translateX(${this.state.mainActiveSlide * 100 * -1}%)`}}>
-                                    <RowContentContainer
-                                        activeSlide={this.state.mainActiveSlide}
-                                        buttonHandler={this.buttonHandler}
-                                        setContentValues={this.setContentValues}
-                                        panelContent={subPanel}
-                                        tabName={tabName}
-                                        contentIdx={subContentIdx}
-                                        onChange={this.setContentValues} 
-                                        changeSlide={this.changeSlide}
-                                        currentPane={activeTab}
-                                        optionView={'sub'}
-                                        maxSlides={this.state.mainMaxSlides}
-                                    />
-                                </div>
-                                );
-                        })}
-                    </div>
+                    
+
                 </div>
             </div>
 

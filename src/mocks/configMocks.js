@@ -97,6 +97,7 @@ const _datapoint = [
 	{
 		for:'calibrationParameter',
 		defaultName:'Device',
+		master: 0,
 		controls:
 		[
 			{label:'Add Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'addParameter', maxLength:0, titleOrder:-1},
@@ -116,6 +117,7 @@ const _datapoint = [
 	{
 		for:'calibrationParameter',
 		defaultName:'Setpoint',
+		master: 1,
 		controls:
 		[
 			{label:'Add Set Point', type:'button', list:[], width:'50px', height:'30px', control:null, value:'addOption', maxLength:0, titleOrder:-1},
@@ -164,6 +166,7 @@ const _system = [
 	{
 		for:'calibrationParameter',
 		defaultName:'Device',
+		master: 0,
 		controls:
 		[
 			{label:'Add Device That Can Be Calibrated', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add device', maxLength:0, titleOrder:-1},
