@@ -146,7 +146,6 @@ const _system = [
 			{label:'Calibration System Location', type:'dropdown', list:['Not Set', 'Bellevue', 'China', 'Kempten', 'Philomath', 'Seacat Cal Room', 'Small Sensor Cal Room', 'daveg desk'], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:2},
 			{label:'Number of sequential calibrations', type:'text', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
 			{label:'Samples to average', type:'text', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
-			{label:'Coefficient of Variation (max)', type:'text', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
 			{label:'Additional Wait Time Once Stable (ms)', type:'text', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
 			{label:'Sample Interval', type:'text', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
 			{label:'Data Point Timeout', type:'text', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},

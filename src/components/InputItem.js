@@ -9,6 +9,7 @@ class InputItem extends React.Component {
         }
 
         this.trackChanges = this.trackChanges.bind(this);
+        this.setFocus = this.setFocus.bind(this);
     }
 
     trackChanges(e) {
@@ -21,6 +22,16 @@ class InputItem extends React.Component {
         this.props.trackChanges(this.props.index, e.target.value);
     }
 
+    /**
+     * highlights selected input (hopefully)
+     */
+    setFocus() {
+        this.settingInput.focus();
+        this.settingInput.selectionStart = 0;
+        this.settingInput.selectionEnd = this.settingInput.value.length;
+        this.settingInput.select();
+    }
+
     render() {
         const { index } = this.props;
         return (
@@ -29,7 +40,8 @@ class InputItem extends React.Component {
                     <input 
                         value={this.state.userValue}
                         type="text"
-
+                        ref={(input) => { this.settingInput = input; }} 
+                        onClick={this.setFocus}
                         onChange={this.trackChanges}
                     ></input>
                 </div>          

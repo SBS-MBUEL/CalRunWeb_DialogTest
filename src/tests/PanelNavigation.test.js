@@ -28,6 +28,7 @@ describe('normal input', () => {
                 panel = {testPanel}
                 optionView = {optionView}
                 currentPane = {currentPane} 
+                length={2}
                 />);
 
         const pane = screen.getByText(/panelNavTest - 1: optionParameter/);
@@ -42,11 +43,41 @@ describe('normal input', () => {
             panel = {testPanel}
             optionView = {optionView}
             currentPane = {currentPane} 
+            length={2}
             />);
 
         const pane = screen.getByText(/panelNavTest - 1: optionParameter/);
         const clickRight = pane.parentNode.lastChild.firstChild;
         
         expect(clickRight.className).toBe('button is-link fa fa-chevron-right');
+    });
+
+    test('left arrow is not available', () => {
+        render(<PanelNavigation             
+                panel = {testPanel}
+                optionView = {optionView}
+                currentPane = {currentPane} 
+                length={1}
+                />);
+
+        const pane = screen.getByText(/panelNavTest - 1: optionParameter/);
+        const clickLeft = pane.parentNode.firstChild.firstChild;
+        
+        expect(clickLeft.className).not.toBe('button is-link fa fa-chevron-left');
+
+    });
+
+    test('right arrow is not available', () => {
+        render(<PanelNavigation             
+            panel = {testPanel}
+            optionView = {optionView}
+            currentPane = {currentPane} 
+            length={1}
+            />);
+
+        const pane = screen.getByText(/panelNavTest - 1: optionParameter/);
+        const clickRight = pane.parentNode.lastChild.firstChild;
+        
+        expect(clickRight.className).not.toBe('button is-link fa fa-chevron-right');
     });
 });
