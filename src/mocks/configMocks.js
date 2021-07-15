@@ -32,6 +32,7 @@ const _reference = [
 			{label:'Measurand Sub-Type', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1, settingIndex:114},
 			{label:'Coefficient of Variation', type:'text', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
 			{label:'Cal date', type:'text', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1, settingIndex:115},
+			{label:'Coefficient of Variation (max)', type:'text', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
 			{label:'Test value raw', type:'text', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1, settingIndex:116},
 			{label:'Test value converted', type:'text', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1, settingIndex:117},
 			{label:'Drift', type:'text', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1, settingIndex:118},
@@ -63,8 +64,8 @@ const _device = [
 	{
 		for:'calibrationParameter',
 		defaultName:'Measurand',
-		controls:
-		[
+		master: 0,
+		controls: [
 			{label:'Add Measurand', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add measurand', maxLength:0, titleOrder:-1},
 			{label:'Copy Measurand', type:'button', list:[], width:'50px', height:'30px', control:null, value:'copy measurand', maxLength:0, titleOrder:-1},
 			{label:'Remove Measurand', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove measurand', maxLength:0, titleOrder:-1},
