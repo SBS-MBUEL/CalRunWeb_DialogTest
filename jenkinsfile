@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+    checkout scm
+
+    stages {
+        stage('Setup') {
+            steps {
+                echo 'Building..'
+                bat 'npm install yarn'
+                bat 'yarn'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing..'
+                bat 'yarn test'
+            }
+        }
+        if (env.BRANCH_NAME == 'master') {
+            stage('Deploy') {
+                steps {
+                    echo 'Deploying....'
+                    bat 'yarn production-build'
+                    echo 'place command here to copy results to production server'
+                }
+            }
+        }
+    }
+}
