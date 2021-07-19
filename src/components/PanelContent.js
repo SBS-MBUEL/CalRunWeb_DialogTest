@@ -12,23 +12,24 @@ class PanelContent extends React.Component {
 
     constructor(props) {
         super(props);
-
+        
         let { mainContent, subContent } = this.parseContent(props.content);
 
         this.state = {
             tabName: props.tabName,
             tabContent: props.content,
             panelName: '',
+            subPanelName: '',
             mainActiveSlide : 0,
             mainMaxSlides: mainContent && mainContent.length,
             subActiveSlide: 0,
-            subMaxSlides: subContent && subContent.filter((a, b) => a.master === 0).length
+            subMaxSlides: subContent && subContent.length
         };
-
+        
         this.setContentValues = this.setContentValues.bind(this);
         this.buttonHandler = this.buttonHandler.bind(this);
         this.duplicateOrAddContent = this.duplicateOrAddContent.bind(this);
-        this.duplicateOrAddRow = this.duplicateOrAddRow.bind(this);
+        this.duplicateSubPanel = this.duplicateSubPanel.bind(this);
         this.removeRow = this.removeRow.bind(this);
         this.removeContent = this.removeContent.bind(this);
         this.parseContent = this.parseContent.bind(this);
@@ -39,23 +40,29 @@ class PanelContent extends React.Component {
         this.subSlideLeft = this.subSlideLeft.bind(this);
         this.subSlideRight = this.subSlideRight.bind(this);
         this.setPanelName = this.setPanelName.bind(this);
+        
+
+
     }
 
     componentDidMount() {
-        this.setPanelName(this.state.mainActiveSlide);
+
+        let { mainContent, subContent } = this.parseContent(this.state.tabContent);
+        this.setPanelName(this.state.mainActiveSlide, mainContent, 'panelName');
+        this.setPanelName(this.state.subActiveSlide, subContent, 'subPanelName');
     }
 
     /**
      * set panel name
      * @param {number} activeSlide 
      */
-    setPanelName(activeSlide) {
-        let { mainContent } = this.parseContent(this.state.tabContent);
-        if (mainContent) {
-            for(let i = 0; i < mainContent[activeSlide].controls.length; i++) {
-                if (mainContent[activeSlide].controls[i].type !== 'button') {
+    setPanelName(activeSlide, panel, panelName) {
+        
+        if (panel) {
+            for(let i = 0; i < panel[activeSlide].controls.length; i++) {
+                if (panel[activeSlide].controls[i].type !== 'button') {
                     this.setState({
-                        panelName : mainContent[activeSlide].controls[i].value
+                        [panelName] : panel[activeSlide].controls[i].value
                     });
                     break;
                 }
@@ -79,8 +86,9 @@ class PanelContent extends React.Component {
         } else {
             this.setState({mainActiveSlide : newSlide});
         }
-
-        this.setPanelName(newSlide);
+        let { mainContent } = this.parseContent(this.state.tabContent);
+        this.setPanelName(this.state.mainActiveSlide, mainContent, 'panelName');
+        this.setPanelName(this.state.subActiveSlide, subContent, 'subPanelName');
 
     }
 
@@ -111,11 +119,12 @@ class PanelContent extends React.Component {
         let mainContent = undefined;
         let subContent = undefined;
 
+        let activeSlide = (this.state && this.state.mainActiveSlide >= 0) ? this.state.mainActiveSlide : 0
         if (content && content.length > 0) {
 
             mainContent = this.filterContent(content, 'calibrationOption');
 
-            subContent = this.filterContent(content, 'calibrationParameter');
+            subContent = this.filterContent(content, 'calibrationParameter').filter((a, b) => a.master === content[activeSlide].indice);
 
         }
 
@@ -166,7 +175,7 @@ class PanelContent extends React.Component {
      * @param {number} subIdx - Where in the content object to place the content
      * @returns 
     */
-    duplicateOrAddRow(subControls, fn, subIdx) {
+    duplicateSubPanel(subControls, fn, subIdx) {
         // change state from content
         // const fn = 'add';
         let changedControls = JSON.parse(JSON.stringify(subControls));
@@ -276,7 +285,7 @@ class PanelContent extends React.Component {
     */
     duplicatePanelContent(btnFunction, mainContent, subContent) {
         let currentLength = this.state.tabContent.length;
-        let idx = this.duplicateOrAddContent(subContent[this.state.mainActiveSlide], btnFunction, subContent[this.state.mainActiveSlide].indice);
+        let idx = this.duplicateOrAddContent(subContent[this.state.subActiveSlide], btnFunction, subContent[this.state.subActiveSlide].indice);
         if (idx) {
             let timeout = null;
             let interval = setInterval(() => {
@@ -371,16 +380,20 @@ class PanelContent extends React.Component {
         // TODO: need to determine which panel is currently displayed and appropriately copy / remove / duplicate it or rows in it.
         if (parameter !== 'device' || this.state.tabName.match(/device/) === null ) {
             if (btnFunction === 'add' || btnFunction === 'copy') {
-                let idx = this.duplicateOrAddRow(subContent[this.state.mainActiveSlide].controls, btnFunction, subContent[this.state.mainActiveSlide].indice);
+                let idx = this.duplicateOrAddContent(subContent[this.state.subActiveSlide], btnFunction, subContent[this.state.subActiveSlide].indice);
             } else if (btnFunction === 'remove') {
-                let idx = this.removeRow(subContent[this.state.mainActiveSlide].controls, btnFunction, subContent[this.state.mainActiveSlide].indice);
+                if (subContent.length === 1) {
+                    renderGrowl('growl', `Unable to remove the last ${this.state.subPanelName}.`, 'warning');
+                    return;
+                }
+                let idx = this.removeContent(this.state.tabContent.slice(), btnFunction, subContent[this.state.subActiveSlide].indice);
             }
         } else if (parameter === 'device' && this.state.tabName.match(/device/) !== null) {
             if (btnFunction === 'add' || btnFunction === 'copy') {
                 this.duplicatePanelContent(btnFunction, mainContent, subContent);
             } else if (btnFunction === 'remove') {
                 if (mainContent.length === 1 && subContent.length === 1) {
-                    renderGrowl('growl', 'Unable to remove the last device.', 'warning');
+                    renderGrowl('growl', `Unable to remove the last ${this.state.panelName}.`, 'warning');
                     return;
                 }
                 let cntnt = this.removeContent(this.state.tabContent.slice(), btnFunction, subContent[this.state.mainActiveSlide].indice);
@@ -409,9 +422,10 @@ class PanelContent extends React.Component {
      */
     setContentValues(key, val, settingIdx, controlIdx) {
         let changedContent = this.state.tabContent.slice();
-
+        let { subContent, mainContent } = this.parseContent(this.state.tabContent);
         changedContent[settingIdx].controls[controlIdx].value = val;
-        this.setPanelName(this.state.mainActiveSlide);
+        this.setPanelName(this.state.mainActiveSlide, mainContent, 'panelName');
+        this.setPanelName(this.state.subActiveSlide, subContent, 'subPanelName');
         this.props.setContent(key, val, changedContent, this.props.tabName);
     }
 
@@ -468,7 +482,7 @@ class PanelContent extends React.Component {
                                             <div key={`${'sub'}-${tabName}-${subContentIdx}`} className="container column is-11 slide mainPanel-content is-inline" style={{"transform": `translateY(${this.state.subActiveSlide * 100 * -1}%)`}}>
                                                 <PanelNavigation 
                                                     panel={subPanel.defaultName.toUpperCase()} 
-                                                    optionView={subPanel.defaultName.toUpperCase()}
+                                                    optionView={this.state.subPanelName}
                                                     currentPane={this.state.subActiveSlide}
                                                     leftArrow={this.subSlideLeft}
                                                     rightArrow={this.subSlideRight}
