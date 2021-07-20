@@ -22,7 +22,8 @@ class InputItem extends React.Component {
             if (!isNaN(e.target.value)) { // This is a number
                 this.props.trackChanges(this.props.index, e.target.value);
             } else {
-                // what to do?
+                // TODO: display some sort error message about not entering a number.
+                // Currently, upon trying to enter text instead of a number, and ErrorRow appears here.
             }
         } else {
             this.props.trackChanges(this.props.index, e.target.value);
@@ -35,9 +36,13 @@ class InputItem extends React.Component {
      * highlights selected input (hopefully)
      */
     setFocus() {
+        
         this.settingInput.focus();
-        this.settingInput.selectionStart = 0;
-        this.settingInput.selectionEnd = this.settingInput.value.length;
+        // input type: number doesn't allow for these properties to be used
+        if (!this.props.isNumeric) {
+            this.settingInput.selectionStart = 0;
+            this.settingInput.selectionEnd = this.settingInput.value.length;
+        }
         this.settingInput.select();
     }
 
