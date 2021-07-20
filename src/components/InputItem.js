@@ -18,8 +18,17 @@ class InputItem extends React.Component {
         this.setState({
             userValue: e.target.value
         });
+        if (this.props.isNumeric) {
+            if (!isNaN(e.target.value)) { // This is a number
+                this.props.trackChanges(this.props.index, e.target.value);
+            } else {
+                // what to do?
+            }
+        } else {
+            this.props.trackChanges(this.props.index, e.target.value);
+        }
 
-        this.props.trackChanges(this.props.index, e.target.value);
+        
     }
 
     /**
@@ -34,19 +43,36 @@ class InputItem extends React.Component {
 
     render() {
         const { index } = this.props;
-        return (
+        if (this.props.isNumeric) {
+            return (
             <React.Fragment>
                 <div key={`${index}-input`} className="is-centered is-info is-rounded">
                     <input 
                         value={this.state.userValue}
-                        type="text"
+                        type="number"
                         ref={(input) => { this.settingInput = input; }} 
                         onClick={this.setFocus}
                         onChange={this.trackChanges}
                     ></input>
                 </div>          
             </React.Fragment>
-        );
+            );
+        } else {
+            return (
+                <React.Fragment>
+                    <div key={`${index}-input`} className="is-centered is-info is-rounded">
+                        <input 
+                            value={this.state.userValue}
+                            type="text"
+                            ref={(input) => { this.settingInput = input; }} 
+                            onClick={this.setFocus}
+                            onChange={this.trackChanges}
+                        ></input>
+                    </div>          
+                </React.Fragment>
+            );
+        }
+        
     }
 }
 

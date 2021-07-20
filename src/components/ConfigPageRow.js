@@ -52,7 +52,9 @@ import { ErrorRow } from './ErrorRow';
             subContent = row.type === 'dropdown' ?
                     <DropDownContainer index={row.label} userValue={this.state.userValue} trackChanges={this.trackChanges} row={row} />
                 : row.type === 'text' ?
-                    <InputItem index={row.label} userValue={this.state.userValue} inputChange={this.trackChanges} trackChanges={this.trackChanges} />
+                    <InputItem index={row.label} isNumeric={false} userValue={this.state.userValue} inputChange={this.trackChanges} trackChanges={this.trackChanges} />
+                : row.type === 'numerictext' ?
+                    <InputItem index={row.label} isNumeric={true} userValue={this.state.userValue} inputChange={this.trackChanges} trackChanges={this.trackChanges} />
                 : row.type === 'textarea' ?
                     <TextArea index={row.label} value={this.state.userValue} label={row.label} trackChanges={this.trackChanges} />
                 :
