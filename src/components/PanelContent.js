@@ -40,8 +40,7 @@ class PanelContent extends React.Component {
         this.subSlideLeft = this.subSlideLeft.bind(this);
         this.subSlideRight = this.subSlideRight.bind(this);
         this.setPanelName = this.setPanelName.bind(this);
-        
-
+        this.updatePanelContent = this.updatePanelContent.bind(this);
 
     }
 
@@ -86,7 +85,7 @@ class PanelContent extends React.Component {
         } else {
             this.setState({mainActiveSlide : newSlide});
         }
-        let { mainContent } = this.parseContent(this.state.tabContent);
+        let { mainContent, subContent } = this.parseContent(this.state.tabContent);
         this.setPanelName(this.state.mainActiveSlide, mainContent, 'panelName');
         this.setPanelName(this.state.subActiveSlide, subContent, 'subPanelName');
 
@@ -124,7 +123,8 @@ class PanelContent extends React.Component {
 
             mainContent = this.filterContent(content, 'calibrationOption');
 
-            subContent = this.filterContent(content, 'calibrationParameter').filter((a, b) => a.master === content[activeSlide].indice);
+            subContent = this.filterContent(content, 'calibrationParameter');
+            // .filter((a, b) => a.master === content[activeSlide].indice);
 
         }
 
@@ -134,19 +134,31 @@ class PanelContent extends React.Component {
     }
 
     /**
+     * updates tabContent state with passed in panel object
+     * @param {object} panel 
+     */
+    updatePanelContent(content, fn) {
+        this.setState({
+            tabContent : content
+        });
+
+        this.props.setContent(undefined, undefined, content, this.props.tabName, fn, 'panel');
+    }
+
+    /**
      * adds panel to CONTENT object
      * //TODO: this will likely need to be refactored to deal with more complex lists
-     * @param {array} content - controls list object
+     * @param {array} panel - controls list object
      * @param {string} fn - add / delete / copy
      * @param {number} subIdx - Where in the content object to place the content
      * @returns 
     */
-    duplicateOrAddContent(content, fn, subIdx) {
+    duplicateOrAddContent(panel, fn, subIdx, content) {
 
         // copy panel (main or sub)
-        const copiedPanel = JSON.parse(JSON.stringify(content));
+        const copiedPanel = JSON.parse(JSON.stringify(panel));
         // copy content
-        const existingContent = JSON.parse(JSON.stringify(this.state.tabContent));
+        const existingContent = JSON.parse(JSON.stringify(content));
 
         if (fn === 'add') {
             copiedPanel.controls.map((el) => {
@@ -158,13 +170,14 @@ class PanelContent extends React.Component {
 
         let idx = existingContent.push(copiedPanel) - 1;
         copiedPanel.indice = idx;
-        this.setState({
-            tabContent : existingContent
-        });
-        // TODO: make passed object match other function - not sending correct object and causing propagation errors.
-        this.props.setContent(undefined, undefined, existingContent, this.props.tabName, fn, 'panel'); // TODO: change signature to pass "add" for fn
 
-        return idx;
+        // this.setState({
+        //     tabContent : existingContent
+        // });
+        // TODO: make passed object match other function - not sending correct object and causing propagation errors.
+        // this.props.setContent(undefined, undefined, existingContent, this.props.tabName, fn, 'panel'); // TODO: change signature to pass "add" for fn
+
+        return existingContent;
     }
 
     /**
@@ -233,7 +246,7 @@ class PanelContent extends React.Component {
 
         newTabContent.push(indicesToRemove);
 
-        newTabContent = this.props.setContent(key, val, newTabContent, this.props.tabName, fn, 'panel');
+        // newTabContent = this.props.setContent(key, val, newTabContent, this.props.tabName, fn, 'panel');
 
         return newTabContent;
     }
@@ -283,33 +296,30 @@ class PanelContent extends React.Component {
      * @param {object} mainContent 
      * @param {object} subContent 
     */
-    duplicatePanelContent(btnFunction, mainContent, subContent) {
+    duplicatePanelContent(btnFunction, mainContent) {
         let currentLength = this.state.tabContent.length;
-        let idx = this.duplicateOrAddContent(subContent[this.state.subActiveSlide], btnFunction, subContent[this.state.subActiveSlide].indice);
-        if (idx) {
-            let timeout = null;
-            let interval = setInterval(() => {
-                if (currentLength === this.state.tabContent.length) {
-                    return;
-                } else {
-                    clearTimeout(timeout);
-                    timeout = null;
-                    clearInterval(interval);
-                    interval = null;
-                    idx = this.duplicateOrAddContent(mainContent[this.state.mainActiveSlide], btnFunction, mainContent[this.state.mainActiveSlide].indice);
+        let newContent = this.duplicateOrAddContent(mainContent[this.state.mainActiveSlide], btnFunction, mainContent[this.state.mainActiveSlide].indice, this.state.tabContent);
+        if (newContent) {
+            let { subContent } = this.parseContent(newContent);
 
-                    this.setState({
-                        mainMaxSlides: this.state.mainMaxSlides + 1,
-                        mainActiveSlide: this.state.mainMaxSlides,
-                    });
-                }
-            }, 15);
+            let newMasterIndex = newContent.length - 1;
+            
+            subContent.forEach((panel) => {
+                newContent = this.duplicateOrAddContent(panel, btnFunction, panel.indice, newContent);
+            
+                newContent[newContent.length - 1].master = newMasterIndex;
+            });
+            
+            this.updatePanelContent(newContent, btnFunction);
 
-            timeout = setTimeout(() => {
-                clearInterval(interval);
-                interval = null;
-                console.error('unable to add content');
-            }, 2000);
+            this.setState({
+                mainMaxSlides: this.state.mainMaxSlides + 1,
+                mainActiveSlide: this.state.mainMaxSlides,
+                subMaxSlides: this.state.subMaxSlides + 1,
+                subActiveSlide: 0
+            });
+
+
         }
     }
     /**
@@ -380,7 +390,8 @@ class PanelContent extends React.Component {
         // TODO: need to determine which panel is currently displayed and appropriately copy / remove / duplicate it or rows in it.
         if (parameter !== 'device' || this.state.tabName.match(/device/) === null ) {
             if (btnFunction === 'add' || btnFunction === 'copy') {
-                let idx = this.duplicateOrAddContent(subContent[this.state.subActiveSlide], btnFunction, subContent[this.state.subActiveSlide].indice);
+                let newContent = this.duplicateOrAddContent(subContent[this.state.subActiveSlide], btnFunction, subContent[this.state.subActiveSlide].indice, this.state.tabContent);
+                this.updatePanelContent(newContent, btnFunction);
             } else if (btnFunction === 'remove') {
                 if (subContent.length === 1) {
                     renderGrowl('growl', `Unable to remove the last ${this.state.subPanelName}.`, 'warning');
@@ -388,9 +399,9 @@ class PanelContent extends React.Component {
                 }
                 let idx = this.removeContent(this.state.tabContent.slice(), btnFunction, subContent[this.state.subActiveSlide].indice);
             }
-        } else if (parameter === 'device' && this.state.tabName.match(/device/) !== null) {
+        } else if (parameter === 'device' && this.state.tabName.match(/device/) !== null) { // Need a better way to discern this
             if (btnFunction === 'add' || btnFunction === 'copy') {
-                this.duplicatePanelContent(btnFunction, mainContent, subContent);
+                this.duplicatePanelContent(btnFunction, mainContent);
             } else if (btnFunction === 'remove') {
                 if (mainContent.length === 1 && subContent.length === 1) {
                     renderGrowl('growl', `Unable to remove the last ${this.state.panelName}.`, 'warning');
@@ -476,8 +487,8 @@ class PanelContent extends React.Component {
                                     />
                                     <hr />
                                     
-                                    {subContent.map((subPanel, subContentIdx, arr) => {
-                                    if (subPanel.master === contentIdx) {
+                                    {subContent.filter((a, b) => a.master === panel.indice).map((subPanel, subContentIdx, arr) => {
+                                    // if (subPanel.master === contentIdx) {
                                         return (
                                             <div key={`${'sub'}-${tabName}-${subContentIdx}`} className="container column is-11 slide mainPanel-content is-inline" style={{"transform": `translateY(${this.state.subActiveSlide * 100 * -1}%)`}}>
                                                 <PanelNavigation 
@@ -486,6 +497,7 @@ class PanelContent extends React.Component {
                                                     currentPane={this.state.subActiveSlide}
                                                     leftArrow={this.subSlideLeft}
                                                     rightArrow={this.subSlideRight}
+                                                    length={subContent.length}
                                                 />
                                                 <RowContentContainer
                                                     activeSlide={this.state.mainActiveSlide}
@@ -502,7 +514,7 @@ class PanelContent extends React.Component {
                                                 />
                                             </div>
                                         );
-                                    }
+                                    // }
                                     })}
                                 </div>)
 
