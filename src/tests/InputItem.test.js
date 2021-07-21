@@ -30,6 +30,33 @@ describe('render and control input box with good inputs', () => {
     
 });
 
+describe('render and control input box configured for numerical values', () => {
+    test('renders numeric input box with passed in value', () => {
+        let result = '';
+        render(<InputItem userValue='22' isNumeric = {true} trackChanges={(key, val) => {
+            result = val;
+            expect(result).toBe('25');
+            expect(inputBox.value).toBe('25');
+        }} /> );
+        
+        const inputBox = screen.getByDisplayValue(/22/);
+    
+        fireEvent.change(inputBox, { target: { value: 25 } });
+    });
+    test('renders numeric input box and doesn\'t save text input', () => {
+        let result = '';
+        render(<InputItem userValue='10' isNumeric = {true} trackChanges={(key, val) => {
+            result = val;
+            expect(result).toBe('');
+            expect(inputBox.value).toBe('');
+        }} /> );
+        
+        const inputBox = screen.getByDisplayValue(/10/);
+    
+        fireEvent.change(inputBox, { target: { value: 'NewValue' } });
+    });
+});
+
 describe('Input Box renders and controls with null input.', () => {
     test('renders input box with null passed in value', () => {
         render(<InputItem userValue={null} trackChanges={(e) => {

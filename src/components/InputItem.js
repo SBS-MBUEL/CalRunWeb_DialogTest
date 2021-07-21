@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { renderGrowl } from '../utils/growl'
 
 class InputItem extends React.Component {
     constructor(props) {
@@ -18,66 +18,43 @@ class InputItem extends React.Component {
         this.setState({
             userValue: e.target.value
         });
-        if (this.props.isNumeric) {
-            if (!isNaN(e.target.value)) { // This is a number
+        if (this.props.type === 'number') {
+            console.log("hmmm");
+            if (e.target.value && !isNaN(e.target.value)) { // This is a number
                 this.props.trackChanges(this.props.index, e.target.value);
             } else {
-                // TODO: display some sort error message about not entering a number.
-                // Currently, upon trying to enter text instead of a number, and ErrorRow appears here.
+                renderGrowl('growl', 'Text entered for number-only field', 'warning');
+                // Setting value to 0, so that this overwrites the last valid number entered
+                this.props.trackChanges(this.props.index, 0);
             }
         } else {
             this.props.trackChanges(this.props.index, e.target.value);
-        }
-
-        
+        }  
     }
 
     /**
      * highlights selected input (hopefully)
      */
     setFocus() {
-        
         this.settingInput.focus();
-        // input type: number doesn't allow for these properties to be used
-        if (!this.props.isNumeric) {
-            this.settingInput.selectionStart = 0;
-            this.settingInput.selectionEnd = this.settingInput.value.length;
-        }
         this.settingInput.select();
     }
 
     render() {
         const { index } = this.props;
-        if (this.props.isNumeric) {
-            return (
-            <React.Fragment>
-                <div key={`${index}-input`} className="is-centered is-info is-rounded">
-                    <input 
-                        value={this.state.userValue}
-                        type="number"
-                        ref={(input) => { this.settingInput = input; }} 
-                        onClick={this.setFocus}
-                        onChange={this.trackChanges}
-                    ></input>
-                </div>          
-            </React.Fragment>
-            );
-        } else {
-            return (
-                <React.Fragment>
-                    <div key={`${index}-input`} className="is-centered is-info is-rounded">
-                        <input 
-                            value={this.state.userValue}
-                            type="text"
-                            ref={(input) => { this.settingInput = input; }} 
-                            onClick={this.setFocus}
-                            onChange={this.trackChanges}
-                        ></input>
-                    </div>          
-                </React.Fragment>
-            );
-        }
-        
+        return (
+        <React.Fragment>
+            <div key={`${index}-input`} className="is-centered is-info is-rounded">
+                <input 
+                    value={this.state.userValue}
+                    type={this.props.type}
+                    ref={(input) => { this.settingInput = input; }} 
+                    onClick={this.setFocus}
+                    onChange={this.trackChanges}
+                ></input>
+            </div>          
+        </React.Fragment>
+        );    
     }
 }
 
