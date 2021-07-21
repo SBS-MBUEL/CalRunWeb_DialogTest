@@ -19,7 +19,6 @@ class InputItem extends React.Component {
             userValue: e.target.value
         });
         if (this.props.type === 'number') {
-            console.log("hmmm");
             if (e.target.value && !isNaN(e.target.value)) { // This is a number
                 this.props.trackChanges(this.props.index, e.target.value);
             } else {
@@ -47,7 +46,7 @@ class InputItem extends React.Component {
             <div key={`${index}-input`} className="is-centered is-info is-rounded">
                 <input 
                     value={this.state.userValue}
-                    type={this.props.type}
+                    type={this.props.type || 'text'}
                     ref={(input) => { this.settingInput = input; }} 
                     onClick={this.setFocus}
                     onChange={this.trackChanges}

@@ -33,7 +33,7 @@ describe('render and control input box with good inputs', () => {
 describe('render and control input box configured for numerical values', () => {
     test('renders numeric input box with passed in value', () => {
         let result = '';
-        render(<InputItem userValue='22' isNumeric = {true} trackChanges={(key, val) => {
+        render(<InputItem userValue='22' type={'number'} trackChanges={(key, val) => {
             result = val;
             expect(result).toBe('25');
             expect(inputBox.value).toBe('25');
@@ -45,9 +45,10 @@ describe('render and control input box configured for numerical values', () => {
     });
     test('renders numeric input box and doesn\'t save text input', () => {
         let result = '';
-        render(<InputItem userValue='10' isNumeric = {true} trackChanges={(key, val) => {
+        render(<InputItem userValue='10' type={'number'} trackChanges={(key, val) => {
             result = val;
-            expect(result).toBe('');
+            // Note: value gets defaulted back to 0, but the inputBox value is ''
+            expect(result).toBe(0);
             expect(inputBox.value).toBe('');
         }} /> );
         
