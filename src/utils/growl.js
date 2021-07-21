@@ -68,7 +68,6 @@ function setTimerToRemoveGrowl(element, timeout=5000) {
 function setListener(element, timer) {
     
     element.addEventListener('mouseover', () => {
-        console.log(timer);
         element.classList.remove('removed');
         clearTimeout(timer);
     });

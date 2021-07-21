@@ -69,7 +69,7 @@ describe('Input Box renders and controls with null input.', () => {
         try {
             fireEvent.change(inputBox, { target: { value: 'NewValue' } });
         } catch(ex) {
-            console.log(ex);
+            console.warn(ex);
         }
     });
 });

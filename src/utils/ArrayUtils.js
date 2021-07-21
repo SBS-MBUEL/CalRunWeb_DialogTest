@@ -65,7 +65,6 @@ function FindUniqueIndexInSettings(settings, key1, value1, key2, value2) {
             // search query is not returning a unique result.
             return -1; 
         }
-        console.log(indice);
         return indice[0];
     } catch (er) {
         return -1;

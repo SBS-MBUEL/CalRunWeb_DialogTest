@@ -36,8 +36,6 @@ describe('value errors not popping up.', () => {
 
         const initial_length = _sub_drop_items.length;
 
-        console.log(initial_length);
-
         const _sub_drop_item = _sub_drop_items[6];
 
         fireEvent.click(_sub_drop_item);
@@ -185,7 +183,6 @@ describe('normal functions', () => {
         expect(_sub_list.length).toBe(18);
 
         _sub_list.forEach((el, i) => {
-            console.log('devices' + el.textContent);
             expect(el.textContent).toMatch(/Device/i);
         });
         

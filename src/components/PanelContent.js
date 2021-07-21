@@ -358,9 +358,6 @@ class PanelContent extends React.Component {
 
         let newSlide = this.state.mainActiveSlide > 0 ? (this.state.mainActiveSlide - 1) : (this.state.mainMaxSlides - 1);
         
-        
-            
-        console.log(this.state.mainActiveSlide, newSlide);
         this.changeSlide(newSlide);
         
     }
@@ -372,8 +369,6 @@ class PanelContent extends React.Component {
 
         let newSlide = this.state.mainActiveSlide < (this.state.mainMaxSlides - 1) ? (this.state.mainActiveSlide + 1) : 0;
         
-
-        console.log(this.state.mainActiveSlide, newSlide);
         this.changeSlide(newSlide);
 
     }
@@ -387,8 +382,6 @@ class PanelContent extends React.Component {
         const btnFunction = btn.children[1].textContent.split(' ')[0];
 
         const parameter = btn.children[1].textContent.split(' ')[1];
-
-        console.log(`parameter: ${parameter}`);
 
         // Determine path of button press
         let { subContent, mainContent } = this.parseContent(this.state.tabContent);
