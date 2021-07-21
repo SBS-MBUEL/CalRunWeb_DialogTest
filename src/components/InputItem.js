@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { renderGrowl } from '../utils/growl'
 
 class InputItem extends React.Component {
     constructor(props) {
@@ -18,8 +18,17 @@ class InputItem extends React.Component {
         this.setState({
             userValue: e.target.value
         });
-
-        this.props.trackChanges(this.props.index, e.target.value);
+        if (this.props.type === 'number') {
+            if (e.target.value && !isNaN(e.target.value)) { // This is a number
+                this.props.trackChanges(this.props.index, e.target.value);
+            } else {
+                renderGrowl('growl', 'Text entered for number-only field', 'warning');
+                // Setting value to 0, so that this overwrites the last valid number entered
+                this.props.trackChanges(this.props.index, 0);
+            }
+        } else {
+            this.props.trackChanges(this.props.index, e.target.value);
+        }  
     }
 
     /**
@@ -27,26 +36,24 @@ class InputItem extends React.Component {
      */
     setFocus() {
         this.settingInput.focus();
-        this.settingInput.selectionStart = 0;
-        this.settingInput.selectionEnd = this.settingInput.value.length;
         this.settingInput.select();
     }
 
     render() {
         const { index } = this.props;
         return (
-            <React.Fragment>
-                <div key={`${index}-input`} className="is-centered is-info is-rounded">
-                    <input 
-                        value={this.state.userValue}
-                        type="text"
-                        ref={(input) => { this.settingInput = input; }} 
-                        onClick={this.setFocus}
-                        onChange={this.trackChanges}
-                    ></input>
-                </div>          
-            </React.Fragment>
-        );
+        <React.Fragment>
+            <div key={`${index}-input`} className="is-centered is-info is-rounded">
+                <input 
+                    value={this.state.userValue}
+                    type={this.props.type || 'text'}
+                    ref={(input) => { this.settingInput = input; }} 
+                    onClick={this.setFocus}
+                    onChange={this.trackChanges}
+                ></input>
+            </div>          
+        </React.Fragment>
+        );    
     }
 }
 
