@@ -327,7 +327,7 @@ class PanelContent extends React.Component {
             
             if (btnFunction === 'copy') {
                 subContent.filter((a, b) => a.master === mainContent[this.state.mainActiveSlide].indice).forEach((panel) => {
-                    newContent = this.duplicateOrAddContent(panel, btnFunction, panel.indice, newContent);
+                    newContent = this.duplicateOrAddContent(panel, btnFunction, newContent panel.indice);
                 
                     newContent[newContent.length - 1].master = newMasterIndex;
                 });
@@ -423,7 +423,7 @@ class PanelContent extends React.Component {
                 if (newContent) {
                     let { subContent } = this.parseContent(newContent);
                     
-                    subContent.filter((a, b) => a.master === this.state.tabContent[this.state.mainActiveSlide].indice).forEach((panel) => {
+                    subContent.filter((a, b) => a.master === mainContent[this.state.mainActiveSlide].indice).forEach( (panel) => {
                         newContent = this.removeContent(newContent, btnFunction, panel.indice, true);
                     
                         newContent[newContent.length - 1].master = newMasterIndex;
