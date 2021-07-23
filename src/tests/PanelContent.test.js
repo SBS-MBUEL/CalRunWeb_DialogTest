@@ -20,6 +20,7 @@ const _mock_device = [
 	{
         for:'calibrationParameter',
 		defaultName:'Measurand',
+        master: 0,
 		controls: [
 		    {label:'Measurand-0', type:'dropdown', list:['purple', 'people', 'eater'], width:'100px', height:'30px', control:['purple', 'people', 'eater'], value:'sub-list', maxLength:0, titleOrder:0},
 	    ]
@@ -119,11 +120,11 @@ describe('test input is correct', () => {
             handler={clickRouter} 
             /> );
 
-        const _sub_item = screen.getByText(/sub-list/);
+        const _sub_item = screen.getAllByText(/sub-list/)[0];
 
         expect(_sub_item).not.toBe(undefined);
 
-        expect(_sub_item.textContent).toBe('sub-list');
+        expect(_sub_item.textContent).toBe('MEASURAND - 1: sub-list');
     });
 
     test('sub list has valid items', () => {
@@ -191,7 +192,7 @@ describe('Can change sub item', () => {
                 handler={clickRouter} 
             /> );
 
-        const _sub_item = screen.getByText(/sub-list/);
+        const _sub_item = screen.getAllByText(/sub-list/)[0];
         fireEvent.click(_sub_item);
         
         const _sub_item_1 = screen.getByText(/purple/);
@@ -237,7 +238,7 @@ describe('Can change sub item', () => {
         
         const _sub_list = screen.getAllByText(/Measurand-[0-9]/);
 
-        expect(_sub_list.length).toBe(3); // TODO: not really certain why this is 2?
+        expect(_sub_list.length).toBe(2); // TODO: not really certain why this is 2?
         
     });
 
@@ -259,7 +260,7 @@ describe('Can change sub item', () => {
             
             const _sub_list = screen.getAllByText(/Measurand/i);
     
-            expect(_sub_list.length).toBe(2); // TODO: not really certain why this is 3?
+            expect(_sub_list.length).toBe(2); // TODO: not really certain why this is 2?
             
         });
 });

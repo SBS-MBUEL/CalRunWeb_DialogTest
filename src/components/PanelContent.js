@@ -137,6 +137,9 @@ class PanelContent extends React.Component {
      * @param {object} panel 
      */
     updatePanelContent(content, fn) {
+        if (!content) {
+            return null;
+        }
         this.props.setContent(undefined, undefined, content, this.props.tabName, fn, 'panel');
 
         if (!content[content.length - 1].indice) {
@@ -459,6 +462,7 @@ class PanelContent extends React.Component {
     setContentValues(key, val, settingIdx, controlIdx) {
         let changedContent = this.state.tabContent.slice();
         let { subContent, mainContent } = this.parseContent(this.state.tabContent);
+        
         changedContent[settingIdx].controls[controlIdx].value = val;
         this.setPanelName(this.state.mainActiveSlide, mainContent, 'panelName');
         this.setPanelName(this.state.subActiveSlide, subContent, 'subPanelName');
