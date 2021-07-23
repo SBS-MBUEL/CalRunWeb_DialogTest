@@ -42,8 +42,8 @@ class ConfigContainer extends React.Component {
 
     /**
      * setContent takes the changes from the tabs, updates the real-time objects and saves them to local-storage
-     * @param {string} key 
-     * @param {string} value 
+     * @param {string} key @deprecated
+     * @param {string} value @deprecated
      * @param {object} content 
      * @param {string} tabName 
      * @param {string} fn - default is update mode / options "update", "delete", "add" (copy is dealt with as an add)
@@ -68,7 +68,7 @@ class ConfigContainer extends React.Component {
         
         // This is for removing a single item from the array
         if (fn === 'remove') {
-            successfulUpdate = this.removeRow(mode, changedContent, copiedSettings, tabName);
+            successfulUpdate = this.removeRow(mode, copiedSettings, panelContent, tabName);
         }
         changedContent[`_${tabName}`] = JSON.parse(JSON.stringify(panelContent));
         
@@ -169,11 +169,13 @@ class ConfigContainer extends React.Component {
 
     /**
      * removes the selected panel / sub panel from the object
+     * @param {string} mode 
      * @param {object} copiedSettings 
      * @param {object} panelContent 
+     * @param {string} tabName 
      * @returns 
      */
-    removeRow(copiedSettings, panelContent) {
+    removeRow(mode, copiedSettings, panelContent, tabName ) {
         console.log('remove row');
         let successfulUpdate = false;
         try {

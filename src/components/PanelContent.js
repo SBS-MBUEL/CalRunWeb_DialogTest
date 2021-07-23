@@ -124,7 +124,6 @@ class PanelContent extends React.Component {
             mainContent = this.filterContent(content, 'calibrationOption');
 
             subContent = this.filterContent(content, 'calibrationParameter');
-            // .filter((a, b) => a.master === content[activeSlide].indice);
 
         }
 
@@ -138,11 +137,15 @@ class PanelContent extends React.Component {
      * @param {object} panel 
      */
     updatePanelContent(content, fn) {
+        this.props.setContent(undefined, undefined, content, this.props.tabName, fn, 'panel');
+
+        if (!content[content.length - 1].indice) {
+            content.pop();
+        }
         this.setState({
             tabContent : content
         });
 
-        this.props.setContent(undefined, undefined, content, this.props.tabName, fn, 'panel');
     }
 
     /**
@@ -219,36 +222,47 @@ class PanelContent extends React.Component {
     }
 
     /**
-     * remove panel content
+     * remove selected panel from  panelcontent
      * @param {*} content 
      * @param {*} fn 
-     * @param {*} subIdx 
+     * @param {*} indexToRemove 
+     * @param {boolean} force - forces the panel in indexToRemove to be removed
      * @returns 
     */
-    removeContent(panelContent, fn, subIdx) {
-        let indicesToRemove = panelContent[subIdx].controls.reduce((acc, _, index) => {
+    removeContent(panelContent, fn, indexToRemove, force = false) {
+        let indicesToRemove = panelContent[indexToRemove].controls.reduce((acc, _, index) => {
             acc.push(_.settingIndex);
             return acc;
         }, []).filter((a, b) => a !== undefined);
+
+        let validRemoval = true;
+        if (panelContent[indexToRemove].for === 'calibrationParameter') {
+            validRemoval = this.parseContent(panelContent)
+                .subContent.filter((a,b) => a.master === panelContent[this.state.mainActiveSlide].indice)
+                .length > 1;
+        }
         
-        let newTabContent = RemoveItemFromArray(panelContent, subIdx).map((item, index) => {
-            item.indice = index;
-            return item;
-        });
+        if (validRemoval || force) {
+            let newTabContent = RemoveItemFromArray(panelContent, indexToRemove).map((item, index) => {
+                item.indice = index;
+                return item;
+            });
+    
+            // this.setState({
+            //     tabContent : newTabContent
+            // });
+    
+            let key = 'Not Set';
+            let val = 'Not Set';
+    
+            newTabContent.push(indicesToRemove);
+            return newTabContent;
 
-        this.setState({
-            tabContent : newTabContent
-        });
+        } else {
+            renderGrowl('growl', 'unable to remove last element of settings object for this tab.', 'warning');
+            return null;
+        }
 
-
-        let key = 'Not Set';
-        let val = 'Not Set';
-
-        newTabContent.push(indicesToRemove);
-
-        // newTabContent = this.props.setContent(key, val, newTabContent, this.props.tabName, fn, 'panel');
-
-        return newTabContent;
     }
 
     /**
@@ -283,11 +297,11 @@ class PanelContent extends React.Component {
         let val = newTabContent[setIdx].controls[idx].value
         newTabContent[setIdx].controls = changedControls;
 
-        this.setState({
-            tabContent : newTabContent
-        });
+        // this.setState({
+        //     tabContent : newTabContent
+        // });
 
-        this.props.setContent(key, val, newTabContent, this.props.tabName, fn);
+        // this.props.setContent(key, val, newTabContent, this.props.tabName, fn);
     }
 
     /**
@@ -390,33 +404,45 @@ class PanelContent extends React.Component {
         if (parameter !== 'device' || this.state.tabName.match(/device/) === null ) {
             if (btnFunction === 'add' || btnFunction === 'copy') {
                 let newContent = this.duplicateOrAddContent(subContent[this.state.subActiveSlide], btnFunction, subContent[this.state.subActiveSlide].indice, this.state.tabContent);
-                this.updatePanelContent(newContent, btnFunction);
+
+                newContent && this.updatePanelContent(newContent, btnFunction);
             } else if (btnFunction === 'remove') {
-                if (subContent.length === 1) {
-                    renderGrowl('growl', `Unable to remove the last ${this.state.subPanelName}.`, 'warning');
-                    return;
-                }
-                let idx = this.removeContent(this.state.tabContent.slice(), btnFunction, subContent[this.state.subActiveSlide].indice);
+
+                let newContent = this.removeContent(this.state.tabContent.slice(), btnFunction, subContent[this.state.subActiveSlide].indice);
+                this.updatePanelContent(newContent, btnFunction);
             }
         } else if (parameter === 'device' && this.state.tabName.match(/device/) !== null) { // Need a better way to discern this
             if (btnFunction === 'add' || btnFunction === 'copy') {
                 this.duplicatePanelContent(btnFunction, mainContent);
             } else if (btnFunction === 'remove') {
-                if (mainContent.length === 1 && subContent.length === 1) {
+                if (mainContent.length === 1) {
                     renderGrowl('growl', `Unable to remove the last ${this.state.panelName}.`, 'warning');
                     return;
                 }
-                let cntnt = this.removeContent(this.state.tabContent.slice(), btnFunction, subContent[this.state.mainActiveSlide].indice);
-                if (cntnt) {
-                    let { mainContent } = this.parseContent(cntnt);
-                    cntnt = this.removeContent(cntnt, btnFunction, mainContent[this.state.mainActiveSlide].indice);
-
-                    this.setState({
-                        mainMaxSlides: this.state.mainMaxSlides - 1,
-                        mainActiveSlide: 0,
+                // start of removal function
+                let newContent = this.removeContent(this.state.tabContent.slice(), btnFunction, mainContent[this.state.mainActiveSlide].indice, true);
+                let newMasterIndex = newContent.length - 1;
+                
+                if (newContent) {
+                    let { subContent } = this.parseContent(newContent);
+                    
+                    subContent.filter((a, b) => a.master === this.state.tabContent[this.state.mainActiveSlide].indice).forEach((panel) => {
+                        newContent = this.removeContent(newContent, btnFunction, panel.indice, true);
+                    
+                        newContent[newContent.length - 1].master = newMasterIndex;
                     });
+                    
+                    if (newContent) {
+                        this.updatePanelContent(newContent, btnFunction);
+    
+                        this.setState({
+                            mainMaxSlides: this.state.mainMaxSlides - 1,
+                            mainActiveSlide: 0,
+                        });
+    
+                        this.setPanelName(0);
 
-                    this.setPanelName(0);
+                    }
                 }
             }
         }
