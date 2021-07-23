@@ -478,3 +478,9 @@ function onError(err)
 	}
 }
 
+const clearLSButton = document.querySelector('#btnClearLocalStorage');
+// THIS CODE WAS IMPLEMENTED TO CLEAR LOCAL STORAGE - it is intended for debug purposes and SHOULD NOT go to production.
+clearLSButton.addEventListener('click', (e) => {
+	localStorage.clear();
+	window.location.reload();
+});

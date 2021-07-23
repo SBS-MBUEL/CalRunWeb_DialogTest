@@ -6,14 +6,15 @@ const _reference = [
 		defaultName:'Reference',
 		controls:
 		[
-			{label:'Add New Reference', type:'button', list:[], width:'50px', height:'30px', control:null, value:'addOption', maxLength:0, titleOrder:-1},
-			{label:'Remove This Reference', type:'button', list:[], width:'50px', height:'30px', control:null, value:'removeOption', maxLength:0, titleOrder:-1},
+			{label:'Add New Reference', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add reference', maxLength:0, titleOrder:-1},
+			{label:'Copy Reference', type:'button', list:[], width:'50px', height:'30px', control:null, value:'copy reference', maxLength:0, titleOrder:-1},
+			{label:'Remove This Reference', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove reference', maxLength:0, titleOrder:-1},
 			{label:'Device', type:'dropdown', list:['Not Set', 'ACS', 'ECOV2', 'Keithley', 'SBE3', 'SBE4', 'SBE63', 'SKR-Mini', 'SNTL', 'SparkFun', 'TU5300', 'UNO'], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:0, settingIndex:103},
 			{label:'SN', type:'text', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:1, settingIndex:104},
-			{label:'Port', type:'dropdown', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1, settingIndex:105},
-			{label:'Baud', type:'dropdown', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1, settingIndex:106},
-			{label:'Settings', type:'dropdown', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1, settingIndex:107},
-			{label:'Format', type:'dropdown', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1, settingIndex:108},
+			{label:'Port', type:'dropdown', list:['Not Set', 'COM3', 'COM4', 'COM5'], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1, settingIndex:105},
+			{label:'Baud', type:'dropdown', list:['Not Set', '115200', '57600', '38400', '19200', '9600', '4800', '2400', '1200', '600', '300'], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1, settingIndex:106},
+			{label:'Settings', type:'dropdown', list:['Not Set', 'N,8', 'E,7', 'O,7'], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1, settingIndex:107},
+			{label:'Format', type:'dropdown', list:['RS-232', 'RS-485', 'IM'], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1, settingIndex:108},
 			{label:'Delay before sampling', type:'text', list:[], width:'200px', height:'30px', control:null, value:'0', maxLength:20, titleOrder:-1, settingIndex:109},
 			{label:'Configuration Commands', type:'textarea', list:[], width:'200px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1, settingIndex:110},
 			{label:'Sample Command', type:'text', list:[], width:'200px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1, settingIndex:111},
@@ -23,14 +24,14 @@ const _reference = [
 	{
 		for:'calibrationParameter',
 		defaultName:'Measurand',
+		master:0,
 		controls:
 		[
-			{label:'Add New Measurand', type:'button', list:[], width:'50px', height:'30px', control:null, value:'addParameter', maxLength:0, titleOrder:-1},
-			{label:'Remove This Measurand', type:'button', list:[], width:'50px', height:'30px', control:null, value:'removeParameter', maxLength:0, titleOrder:-1},
-			{label:'Read Coefficients from File', type:'button', list:[], width:'50px', height:'30px', control:null, value:'readCoefficientsFromFile', maxLength:0, titleOrder:-1},
-			{label:'Measurand', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:0, settingIndex:113},
-			{label:'Measurand Sub-Type', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1, settingIndex:114},
-			{label:'Coefficient of Variation', type:'text', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
+			{label:'Add New Measurand', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add measurand', maxLength:0, titleOrder:-1},
+			{label:'Remove This Measurand', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove measurand', maxLength:0, titleOrder:-1},
+			{label:'Read Coefficients from File', type:'button', list:[], width:'50px', height:'30px', control:null, value:'load coeff from file', maxLength:0, titleOrder:-1},
+			{label:'Measurand', type:'dropdown', list:['Not Set',	'Backscatter', 'Chlorophyll',	'Conductivity',	'FDOM',	'FLPC',	'FLPE',	'FLRH',	'FLUR',	'NTU',	'Oxygen',	'Phenanthrene', 'Pressure',	'Temperature',	'Voltage',	'pH'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:0, settingIndex:113},
+			{label:'Measurand Sub-Type', type:'dropdown', list:['Not Set',	'Backscatter', 'Chlorophyll',	'Conductivity',	'FDOM',	'FLPC',	'FLPE',	'FLRH',	'FLUR',	'NTU',	'Oxygen',	'Phenanthrene', 'Pressure',	'Temperature',	'Voltage',	'pH'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1, settingIndex:114},
 			{label:'Cal date', type:'text', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1, settingIndex:115},
 			{label:'Coefficient of Variation (max)', type:'text', list:[], width:'50px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
 			{label:'Test value raw', type:'text', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1, settingIndex:116},
@@ -70,10 +71,9 @@ const _device = [
 			{label:'Copy Measurand', type:'button', list:[], width:'50px', height:'30px', control:null, value:'copy measurand', maxLength:0, titleOrder:-1},
 			{label:'Remove Measurand', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove measurand', maxLength:0, titleOrder:-1},
 			{label:'Measurand', type:'dropdown', list:['Not Set',	'Backscatter', 'Chlorophyll',	'Conductivity',	'FDOM',	'FLPC',	'FLPE',	'FLRH',	'FLUR',	'NTU',	'Oxygen',	'Phenanthrene', 'Pressure',	'Temperature',	'Voltage',	'pH'], width:'100px', height:'30px', control:"Control Device-0", value:'Not Set', maxLength:0, titleOrder:0, settingIndex: 10},
+			{label:'Measurand Sub-Type', type:'dropdown', list:['Not Set',	'Backscatter', 'Chlorophyll',	'Conductivity',	'FDOM',	'FLPC',	'FLPE',	'FLRH',	'FLUR',	'NTU',	'Oxygen',	'Phenanthrene', 'Pressure',	'Temperature',	'Voltage',	'pH'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1, settingIndex:11},
 		]
 	},
-
-	
 ];
 const _datapoint = [
 	{
@@ -97,6 +97,7 @@ const _datapoint = [
 	{
 		for:'calibrationParameter',
 		defaultName:'Device',
+		master: 0,
 		controls:
 		[
 			{label:'Add Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'addParameter', maxLength:0, titleOrder:-1},
@@ -116,6 +117,7 @@ const _datapoint = [
 	{
 		for:'calibrationParameter',
 		defaultName:'Setpoint',
+		master: 1,
 		controls:
 		[
 			{label:'Add Set Point', type:'button', list:[], width:'50px', height:'30px', control:null, value:'addOption', maxLength:0, titleOrder:-1},
@@ -163,6 +165,7 @@ const _system = [
 	{
 		for:'calibrationParameter',
 		defaultName:'Device',
+		master: 0,
 		controls:
 		[
 			{label:'Add Device That Can Be Calibrated', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add device', maxLength:0, titleOrder:-1},

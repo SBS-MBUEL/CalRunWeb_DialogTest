@@ -1476,11 +1476,9 @@ function ConfigurationManager(isDebug)
 				let itemValue = control.value;
 				settings[itemName] = itemValue;
 			}
-			console.log(settings);
 		}
 		catch(err)
 		{
-			console.log(err);
 			self.onError(err);
 		}
 	};

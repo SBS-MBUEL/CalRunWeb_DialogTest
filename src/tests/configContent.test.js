@@ -36,8 +36,6 @@ describe('value errors not popping up.', () => {
 
         const initial_length = _sub_drop_items.length;
 
-        console.log(initial_length);
-
         const _sub_drop_item = _sub_drop_items[6];
 
         fireEvent.click(_sub_drop_item);
@@ -51,7 +49,7 @@ describe('value errors not popping up.', () => {
 
         const new_length = screen.getAllByText(/Not Set/).length;
 
-        expect(new_length).toBe(initial_length - 1);
+        expect(new_length).toBe(initial_length - 2);
     });
 });
 
@@ -92,7 +90,7 @@ describe('normal functions', () => {
         render(<App /> );
 
         let _sub_drop_items = screen.getAllByText(/Not Set/);
-        expect(_sub_drop_items.length).toBe(50);
+        expect(_sub_drop_items.length).toBe(61);
 
         const _sub_drop_item = _sub_drop_items[5];
 
@@ -101,7 +99,7 @@ describe('normal functions', () => {
 
 
         let _sub_item_list = screen.getAllByText(/DeepSeapHoxV2/);
-        expect(_sub_item_list.length).toBe(2);
+        expect(_sub_item_list.length).toBe(3);
 
         _sub_item_list.forEach(el => {
             fireEvent.click(el);
@@ -110,8 +108,8 @@ describe('normal functions', () => {
         _sub_item_list = screen.getAllByText(/DeepSeapHoxV2/);
         _sub_drop_items = screen.getAllByText(/Not Set/);
 
-        expect(_sub_item_list.length).toBe(2);
-        expect(_sub_drop_items.length).toBe(50);
+        expect(_sub_item_list.length).toBe(3);
+        expect(_sub_drop_items.length).toBe(61);
 
         const _add_item = screen.getAllByText(/add device/)[0];
         fireEvent.click(_add_item);
@@ -120,8 +118,8 @@ describe('normal functions', () => {
         _sub_item_list = screen.getAllByText(/DeepSeapHoxV2/);
         _sub_drop_items = screen.getAllByText(/Not Set/);
 
-        expect(_sub_item_list.length).toBe(3);
-        expect(_sub_drop_items.length).toBe(52);
+        expect(_sub_item_list.length).toBe(5);
+        expect(_sub_drop_items.length).toBe(63);
         
     });
 
@@ -137,7 +135,7 @@ describe('normal functions', () => {
         
         const _sub_list = screen.getAllByText(/Device/);
 
-        expect(_sub_list.length).toBe(16);
+        expect(_sub_list.length).toBe(18);
 
         _sub_list.forEach((el, i) => {
             expect(el.textContent).toMatch(/Device/i);
@@ -156,18 +154,18 @@ describe('normal functions', () => {
         const _copy_button = screen.getAllByText(/copy device/)[0];
         fireEvent.click(_copy_button);
 
-        expect(_sub_item_list.length).toBe(4);
-        expect(_sub_drop_items.length).toBe(54);
+        expect(_sub_item_list.length).toBe(3);
+        expect(_sub_drop_items.length).toBe(61);
         
         const _sub_list = screen.getAllByText(/Device/);
 
-        expect(_sub_list.length).toBe(17);
+        expect(_sub_list.length).toBe(18);
 
         _sub_item_list = screen.getAllByText(/DeepSeapHoxV2/);
         _sub_drop_items = screen.getAllByText(/Not Set/);
 
-        expect(_sub_item_list.length).toBe(5);
-        expect(_sub_drop_items.length).toBe(56);
+        expect(_sub_item_list.length).toBe(6);
+        expect(_sub_drop_items.length).toBe(62);
     });
 
     // at this stage it does add it to the list
@@ -185,7 +183,6 @@ describe('normal functions', () => {
         expect(_sub_list.length).toBe(18);
 
         _sub_list.forEach((el, i) => {
-            console.log('devices' + el.textContent);
             expect(el.textContent).toMatch(/Device/i);
         });
         
@@ -202,7 +199,7 @@ describe('normal functions', () => {
         
         const _sub_list = screen.getAllByText(/Device/);
 
-        expect(_sub_list.length).toBe(17);
+        expect(_sub_list.length).toBe(14);
     });
 
     // at this stage it does add it to the list
@@ -216,7 +213,7 @@ describe('normal functions', () => {
         
         const _sub_list = screen.getAllByText(/Device/);
 
-        expect(_sub_list.length).toBe(16);
+        expect(_sub_list.length).toBe(14);
 
         _sub_list.forEach((el, i) => {
             expect(el.textContent).toMatch(/Device/i);

@@ -124,7 +124,6 @@ const files_to_delete = [
 
 iterate(root_search_path)
     .then(function(results) {
-        console.log(results);
         results.map((file, index) => {
 
             const txt = readFileSync(file); // Todo: try to improve to be asynchronous
@@ -136,7 +135,7 @@ iterate(root_search_path)
 
 
             if (res !== txt) {
-                console.log(`replacement in ${file}`);
+                console.log(`replacement completed in: ${file}`);
                 saveFileSync(file, res);
             }
             
