@@ -156,10 +156,10 @@ class PanelContent extends React.Component {
      * //TODO: this will likely need to be refactored to deal with more complex lists
      * @param {array} panel - controls list object
      * @param {string} fn - add / delete / copy
-     * @param {number} subIdx - Where in the content object to place the content
+     * @param {number} masterIdx - Where in the content object to place the content
      * @returns 
     */
-    duplicateOrAddContent(panel, fn, subIdx, content) {
+    duplicateOrAddContent(panel, fn, content, masterIdx = null) {
 
         // copy panel (main or sub)
         const copiedPanel = JSON.parse(JSON.stringify(panel));
@@ -171,7 +171,11 @@ class PanelContent extends React.Component {
                 if (el.type !== 'button') {
                     el.value = 'Not Set';
                 }
-            })
+            });
+        }
+
+        if (masterIdx) {
+            copiedPanel.master = masterIdx;
         }
 
         let idx = existingContent.push(copiedPanel) - 1;
@@ -225,14 +229,15 @@ class PanelContent extends React.Component {
     }
 
     /**
-     * remove selected panel from  panelcontent
-     * @param {*} content 
-     * @param {*} fn 
-     * @param {*} indexToRemove 
+     * remove selected panel from  panelcontent object passed in
+     * @param {object} panelContent 
+     * @param {string} fn 
+     * @param {number} indexToRemove 
+     * @param {number} masterIndex
      * @param {boolean} force - forces the panel in indexToRemove to be removed
      * @returns 
     */
-    removeContent(panelContent, fn, indexToRemove, force = false) {
+    removeContent(panelContent, fn, indexToRemove, masterIndex, force = false) {
         let indicesToRemove = panelContent[indexToRemove].controls.reduce((acc, _, index) => {
             acc.push(_.settingIndex);
             return acc;
@@ -241,7 +246,7 @@ class PanelContent extends React.Component {
         let validRemoval = true;
         if (panelContent[indexToRemove].for === 'calibrationParameter') {
             validRemoval = this.parseContent(panelContent)
-                .subContent.filter((a,b) => a.master === panelContent[this.state.mainActiveSlide].indice)
+                .subContent.filter((a,b) => a.master === masterIndex)
                 .length > 1;
         }
         
@@ -315,7 +320,7 @@ class PanelContent extends React.Component {
     */
     duplicatePanelContent(btnFunction, mainContent) {
         let currentLength = this.state.tabContent.length;
-        let newContent = this.duplicateOrAddContent(mainContent[this.state.mainActiveSlide], btnFunction, mainContent[this.state.mainActiveSlide].indice, this.state.tabContent);
+        let newContent = this.duplicateOrAddContent(mainContent[this.state.mainActiveSlide], btnFunction, this.state.tabContent);
         if (newContent) {
             let { subContent } = this.parseContent(newContent);
 
@@ -323,12 +328,12 @@ class PanelContent extends React.Component {
             
             if (btnFunction === 'copy') {
                 subContent.filter((a, b) => a.master === mainContent[this.state.mainActiveSlide].indice).forEach((panel) => {
-                    newContent = this.duplicateOrAddContent(panel, btnFunction, panel.indice, newContent);
+                    newContent = this.duplicateOrAddContent(panel, btnFunction, newContent, panel.indice);
                 
                     newContent[newContent.length - 1].master = newMasterIndex;
                 });
             } else {
-                newContent = this.duplicateOrAddContent(subContent[0], btnFunction, subContent[0].indice, newContent);
+                newContent = this.duplicateOrAddContent(subContent[0], btnFunction, newContent);
                 
                 newContent[newContent.length - 1].master = newMasterIndex;
             }
@@ -395,7 +400,7 @@ class PanelContent extends React.Component {
      * @param {dom} btn pressed in ButtonItem
      * @param {number} settingIdx
      */
-    buttonHandler(btn, settingIdx) {
+    buttonHandler(btn, slideIdx) {
         const btnFunction = btn.children[1].textContent.split(' ')[0];
 
         const parameter = btn.children[1].textContent.split(' ')[1];
@@ -404,17 +409,7 @@ class PanelContent extends React.Component {
         let { subContent, mainContent } = this.parseContent(this.state.tabContent);
 
         // TODO: need to determine which panel is currently displayed and appropriately copy / remove / duplicate it or rows in it.
-        if (parameter !== 'device' || this.state.tabName.match(/device/) === null ) {
-            if (btnFunction === 'add' || btnFunction === 'copy') {
-                let newContent = this.duplicateOrAddContent(subContent[this.state.subActiveSlide], btnFunction, subContent[this.state.subActiveSlide].indice, this.state.tabContent);
-
-                newContent && this.updatePanelContent(newContent, btnFunction);
-            } else if (btnFunction === 'remove') {
-
-                let newContent = this.removeContent(this.state.tabContent.slice(), btnFunction, subContent[this.state.subActiveSlide].indice);
-                this.updatePanelContent(newContent, btnFunction);
-            }
-        } else if (parameter === 'device' && this.state.tabName.match(/device/) !== null) { // Need a better way to discern this
+        if ((parameter === 'device' || parameter === 'reference' || parameter === 'setpoint')) { // Need a better way to discern this
             if (btnFunction === 'add' || btnFunction === 'copy') {
                 this.duplicatePanelContent(btnFunction, mainContent);
             } else if (btnFunction === 'remove') {
@@ -423,14 +418,14 @@ class PanelContent extends React.Component {
                     return;
                 }
                 // start of removal function
-                let newContent = this.removeContent(this.state.tabContent.slice(), btnFunction, mainContent[this.state.mainActiveSlide].indice, true);
+                let newContent = this.removeContent(this.state.tabContent.slice(), btnFunction, mainContent[this.state.mainContent].indice, mainContent[this.state.mainActiveSlide].indice, true);
                 let newMasterIndex = newContent.length - 1;
                 
                 if (newContent) {
                     let { subContent } = this.parseContent(newContent);
                     
-                    subContent.filter((a, b) => a.master === this.state.tabContent[this.state.mainActiveSlide].indice).forEach((panel) => {
-                        newContent = this.removeContent(newContent, btnFunction, panel.indice, true);
+                    subContent.filter((a, b) => a.master === mainContent[this.state.mainActiveSlide].indice).forEach( (panel) => {
+                        newContent = this.removeContent(newContent, btnFunction, panel.indice, mainContent[this.state.mainActiveSlide].indice ,true);
                     
                         newContent[newContent.length - 1].master = newMasterIndex;
                     });
@@ -447,6 +442,16 @@ class PanelContent extends React.Component {
 
                     }
                 }
+            }
+        } else {
+            if (btnFunction === 'add' || btnFunction === 'copy') {
+                let newContent = this.duplicateOrAddContent(subContent[slideIdx], btnFunction, this.state.tabContent, mainContent[this.state.mainActiveSlide].indice);
+
+                newContent && this.updatePanelContent(newContent, btnFunction);
+            } else if (btnFunction === 'remove') {
+
+                let newContent = this.removeContent(this.state.tabContent.slice(), btnFunction, subContent[slideIdx].indice, mainContent[this.state.mainActiveSlide].indice);
+                this.updatePanelContent(newContent, btnFunction);
             }
         }
 
@@ -529,7 +534,7 @@ class PanelContent extends React.Component {
                                                     length={subContent.length}
                                                 />
                                                 <RowContentContainer
-                                                    activeSlide={this.state.mainActiveSlide}
+                                                    activeSlide={subContentIdx}
                                                     buttonHandler={this.buttonHandler}
                                                     setContentValues={this.setContentValues}
                                                     panelContent={subPanel}

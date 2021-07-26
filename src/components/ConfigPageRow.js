@@ -17,16 +17,13 @@ import { ErrorRow } from './ErrorRow';
         super(props);
         this.state = {
             userValue: props && props.row && props.row.value ? props.row.value : undefined,
-            settingIndex: props.settingIndex,
-            controlIndex: props.controlIndex,
-            objectIndex: props.contentIdx
         }
         this.trackChanges = this.trackChanges.bind(this);
         this.btnClickHandler = this.btnClickHandler.bind(this);
     }
 
     btnClickHandler(btn) {
-        this.props.buttonHandler(btn, this.state.settingIndex);
+        this.props.buttonHandler(btn); 
     }
     /**
      * propagates changes up call stack
@@ -35,7 +32,7 @@ import { ErrorRow } from './ErrorRow';
     */
     trackChanges(key, val) {
         // Propagate up to save to database
-        this.props.onChange(key, val, this.state.settingIndex, this.state.controlIndex); // (0 is setting index)
+        this.props.onChange(key, val, this.props.settingIndex, this.props.controlIndex); // (0 is setting index)
     }
 
     /**
