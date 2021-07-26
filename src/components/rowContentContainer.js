@@ -12,6 +12,7 @@ class RowContentContainer extends React.Component {
         }
 
         this.setContentValues = this.setContentValues.bind(this);
+        this.buttonHandler = this.buttonHandler.bind(this);
     }
 
     /**
@@ -31,17 +32,14 @@ class RowContentContainer extends React.Component {
         this.props.setContentValues(key, val, settingIdx, controlIdx);
     }
 
+    buttonHandler(btn) {
+        this.props.buttonHandler(btn, this.props.activeSlide);
+    }
+
     render() {
-        const { index, tabName, handler, optionView } = this.props;
         return (
                     <React.Fragment>
-                        {/* <PanelNavigation 
-                            panel={tabName} 
-                            optionView={this.state.currentView}
-                            currentPane={this.props.currentPane}
-                            leftArrow={this.slideLeft}
-                            rightArrow={this.slideRight}
-                        /> */}
+
                         {this.state.panelContent.controls.map((row, rowIdx) => {
                             return (
                                 <div className="column content" key={`${row.label}-${rowIdx}`}>
@@ -51,7 +49,7 @@ class RowContentContainer extends React.Component {
                                         row={row} 
                                         settingIndex={this.state.panelContent.indice}
                                         controlIndex={rowIdx} 
-                                        buttonHandler={this.props.buttonHandler}
+                                        buttonHandler={this.buttonHandler}
                                     />
                                 </div>
                             )

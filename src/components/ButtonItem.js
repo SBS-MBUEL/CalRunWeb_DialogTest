@@ -20,6 +20,7 @@ class ButtonItem extends React.Component {
 
         this.props.handler ? this.props.handler(el) : console.error('unable to propagate button click up stack');
     }
+    
     render() {
         const { value } = this.props;
 
