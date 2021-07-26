@@ -2,6 +2,8 @@ import { fireEvent, render, screen, userEvent } from '@testing-library/react';
 import { TabPanels } from '../components/TabPanels';
 import { objectCollection } from '../mocks/configMocks'
 
+window.HTMLElement.prototype.scrollIntoView = function() {};
+
 function getTabs() {
     return [
         {

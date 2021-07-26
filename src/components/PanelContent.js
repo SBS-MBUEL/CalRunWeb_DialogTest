@@ -42,6 +42,7 @@ class PanelContent extends React.Component {
         this.setPanelName = this.setPanelName.bind(this);
         this.updatePanelContent = this.updatePanelContent.bind(this);
 
+        this.scrollTarget = React.createRef();
     }
 
     componentDidMount() {
@@ -49,6 +50,11 @@ class PanelContent extends React.Component {
         let { mainContent, subContent } = this.parseContent(this.state.tabContent);
         this.setPanelName(this.state.mainActiveSlide, mainContent, 'panelName');
         this.setPanelName(this.state.subActiveSlide, subContent, 'subPanelName');
+    }
+
+    componentDidUpdate() {
+        if (this.scrollTarget.current)
+            this.scrollTarget.current.scrollIntoView({behavior: 'smooth'});
     }
 
     /**
@@ -223,8 +229,8 @@ class PanelContent extends React.Component {
             tabContent : newTabContent
         });
 
+        
         this.props.setContent(key, val, newTabContent, this.props.tabName, fn); // TODO: change signature to pass "add" for fn
-
         return newTabContent;
     }
 
@@ -347,7 +353,6 @@ class PanelContent extends React.Component {
                 subActiveSlide: 0
             });
 
-
         }
     }
     /**
@@ -467,7 +472,7 @@ class PanelContent extends React.Component {
     setContentValues(key, val, settingIdx, controlIdx) {
         let changedContent = this.state.tabContent.slice();
         let { subContent, mainContent } = this.parseContent(this.state.tabContent);
-        
+
         changedContent[settingIdx].controls[controlIdx].value = val;
         this.setPanelName(this.state.mainActiveSlide, mainContent, 'panelName');
         this.setPanelName(this.state.subActiveSlide, subContent, 'subPanelName');
@@ -555,7 +560,7 @@ class PanelContent extends React.Component {
 
                         })}
                     </div>
-                    
+                    <div ref={this.scrollTarget}/>
 
                 </div>
             </div>
