@@ -81,6 +81,8 @@ const _datapoint = [
 		defaultName:'Data Point',
 		controls:
 		[
+			{label:'Add Setpoint', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add setpoint', maxLength:0, titleOrder:-1},
+			{label:'Remove Setpoint', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove setpoint', maxLength:0, titleOrder:-1},
 			{label:'Calculate After', type:'dropdown', list:['Not Set', 'Sine Max', 'Sentinel Offset'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1, settingIndex:10},
 			
 		]	
