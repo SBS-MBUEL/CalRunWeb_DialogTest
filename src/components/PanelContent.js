@@ -23,7 +23,8 @@ class PanelContent extends React.Component {
             mainActiveSlide : 0,
             mainMaxSlides: mainContent && mainContent.length,
             subActiveSlide: 0,
-            subMaxSlides: subContent && subContent.length
+            subMaxSlides: subContent && subContent.length,
+            validScroll: false
         };
         
         this.setContentValues = this.setContentValues.bind(this);
@@ -53,8 +54,10 @@ class PanelContent extends React.Component {
     }
 
     componentDidUpdate() {
-        if (this.scrollTarget.current)
+        if (this.scrollTarget.current && this.state.validScroll) {
             this.scrollTarget.current.scrollIntoView({block: "end", inline: "nearest", behavior: 'smooth'});
+            this.setState({validScroll: false});
+        }
     }
 
     /**
@@ -192,7 +195,7 @@ class PanelContent extends React.Component {
         // });
         // TODO: make passed object match other function - not sending correct object and causing propagation errors.
         // this.props.setContent(undefined, undefined, existingContent, this.props.tabName, fn, 'panel'); // TODO: change signature to pass "add" for fn
-
+        this.setState({validScroll: true})
         return existingContent;
     }
 
