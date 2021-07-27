@@ -9,6 +9,8 @@ import App from '../App';
 var localSettings = getLocalStorage('SystemName-Settings');
 var localConfig = getLocalStorage('SystemName-Config');
 
+window.HTMLElement.prototype.scrollIntoView = function() {};
+
 function setup() {
     localStorage.clear('SystemName-Config');
 

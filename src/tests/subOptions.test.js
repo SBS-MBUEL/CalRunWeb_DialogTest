@@ -8,6 +8,8 @@ let subOptionControls = [
         'SBE37',	'SBE39',	'SBE4',	'SBE63',	'SKR-Mini'], width:'100px', height:'30px', control:null, value:'test-2', maxLength:0, titleOrder:0}
 ];
 
+window.HTMLElement.prototype.scrollIntoView = function() {};
+
 const processChange = (e) => {
 
 }

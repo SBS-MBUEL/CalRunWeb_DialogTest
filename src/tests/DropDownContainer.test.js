@@ -7,6 +7,8 @@ const testRowObject = {
     list: ['drop1', 'drop2', 'drop3', 'drop4']
 }
 
+window.HTMLElement.prototype.scrollIntoView = function() {};
+
 const processClick = (k, v) => {
 
 }
