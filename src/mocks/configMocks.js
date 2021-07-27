@@ -81,6 +81,8 @@ const _datapoint = [
 		defaultName:'Data Point',
 		controls:
 		[
+			{label:'Add Setpoint', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add setpoint', maxLength:0, titleOrder:-1},
+			{label:'Remove Setpoint', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove setpoint', maxLength:0, titleOrder:-1},
 			{label:'Calculate After', type:'dropdown', list:['Not Set', 'Sine Max', 'Sentinel Offset'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1, settingIndex:10},
 			
 		]	
@@ -90,6 +92,8 @@ const _datapoint = [
 		defaultName:'Data Point',
 		controls:
 		[
+			{label:'Add Setpoint', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add setpoint', maxLength:0, titleOrder:-1},
+			{label:'Remove Setpoint', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove setpoint', maxLength:0, titleOrder:-1},
 			{label:'Calculate After', type:'dropdown', list:['Not Set', 'Sine Max', 'Sentinel Offset'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1, settingIndex:10},
 			
 		]	
@@ -133,7 +137,48 @@ const _datapoint = [
 			{label:'Drain', type:'dropdown', list:['yes', 'no'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
 			{label:'Fill', type:'dropdown', list:['yes', 'no'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
 		]
+	},
+	{
+		for:'calibrationParameter',
+		defaultName:'Device',
+		master: 1,
+		controls:
+		[
+			{label:'Add Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add SP device data', maxLength:0, titleOrder:-1},
+			{label:'Remove Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove SP device data', maxLength:0, titleOrder:-1},
+			{label:'Device Type', type:'dropdown', list:['Reference', 'System'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:0},
+			{label:'Model', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:1},
+			{label:'SN', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:2},
+			{label:'Measurand', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:3},
+			{label:'Measurand Sub-Type', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1},		
+			{label:'Peristaltic Pump Number', type:'number', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
+			{label:'Injection Volume', type:'number', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
+			{label:'Pump Rate', type:'number', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
+			{label:'Drain', type:'dropdown', list:['yes', 'no'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
+			{label:'Fill', type:'dropdown', list:['yes', 'no'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
+		]
+	},
+	{
+		for:'calibrationParameter',
+		defaultName:'Setpoint',
+		master: 1,
+		controls:
+		[
+			{label:'Add Set Point', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add SP setpoint data', maxLength:0, titleOrder:-1},
+			{label:'Remove Set Point', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove SP setpoint data', maxLength:0, titleOrder:-1},
+			{label:'Device Type', type:'dropdown', list:['Reference', 'System'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:0},
+			{label:'Model', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:1},
+			{label:'SN', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:2},
+			{label:'Measurand', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:3},
+			{label:'Measurand Sub-Type', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:-1},		
+			{label:'Peristaltic Pump Number', type:'text', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
+			{label:'Injection Volume', type:'text', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
+			{label:'Pump Rate', type:'text', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
+			{label:'Drain', type:'dropdown', list:['yes', 'no'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
+			{label:'Fill', type:'dropdown', list:['yes', 'no'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:-1},
+		]
 	}
+
 
 ];
 const _system = [
@@ -168,9 +213,9 @@ const _system = [
 		master: 0,
 		controls:
 		[
-			{label:'Add Device That Can Be Calibrated', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add device', maxLength:0, titleOrder:-1},
-			{label:'Copy Device Last Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'copy device', maxLength:0, titleOrder:-1},
-			{label:'Remove Last Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove device', maxLength:0, titleOrder:-1},
+			{label:'Add Device That Can Be Calibrated', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add cal device', maxLength:0, titleOrder:-1},
+			{label:'Copy Device Last Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'copy cal device', maxLength:0, titleOrder:-1},
+			{label:'Remove Last Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove cal device', maxLength:0, titleOrder:-1},
 			{label:'Device', type:'dropdown', list:['Not Set', 'AC-S',	'DeepSeapHoxV2',	'Digiquartz',	'Druck', 'ECOV2',	'FloatpH',	'Keithley',	'Kistler',	'SBE3',
 				'SBE37',	'SBE39',	'SBE4',	'SBE63',	'SKR-Mini'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:0},
 		]
