@@ -11,7 +11,7 @@ import createGUID from '../utils/createGUID';
 
         return (
             <React.Fragment>
-                <div key={createGUID()} className="columns">
+                <div key={`${heading}-CDH`} className="columns">
 
                     <div className="column">
                         <h1 className="title is-2 has-text-centered">{heading}</h1>

@@ -49,23 +49,26 @@
 
 		<!-- // Initialize application -->
 		<script type="text/javascript">
-			// This is how we get the program working
-			//Load global files and then initialize the calRun system
-			var localSettings = getLocalStorage('SystemName-Settings');
-			var localConfig = getLocalStorage('SystemName-Config');
-
-			if (!localSettings) { // retrieve database immediately
-				setLocalStorage('SystemName-Settings', databaseContent);
-				localSettings = databaseContent;
-			}
-
-			if (!localConfig) { // retrieve configuration from database
-				setLocalStorage('SystemName-Config', objectCollection);
-				localConfig = objectCollection;
-			}
-			
+			var localSettings;
+			var localConfig;
+			var systemName = 'calRunWeb';
 			document.addEventListener('DOMContentLoaded', function() {
 				initializeGlobals(initializeCalRun);
+				// This is how we get the program working
+				//Load global files and then initialize the calRun system
+
+				localSettings = getLocalStorage(`${systemName}-Settings`);
+				localConfig = getLocalStorage(`${systemName}-Config`);
+	
+				if (!localSettings) { // retrieve database immediately
+					setLocalStorage(`${systemName}-Settings`, databaseContent);
+					localSettings = databaseContent;
+				}
+	
+				if (!localConfig) { // retrieve configuration from database
+					setLocalStorage(`${systemName}-Config`, objectCollection);
+					localConfig = objectCollection;
+				}
 			
 			});
 		</script>
@@ -126,7 +129,7 @@
 
 					</div>
 					<div class="column is-half float-right">
-						<div class='systemName' contenteditable='true'>Not Set</div>
+						<div id='systemName' class='systemName' contenteditable='true'>Not Set</div>
 						<div class='systemName'>System Name:</div>
 						
 					</div>

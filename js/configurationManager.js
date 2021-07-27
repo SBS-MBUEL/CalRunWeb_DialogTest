@@ -1,184 +1,189 @@
 'use strict';
 
+/**
+ * For managing all aspects of the system configuration
+ * Including holding the settings, finding settings, saving settings and recalling settings
+ * The class includes debug logging ability 
+ * All asynchronous functions provide for a callback and an event listener
+ * 
+ * Event listeners are:
+ *    configurationCopied
+ *    configurationDeleted
+ *    configurationRenamed
+ *    configurationsRetrieved
+ *    configurationSaved
+ * 	  configurationSetAsCurrent
+ *    debug
+ *    error
+ *    newConfigurationCreated
+ *    settingsAdded
+ *    settingsRetrieved
+ *    settingUpdated
+ * 
+ * @param {boolean} isDebug - if we should access the debug database
+ */
 function ConfigurationManager(isDebug)
 {
 	let self = this;
+
 	self.listener = new SBListener();
 	self.on = self.listener.on;
 	self.emit = self.listener.emit;
 
-	//the ID of the currently selected configuration
-	self.currentConfiguration = -1;
-
-	//the name of the currently selected configuration
-	self.currentConfigurationName = '';
-
-	//all the configurations saved for this calibration system
 	self.configurations = [];
+	self.currentConfiguration = -1;
+	self.currentConfigurationName = '';
+	self.configurationTabs = [];
 	self.configurationSettings = [];
-	self.deviceList = [];
-	self.referenceList = [];
-	self.controlList = [];
-	self.dataPoints = [];
-	self.settings = [];
-
-	//for database calls
-	self.isDebug = isDebug === true;
-
-	//for logging transactions
+	self.debugFlag = isDebug === true;
 	self.userName = '';
 	self.pcName = '';
 	self.applicationName = '';
 
 	/**
-	 * Recalls a list of configurations that have been stored in teh database
-	 * Test URL: http://localhost/sbGlobal/sbDatabaseFunctions.php?debug=true&dostuff=RunStoredProcedure&connection=calibration&storedProcedure=RecallConfigurations&systemID=35
+	 * Recalls a list of configurations that have been stored in the database
+	 * Test URL: http://localhost/sbGlobal/sbDatabaseFunctions.php?debug=true&dostuff=RunStoredProcedure&username=mvorkapich&pcname=1234&applicationname=CalRun&connection=calibration&storedProcedure=RecallConfigurations&systemID=35
 	 * Function Type: Async
 	 * 
-	 * @param {integer} systemID = ID number of the system from the database
+	 * @param {integer} systemID - ID number of the system from the database
+	 * @param {function} callback - a function to be called when the database call is complete
 	 */
-	self.recallConfigurations = function(systemID)
+	self.recallConfigurations = function(systemID, callback)
 	{
 		try
 		{
-			//if the ID is not a positive integer, this is a problem
-			//This function lives in sbGlobal
 			if(isPositiveInteger(systemID) === false)
 			{
-				throw new RangeError('Invalid System ID. Has the system name been set?');
+				//If the ID is not a positive integer, this is a problem. Typically, this will be because the system has not yet been named
+				self.onError('recallConfigurations', 'Invalid System ID. Has the system been given a name yet?', new Error());
+				return false;
 			}
-
-			//build the database call
-			let parameters = 
-			{
-				debug: self.isDebug,
+			let parameters = {
+				debug: self.debugFlag,
 				dostuff: 'RunStoredProcedure',
 				connection: 'calibration',
 				storedProcedure: 'RecallConfigurations',
 				systemID: systemID
 			};
 
-			//log the parameters
 			self.logDebug('recallConfigurations', 'parameters', parameters);
 
-			//database call
 			ProcessDatabaseRequest(parameters, function(data)
 			{
-				//process the retrieved data
-				self.processConfigurations(data);
-			})
+				self.configurationsRetrieved(data, callback);
+			});
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('recallConfigurations', err.message, err);
+			return false;
 		}
 	};
 
 	/**
-	 * For processing configurations retrieved by the recallConfigurations function
-	 * Funtion Type: Sync
+	 * For processing retrieved configuration data
+	 * Function Type: Sync
 	 * 
 	 * @param {string} data - JSON object to be processed
-	 * @returns {boolean} - if the processing of retrieved data was successful
+	 * @param {function} callback - function to be called 
+	 * @returns {boolean} if the processing of retrieved data was successful
 	 */
-	self.processConfigurations = function(data)
+	self.configurationsRetrieved = function(data, callback)
 	{
 		try
 		{
-			//This function is in sbGlobal
 			if(isJson(data))
 			{
-				//store the configurations for later use
 				self.configurations = JSON.parse(data);
-
-				//find the current configuration
-				//there might not be one
 				let currentConfig = self.configurations.filter(function(config)
 				{
 					return parseInt(config.CurrentConfiguration) === 1;
 				});
 
-				//if there is a current configuration
-				//store the ID and name for later use
 				if(currentConfig.length > 0)
 				{
 					self.currentConfiguration = currentConfig[0].ConfigurationID;
 					self.currentConfigurationName = currentConfig[0].ConfigurationName;
+					
 				}
-
-				//notify the outside world that processing has happened
-				self.emit('configurationsProcessed', self.configurations);
-				self.logDebug('configurationsProcessed', 'Configurations processed successfully', data);
-				return true;
+				//console.log(currentConfig);
+				executeCallback(callback, self.configurations);
+				self.emit('configurationsRetrieved', self.configurations);
+				self.logDebug('configurationsRetrieved', 'configuration retrieved successfully', data);
 			}
-
-			self.processDatabaseError(data);
-			return false;
+			else
+			{
+				let errorMessage = processDatabaseError(data);
+				if(errorMessage === null)
+				{
+					self.onError('configurationsRetrieved', 'Unable to process database response: ' + data, new Error());
+					return false;
+				}
+				self.processError(errorMessage.Class, errorMessage.Function, errorMessage.Message, new Error());
+				return false;
+			}
+			return true;
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('configurationsRetrieved', err.message, err);
+			return false;
 		}
 	};
 
 	/**
 	 * Creates a new, blank, named configuration in the database
-	 * Test URL: http://localhost/sbGlobal/sbDatabaseFunctions.php?debug=true&dostuff=RunStoredProcedure&username=mvorkapich&pcname=1234&applicationname=CalRun&connection=calibration&storedProcedure=CreateNewConfiguration&systemID=35&configurationName=blargyblarg
+	 * Test URL: http://localhost/sbGlobal/sbDatabaseFunctions.php?debug=true&dostuff=RunStoredProcedure&username=mvorkapich&computername=1234&connection=calibration&storedProcedure=CreateNewConfiguration&systemID=35&configurationName=blargyblarg
 	 * Function Type: Async
+	 * 
+	 * @param {integer} systemID - the ID of the system from the database
+	 * @param {string} configurationName - the new name
+	 * @param {function} callback - function to be run with the creation is complete
 	 */
-	self.createNewConfiguration = function(systemID, configurationName)
+	self.createNewConfiguration = function(systemID, configurationName, callback)
 	{
 		try
 		{
-			//system ID must be a positive integer
 			if(isPositiveInteger(systemID) === false)
 			{
-				throw new RangeError('Invalid System ID. Has the system name been set?');
+				self.onError('createNewConfiguration', 'System ID must be a positive integer, ' + systemID + ' was passed in', new Error());
+				return false;
 			}
-
-			//the configuration name must exist
 			if(!configurationName)
 			{
-				throw new RangeError('Configuration name cannot be blank.');
+				self.onError('createNewConfiguration', 'Configuration name cannot be blank', new Error());
+				return false;
 			}
 
-			//the configuration name cannot already be in use
 			if(self.checkExistingConfiguration(configurationName) === true)
 			{
-				throw new Error('Configuration name already in use, please select a different name.');
+				self.onError('createNewConfiguration', 'Configuration already exists with the name ' + configurationName + ', please select a different name.', new Error());
+				return false;
 			}
 
-			//define the parameters for submitting to the database
-			let parameters = 
-			{
-				debug: self.isDebug,
+			let parameters = {
+				debug: self.debugFlag,
 				dostuff: 'RunStoredProcedure',
 				connection: 'calibration',
 				storedProcedure: 'CreateNewConfiguration',
 				systemID: systemID,
 				configurationName: configurationName,
+				applicationname: self.applicationName,
+				username: self.userName,
+				pcname: self.pcName
 			};
 
-			//this is for using the transaction log
-			if(self.userName && self.pcName && self.applicationName)
-			{
-				parameters.applicationName = self.applicationName;
-				parameters.username = self.userName;
-				parameters.pcname = self.pcName;
-			}
-
-			//log the debug output
 			self.logDebug('createNewConfiguration', 'parameters', parameters);
-
-			//process the database request
+	
 			ProcessDatabaseRequest(parameters, function(data)
 			{
-				self.processNewConfiguration(data);
+				self.newConfigurationCreated(data, callback);
 			});
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('createNewConfiguration', err.message, err);
+			return false;
 		}
 	};
 
@@ -187,204 +192,213 @@ function ConfigurationManager(isDebug)
 	 * Puts the configuration into the configuration list and clears out the settings
 	 * Function Type: Sync
 	 * 
-	 * Example of good JSON reply: 
-	 * [{"newConfigurationID":"999","calibrationSystemID":"35","configurationName":"my special new configuration"}]
-	 * 
 	 * @param {string} data - JSON encoded string
-	 * @returns {boolean} - was the configuration created successfully?
+	 * @param {function} callback - function to be called
+	 * @returns {boolean} was the configuration created successfully?
 	 */
-	self.processNewConfiguration = function(data)
+	self.newConfigurationCreated = function(data, callback)
 	{
 		try
 		{
-			//response must be JSON
-			//This function lives in sbGlobal
 			if(isJson(data))
 			{
-				//parse response
 				let reply = JSON.parse(data);
-
-				//if the database reply is an empty JSON object
-				//This is a problem 
-				//Empty JSON object would be [] with nothing between
-				//This will pass the JSON check
 				if(reply.length === 0)
 				{
-					throw new Error('Database error! New configuration failed!');
+					self.onError('newConfigurationCreated', 'Unable to detect newly created configuration id', new Error());
+					return false;
 				}
 
-				//get the new configuration ID
+				//once the new configuration exists, need to add the configuration to the list
 				let configurationID = parseInt(reply[0].newConfigurationID);
-
-				//clear the settings
 				self.configurationSettings = [];
-
-				//add a new configuration to the list of configurations
 				self.addConfiguration(reply[0].calibrationSystemID, configurationID, reply[0].configurationName);
-
-				//set the current configuration ID
 				self.currentConfiguration = configurationID;
-
-				//set the current configuration name
 				self.currentConfigurationName = reply[0].configurationName;
-
-				//trigger the listener
-				self.emit('newConfigurationProcessed', configurationID);
-
-				//log debug
-				self.logDebug('processNewConfiguration', 'Configuration created successfully', data);
-				return true;
+				executeCallback(callback, configurationID);
+				self.emit('newConfigurationCreated', configurationID);
+				self.logDebug('newConfigurationCreated', 'configuration created successfully', data);
 			}
+			else
+			{
+				let errorMessage = processDatabaseError(data);
+				if(errorMessage === null)
+				{
+					self.onError('newConfigurationCreated', 'Unable to process database response: ' + data, new Error());
+					return false;
+				}
+				self.processError(errorMessage.Class, errorMessage.Function, errorMessage.Message, new Error());
+				return false;
+			}
+			return true;
 
-			//if this gets called, then clearly there is an error condition
-			self.processDatabaseError(data);
-			return false;
-			
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('newConfigurationCreated', err.message, err);
+			return false;
 		}
-	}
+	};
 
 	/**
 	 * Adds a configuration to the configuration list. This is really intended for internal use only
-	 * This sets the new configuration as the current configuration
+	 * This does set the new configuration as the current configuration
 	 * Function Type: Sync
 	 * 
 	 * @param {integer} systemID - ID of the system
 	 * @param {integer} configurationID - ID of the new configuration
 	 * @param {string} configurationName - The name of the new configuration
-	 * @param {string} notes - (Optional) any notes associated with the new configuration
+	 * 
+	 * @returns {boolean} - did the adding succeed or fail?
 	 */
-	self.addConfiguration = function(systemID, configurationID, configurationName, notes = null)
+	self.addConfiguration = function(systemID, configurationID, configurationName, notes)
 	{
 		try
 		{
-			//NOTE: For these checks, it should not be possible to get here with any of these
-			//situations being true since most of these should have been checked elsewhere
-			//systemID and configurationID must be positive integers
-			//isPositiveInteger is in sbGlobal
+			if(!notes)
+			{
+				notes = null;
+			}
 			if(isPositiveInteger(systemID) === false || isPositiveInteger(configurationID) === false)
 			{
-				throw new RangeError('System ID and/or Configuration ID are invalid. System ID = ' + systemID + ', Configuration ID = ' + configurationID);
+				self.onError('addConfiguration', 'System ID and Configuration ID must both be a positive integer, systemID: ' + systemID + ', configurationID: ' + configurationID + ' were passed in', new Error());
+				return false;
 			}
-
-			//configuration name can't be blank
 			if(!configurationName)
 			{
-				throw new RangeError('Configuration Name cannot be blank');
+				self.onError('addConfiguration', 'Configuration name cannot be blank', new Error());
+				return false;
 			}
 
-			//configuration name cannot already exist
 			if(self.checkExistingConfiguration(configurationName) === true)
 			{
-				throw new Error('Configuration Name already in use. ')
+				self.onError('addConfiguration', 'Configuration already exists with the name ' + configurationName + ', please select a different name.', new Error());
+				return false;
 			}
 
-			//sets all configurations as not being current
-			for(let i = 0; i < self.configurations.length; i++)
+			self.configurations.forEach(function(configuration)
 			{
-				self.configurations[i].CurrentConfiguration = 0;
-			}
+				configuration.CurrentConfiguration = 0;
+			});
 
-			self.logDebug('addConfiguration', 'Set all configurations to not current.');
-
-			//create a new configuration object with the new information
-			//this one should be current
-			let newConfiguration = 
-			{
-				ConfigurationID: configurationID,
-				ConfigurationName: configurationName,
-				CalibrationSystemID: systemID,
-				CurrentConfiguration: 1,
-				Notes: notes
+			self.logDebug('addConfiguration', 'set all configurations to not current');
+	
+			let newConfiguration = {
+				ConfigurationID:configurationID,
+				ConfigurationName:configurationName,
+				CalibrationSystemID:systemID,
+				CurrentConfiguration:1,
+				Notes:notes
 			};
 
 			self.logDebug('addConfiguration', 'new configuration', newConfiguration);
-
-			//add the new configuration to the list
+	
 			self.configurations.push(newConfiguration);
 
 			self.logDebug('addConfiguration', 'new configuration added to configuration list', self.configurations);
 
 			return true;
+		}		
+		catch(err)
+		{
+			self.onError('addConfiguration', err.message, err);
+			return false;
+		}
+	};
+
+	/**
+	 * Looks in the list of configurations and determines if the specified one exists
+	 * Function Type: Sync
+	 * 
+	 * @param {string} configurationName - the name of the configuration. Names must be unique
+	 * @returns {boolean} - does the configuration exist?
+	 */
+	self.checkExistingConfiguration = function(configurationName)
+	{
+		try
+		{
+			if(!configurationName)
+			{
+				self.onError('checkExistingConfiguration', 'Configuration name cannot be blank', new Error());
+				return false;
+			}
+
+			//see if the configuration is in the list
+			let foundConfigurations = self.configurations.filter(function(configuration)
+			{
+				return configuration.ConfigurationName.toLowerCase() === configurationName.toLowerCase();
+			});
+	
+			self.logDebug('checkExistingConfiguration', 'found configuration: ' + (foundConfigurations.length > 0));
+			return foundConfigurations.length > 0;
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('checkExistingConfiguration', err.message, err);
 			return false;
 		}
 	};
 
 	/**
 	 * Renames an existing configuration
-	 * Test URL:
-	 * http://localhost/sbGlobal/sbDatabaseFunctions.php?debug=true&dostuff=RunStoredProcedure&username=mvorkapich&pcname=1234&applicationname=CalRun&connection=calibration&storedProcedure=RenameConfiguration&configurationID=71&newName=cowabunga
+	 * Test URL: http://localhost/sbGlobal/sbDatabaseFunctions.php?debug=true&dostuff=RunStoredProcedure&username=mvorkapich&computername=1234&connection=calibration&storedProcedure=RenameConfiguration&configurationID=71&newName=cowabunga
 	 * Function Type: Async
 	 * 
 	 * @param {integer} configurationID - must be an existing configuration
-	 * @param {string} configurationName - The name to assign to the configuration
+	 * @param {string} newName - the name to assign to the configuration
+	 * @param {function} callback - function to be run when the renaming is complete
 	 */
-	self.renameConfiguration = function(configurationID, configurationName)
+	self.renameConfiguration = function(configurationID, newName, callback)
 	{
 		try
 		{
-			//isPositiveInteger is in sbGlobal
-			//value must be a positive integer
 			if(isPositiveInteger(configurationID) === false)
 			{
-				throw new RangeError('Configuration ID is invalid. Configuration ID = ' + configurationID);
+				self.onError('renameConfiguration', 'Configuration ID must be a positive integer, ' + configurationID + ' was passed in', new Error());
+				return false;
 			}
-
-			//configuration name can't be blank
-			if(!configurationName)
+			if(!newName)
 			{
-				throw new RangeError('Configuration Name cannot be blank');
+				self.onError('renameConfiguration', 'Configuration name cannot be blank');
+				return false;
 			}
 
-			//configuration name cannot already exist
-			if(self.checkExistingConfiguration(configurationName) === true)
+			if(self.checkExistingConfiguration(newName) === true)
 			{
-				throw new Error('Configuration Name already in use. ')
+				self.onError('renameConfiguration', 'Configuration already exists with the name ' + newName + ', please select a different name.', new Error());
+				return false;
 			}
 
-			//configurationID must be in the list of configurations
 			if(self.checkExistingConfigurationID(configurationID) === false)
 			{
-				throw new Error('Configuration ID ' + configurationID + ' cannot be found, please use a different configuration id.');
+				self.onError('renameConfiguration', 'Configuration ID ' + configurationID + ' cannot be found, please use a different configuration id', new Error());
+				return false;
 			}
 
-			//Prepare the parameters that will be sent to the database
-			let parameters = 
-			{
-				debug: self.isDebug,
+			let parameters = {
+				debug: self.debugFlag,
 				dostuff: 'RunStoredProcedure',
 				connection: 'calibration',
 				storedProcedure: 'RenameConfiguration',
 				configurationID: configurationID,
-				newName: configurationName
-			}
-
-			//this is for using the transaction log
-			if(self.userName && self.pcName && self.applicationName)
-			{
-				parameters.applicationName = self.applicationName;
-				parameters.username = self.userName;
-				parameters.pcname = self.pcName;
-			}
+				newName: newName,
+				applicationname: self.applicationName,
+				username: self.userName,
+				pcname: self.pcName
+	
+			};
 
 			self.logDebug('renameConfiguration', 'parameters', parameters);
-
+	
 			ProcessDatabaseRequest(parameters, function(data)
 			{
-				self.processConfigurationRename(data);
+				self.configurationRenamed(data, callback);
 			});
-
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('renameConfiguration', err.message, err);
+			return false;
 		}
 	};
 
@@ -394,82 +408,169 @@ function ConfigurationManager(isDebug)
 	 * Function Type: Sync
 	 * 
 	 * @param {string} data - JSON encoded string
-	 * @returns {boolean} returns true if the configuration was renamed successfully
+	 * @param {function} callback - function to be called
+	 * @returns {boolean} was the configuration renamed successfully?
 	 */
-	self.processConfigurationRename = function(data)
+	self.configurationRenamed = function(data, callback)
 	{
 		try
 		{
-			//An empty response from the database means the configuration could not be found in the database
-			if(data === '[]')
-			{
-				throw new Error('Configuration not found in database');
-			}
-
-			//response must be valid JSON
-			//isJson is from sbGlobal
 			if(isJson(data))
 			{
-				//get the configuration information
 				let configInfo = JSON.parse(data);
 				let configID = parseInt(configInfo[0]['ConfigurationID']);
-				let foundIt = false;
 
-				//update the configuration information in local memory
+				//once the database request is processed, update the configuration list with the new name
 				for(let i = 0; i < self.configurations.length; i++)
 				{
 					if(parseInt(self.configurations[i].ConfigurationID) === configID)
 					{
 						self.configurations[i].ConfigurationName = configInfo[0]['ConfigurationName'];
-						foundIt = true;
 						break;
 					}
 				}
-
-				//if the configuration cannot be found, then this is an error
-				if(!foundIt)
-				{
-					throw new Error('Unable to find configuration in local memory');
-				}
-
-				//notify the world about success
+				executeCallback(callback, configInfo[0]);
 				self.emit('configurationRenamed', configInfo[0]);
-				self.logDebug('processConfigurationRename', 'Configuration renamed successfully', configInfo[0]);
-				return true;
+				self.logDebug('configurationRenamed', 'configuration renamed successfully', configInfo[0]);
+			}
+			else
+			{
+				let errorMessage = processDatabaseError(data);
+				if(errorMessage === null)
+				{
+					self.onError('configurationRenamed', 'Unable to process database response: ' + data, new Error());
+					return false;
+				}
+				self.processError(errorMessage.Class, errorMessage.Function, errorMessage.Message, new Error());
+				return false;
+			}
+			return true;
+
+		}
+		catch(err)
+		{
+			self.onError('configurationRenamed', err.message, err);
+			return false;
+		}
+	};
+
+	/**
+	 * Checks if the specified ID exists in the configuration list
+	 * Function Type: Sync
+	 * 
+	 * @param {integer} configurationID - the id of the configuration to check
+	 * @returns {boolean} - does the configuration exist?
+	 */
+	self.checkExistingConfigurationID = function(configurationID)
+	{
+		try
+		{
+			if(isPositiveInteger(configurationID) === false)
+			{
+				self.onError('checkExistingConfigurationID', 'Configuration ID must be a positive integer, ' + configurationID + ' was passed in', new Error());
+				return false;
 			}
 
-			//if data is not valid json then it's an error
-			self.processDatabaseError(data);
+		
+			for(let i = 0; i < self.configurations.length; i++)
+			{
+				if(parseInt(self.configurations[i].ConfigurationID) === parseInt(configurationID))
+				{
+					self.logDebug('checkExistingConfigurationID', 'configuration id already exists in the configuration list', configurationID);
+					return true;
+				}
+			}
+			self.logDebug('checkExistingConfigurationID', 'configuration id does not exist in the configuration list', configurationID);
 			return false;
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('checkExistingConfigurationID', err.message, err);
+			return false;
+		}
+	};
+
+	/**
+	 * Pass through to the setCurrentConfiguration function
+	 * Looks up the configuration ID and passes it to the next function
+	 * 
+	 * @param {integer} systemID - ID of the system
+	 * @param {string} configurationName - must be unique in the configurations list
+	 * @param {funtion} callback - function that will be called when the setting is done
+	 * @returns {boolean} - did the function execute through to the database call. Since the database call is asynchronous, we won't know if it succeeded until leter.
+	 */
+	self.setCurrentConfigurationByName = function(systemID, configurationName, callback)
+	{
+		try
+		{
+			if(isNaN(systemID) || systemID < 1)
+			{
+				self.onError('setCurrentConfigurationByName', 'System ID must be a positive integer, ' + systemID + ' was passed in', new Error());
+				return false;
+			}
+
+			if(typeof configurationName !== 'string')
+			{
+				self.onError('setCurrentConfigurationByName', 'Configuration name must be a string, ' + configurationName + ' was passed in', new Error());
+				return false;
+			}
+
+			if(!systemID || !configurationName)
+			{
+				self.onError('setCurrentConfigurationByName', 'System ID and Configuration Name cannot be blank', new Error());
+				return false;
+			}
+
+			let selectedConfigurations = self.configurations.filter(function(configuration)
+			{
+				return configuration.ConfigurationName.toLowerCase() === configurationName.toLowerCase();
+			});
+
+			if(selectedConfigurations.length === 0)
+			{
+				self.logDebug('setCurrentConfigurationByName', 'Cannot find specified configuration', configurationName);
+				self.onError('setCurrentConfigurationByName', 'Cannot find specified configuration: ' + configurationName, new Error());
+				return false;
+			}
+
+			if(selectedConfigurations.length > 0)
+			{
+				self.logDebug('setCurrentConfigurationByName', 'Found specified configuration', configurationName);
+				return self.setCurrentConfiguration(systemID, selectedConfigurations[0].ConfigurationID, callback);
+			}
+
+			return false;
+		}
+		catch(err)
+		{
+			self.onError('setCurrentConfigurationByName', err.message, err);
+			return false;
 		}
 	};
 
 	/**
 	 * Sets the specified configuration as current
-	 * Test URL:
-	 * http://localhost/sbGlobal/sbDatabaseFunctions.php?debug=true&dostuff=RunStoredProcedure&username=mvorkapich&pcname=1234&connection=calibration&storedProcedure=SetCurrentConfiguration&systemID=35&configurationID=35&applicationname=CalRun
+	 * Test URL: http://localhost/sbGlobal/sbDatabaseFunctions.php?debug=true&dostuff=RunStoredProcedure&username=mvorkapich&pcname=1234&connection=calibration&storedProcedure=SetCurrentConfiguration&systemID=35&configurationID=35&applicationname=CalRun
 	 * Function Type: Async
 	 * 
-	 * @param {integer} systemID - The ID of the calibration system
-	 * @param {integer} configurationID - The ID of the configuration to set as current
+	 * @param {integer} systemID - the ID of the calibration system
+	 * @param {integer} configurationID - the ID of the configuration to set as current
 	 */
-	self.setCurrentConfiguration = function(systemID, configurationID)
+	self.setCurrentConfiguration = function(systemID, configurationID, callback)
 	{
 		try
 		{
 			if(isPositiveInteger(systemID) === false || isPositiveInteger(configurationID) === false)
 			{
-				throw new RangeError('System ID and/or Configuration ID are invalid. System ID = ' + systemID + ', Configuration ID = ' + configurationID);
+				self.onError('setCurrentConfiguration', 'System ID and Configuration ID must both be a positive integer, systemID: ' + systemID + ', configurationID: ' + configurationID + ' were passed in', new Error());
+				return false;
 			}
-
 			if(self.checkExistingConfigurationID(configurationID) === false)
 			{
-				throw new Error('Configuration ID ' + configurationID + ' cannot be found, please use a different configuration id.');
+				self.onError('setCurrentConfiguration', 'Configuration ID ' + configurationID + ' cannot be found, please use a different configuration id', new Error());
+				return false;
 			}
+
 			let parameters = {
 				debug: self.debugFlag,
 				dostuff: 'RunStoredProcedure',
@@ -477,26 +578,23 @@ function ConfigurationManager(isDebug)
 				storedProcedure: 'SetCurrentConfiguration',
 				systemID: systemID,
 				configurationID: configurationID,
+				applicationname: self.applicationName,
+				username: self.userName,
+				pcname: self.pcName
 			};
 
-			//this is for using the transaction log
-			if(self.userName && self.pcName && self.applicationName)
-			{
-				parameters.applicationName = self.applicationName;
-				parameters.username = self.userName;
-				parameters.pcname = self.pcName;
-			}
-			
 			self.logDebug('setCurrentConfiguration', 'parameters', parameters);
 	
 			ProcessDatabaseRequest(parameters, function(data)
 			{
-				self.processSetCurrentConfiguration(data);
+				self.configurationSetAsCurrent(data, callback);
 			});
+			return true;
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('setCurrentConfiguration', err.message, err);
+			return false;
 		}
 	};
 
@@ -507,61 +605,55 @@ function ConfigurationManager(isDebug)
 	 * Function Type: Sync
 	 * 
 	 * @param {string} data - JSON encoded string
+	 * @param {function} callback - function to be called
+	 * @returns {boolean} was the configuration set successfully?
 	 */
-	self.processSetCurrentConfiguration = function(data)
+	self.configurationSetAsCurrent = function(data, callback)
 	{
 		try
 		{
-			//a blank JSON object indicates configuration not in database
-			if(data === '[]')
-			{
-				throw new Error('Configuration not found in database');
-			}
-
-			//must be a valid JSON object
 			if(isJson(data))
 			{
-				//parse the object and set the IDs
 				let configInfo = JSON.parse(data);
 				let configID = parseInt(configInfo[0].ConfigurationID);
 				self.currentConfiguration = configID;
 				self.currentConfigurationName = configInfo[0].ConfigurationName;
-				self.logDebug('processSetCurrentConfiguration', 'set current configuration ID', configID);
+
+				self.logDebug('configurationSetAsCurrent', 'set current configuration ID', configID);
 
 				//once the database is updated, need to update the local list with which one is current
-				let foundIt = false;
 				for(let i = 0; i < self.configurations.length; i++)
 				{
 					self.configurations[i].CurrentConfiguration = 0;
 					if(parseInt(self.configurations[i].ConfigurationID) === configID)
 					{
 						self.configurations[i].CurrentConfiguration = 1;
-						foundIt = true;
 					}
 				}
-				//if the configuration cannot be found, then this is an error
-				if(!foundIt)
-				{
-					throw new Error('Unable to find configuration in local memory');
-				}
 
-				self.logDebug('processSetCurrentConfiguration', 'updated configurations object', self.configurations);
+				self.logDebug('configurationSetAsCurrent', 'updated configurations object', self.configurations);
 
+				executeCallback(callback, configInfo[0]);
 				self.emit('configurationSetAsCurrent', configInfo[0]);
-				
-				return true;
 			}
-
-			//if the code makes it here, then it was not a valid JSON object
-			//this is an error
-			self.processDatabaseError(data);
-			return false;
-
+			else
+			{
+				let errorMessage = processDatabaseError(data);
+				if(errorMessage === null)
+				{
+					self.onError('configurationSetAsCurrent', 'Unable to process database response: ' + data, new Error());
+					return false;
+				}
+				self.processError(errorMessage.Class, errorMessage.Function, errorMessage.Message, new Error());
+				return false;
+			}
+			return true;
 
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('configurationSetAsCurrent', err.message, err);
+			return false;
 		}
 	};
 
@@ -569,40 +661,33 @@ function ConfigurationManager(isDebug)
 	 * Creates a duplicate of a specified configuration so it can be used as a starting point for a new configuration
 	 * Function Type: Async
 	 * 
-	 * @param {integer} systemID - the id of the system
+	 * @param {integer} sysemID - the id of the system
 	 * @param {integer} configurationID - the id of the configuration to be used
-	 * @param {string} configurationName - the new name of the configuration
+	 * @param {string} newName - the new name of the configuration
+	 * @param {function} callback - (optional) the function to be run when the copy is complete
+	 * 
 	 */
-	self.copyConfiguration = function(systemID, configurationID, configurationName)
+	self.copyConfiguration = function(systemID, configurationID, newName, callback)
 	{
 		try
 		{
-			//system ID and configuration ID must be positive integers
-			//isPositiveInteger is from sbGlobal
 			if(isPositiveInteger(systemID) === false || isPositiveInteger(configurationID) === false)
 			{
-				throw new RangeError('System ID and/or Configuration ID are invalid. System ID = ' + systemID + ', Configuration ID = ' + configurationID);
+				self.onError('copyConfiguration', 'System ID and Configuration ID must both be a positive integer, systemID: ' + systemID + ', configurationID: ' + configurationID + ' were passed in', new Error());
+				return false;
+			}
+			if(!newName)
+			{
+				self.onError('copyConfiguration', 'Configuration name cannot be blank', new Error());
+				return false;
 			}
 
-			//configuration name can't be blank
-			if(!configurationName)
+			if(self.checkExistingConfiguration(newName) === true)
 			{
-				throw new RangeError('Configuration Name cannot be blank');
+				self.onError('copyConfiguration', 'Configuration already exists with the name ' + newName + ', please select a different name.', new Error());
+				return false;
 			}
 
-			//configuration name cannot already exist
-			if(self.checkExistingConfiguration(configurationName) === true)
-			{
-				throw new Error('Configuration Name already in use. ')
-			}
-
-			//configurationID must be in the list of configurations
-			if(self.checkExistingConfigurationID(configurationID) === false)
-			{
-				throw new Error('Configuration ID ' + configurationID + ' cannot be found, please use a different configuration id.');
-			}
-			
-			//build the database parameters
 			let parameters = {
 				debug: self.debugFlag,
 				dostuff: 'RunStoredProcedure',
@@ -610,61 +695,55 @@ function ConfigurationManager(isDebug)
 				storedProcedure: 'CopyConfiguration',
 				systemID: systemID,
 				configurationID: configurationID,
-				newName: configurationName,
+				newName: newName,
+				applicationname: self.applicationName,
+				username: self.userName,
+				pcname: self.pcName
 			};
 
-			//this is for using the transaction log
-			if(self.userName && self.pcName && self.applicationName)
-			{
-				parameters.applicationName = self.applicationName;
-				parameters.username = self.userName;
-				parameters.pcname = self.pcName;
-			}
-
 			self.logDebug('copyConfiguration', 'parameters', parameters);
-		
-			//call to the database
+	
 			ProcessDatabaseRequest(parameters, function(data)
 			{
-				//when the database responds, process the response
-				self.processConfigurationCopy(data);
+				self.configurationCopied(data, callback);
 			});
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('copyConfiguration', err.message, err);
+			return false;
 		}
+
 	};
 
 	/**
-	 * processes the results of copying a configuration
-	 * Uses the current settings that are already in memory
+	 * When the selected configuration is copied
+	 * Updates the configuration list
+	 * Sets the current configuration ID in the object
+	 * Updates the settings object with the new configuration ID
+	 * Function Type: Sync
+	 * 
+	 * @param {string} data - JSON encoded string
+	 * @param {function} callback - function to be called
+	 * @returns {boolean} was the configuration copied successfully?
 	 */
-	self.processConfigurationCopy = function(data)
+	self.configurationCopied = function(data, callback)
 	{
 		try
 		{
-			//a blank JSON object indicates configuration not in database
-			if(data === '[]')
-			{
-				throw new Error('Configuration not found in database');
-			}
-
-			//must be a valid JSON object
 			if(isJson(data))
 			{
-				//parse the object and set the IDs
 				let response = JSON.parse(data);
-				let systemID = parseInt(response[0].CalibrationSystemID);
-				let configurationID = parseInt(response[0].ConfigurationID);
+				let systemID = response[0].CalibrationSystemID;
+				let configurationID = response[0].ConfigurationID;
 				let configurationName = response[0].ConfigurationName;
 				let notes = response[0].Notes;
 
-				self.logDebug('processConfigurationCopy', 'configuration copied', response);
-
+				//once the configuration is copied in the database, it needs to be added to the
+				//local objects
 				self.addConfiguration(systemID, configurationID, configurationName, notes);
 
-				self.logDebug('processConfigurationCopy', 'configuration added to local memory', configurationID);
+				self.logDebug('configurationCopied', 'configuration added', response);
 
 				for(let i = 0; i < self.configurationSettings.length; i++)
 				{
@@ -675,25 +754,32 @@ function ConfigurationManager(isDebug)
 					}
 				}
 
-				self.logDebug('processConfigurationCopy', 'configuration settings updated with new id', self.configurationSettings);
-				self.currentConfiguration = configurationID;
-				self.currentConfigurationName = configurationName;
-				
-				self.logDebug('processConfigurationCopy', 'configuration set to current', configurationID);
+				self.logDebug('configurationCopied', 'configuration settings updated with new id', self.configurationSettings);
 
+				self.currentConfiguration = parseInt(configurationID);
+
+				self.logDebug('configurationCopied', 'configuration set to current', configurationID);
+				executeCallback(callback, response[0]);
 				self.emit('configurationCopied', response[0]);
-				
-				return true;
 			}
+			else
+			{
+				let errorMessage = processDatabaseError(data);
+				if(errorMessage === null)
+				{
+					self.onError('configurationCopied', 'Unable to process database response: ' + data, new Error());
+					return false;
+				}
+				self.processError(errorMessage.Class, errorMessage.Function, errorMessage.Message);
+				return false;
+			}
+			return true;
 
-			//if the code makes it here, then it was not a valid JSON object
-			//this is an error
-			self.processDatabaseError(data);
-			return false;
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('configurationCopied', err.message, err);
+			return false;
 		}
 	};
 
@@ -705,51 +791,44 @@ function ConfigurationManager(isDebug)
 	 * 
 	 * @param {integer} configurationID - the id of the configuration being deleted
 	 */
-	self.deleteConfiguration = function(configurationID)
+	self.deleteConfiguration = function(configurationID, callback)
 	{
 		try
 		{
-			//configuration ID must be a positive integer
-			//isPositiveInteger is from sbGlobal
 			if(isPositiveInteger(configurationID) === false)
 			{
-				throw new RangeError('Configuration ID is invalid. Configuration ID = ' + configurationID);
+				self.onError('deleteConfiguration', 'Configuration ID must be a positive integer, ' + configurationID + ' was passed in', new Error());
+				return false;
 			}
 
-			//configuration ID must be in local memory
 			if(self.checkExistingConfigurationID(configurationID) === false)
 			{
-				throw new Error('Configuration ID ' + configurationID + ' cannot be found, please use a different configuration id.');
+				self.onError('deleteConfiguration', 'Configuration ID ' + configurationID + ' cannot be found, please use a different configuration id', new Error());
+				return false;
 			}
 
-			//build the parameters for the database
 			let parameters = {
 				debug: self.debugFlag,
 				dostuff: 'RunStoredProcedure',
 				connection: 'calibration',
 				storedProcedure: 'DeleteConfiguration',
 				configurationID: configurationID,
+				applicationname: self.applicationName,
+				username: self.userName,
+				pcname: self.pcName
 			};
-
-			//this is for using the transaction log
-			if(self.userName && self.pcName && self.applicationName)
-			{
-				parameters.applicationName = self.applicationName;
-				parameters.username = self.userName;
-				parameters.pcname = self.pcName;
-			}
 
 			self.logDebug('deleteConfiguration', 'parameters', parameters);
 	
-			//call the database
 			ProcessDatabaseRequest(parameters, function(data)
 			{
-				self.processConfigurationDeleted(data);
+				self.configurationDeleted(data, callback);
 			});
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('deleteConfiguration', err.message, err);
+			return false;
 		}
 
 	};
@@ -762,96 +841,94 @@ function ConfigurationManager(isDebug)
 	 * Function Type: Sync
 	 * 
 	 * @param {string} data - JSON encoded string
+	 * @param {function} callback - function to be called
+	 * @returns {boolean} was the configuration deleted successfully?
 	 */
-	self.processConfigurationDeleted = function(data)
+	self.configurationDeleted = function(data, callback)
 	{
 		try
 		{
-			//a blank JSON object indicates configuration not in database
-			if(data === '[]')
-			{
-				throw new Error('Configuration not found in database');
-			}
-
-			//must be a valid JSON object
 			if(isJson(data))
 			{
 				let response = JSON.parse(data);
-				self.logDebug('processConfigurationDeleted', 'configuration deleted successfully', response);
+				self.logDebug('configurationDeleted', 'configuration deleted successfully', response);
 
-				//remove the configuration from local memory
+				//once the configuration has been deleted, it needs to be removed from the list
 				self.configurations = self.configurations.filter(function(configuration)
 				{
 					return parseInt(configuration.ConfigurationID) !== parseInt(response[0].ConfigurationID);
 				});
 
-				self.logDebug('processConfigurationDeleted', 'configuration removed from local memory', self.configurations);
+				self.logDebug('configurationDeleted', 'configuration removed from configuration list', self.configurations);
 
-				//clear all the settings
 				self.configurationSettings = [];
 				self.currentConfiguration = -1;
 				self.currentConfigurationName = '';
 
-				self.logDebug('processConfigurationDeleted', 'configuration settings cleared');
-
+				self.logDebug('configurationDeleted', 'configuration settings cleared');
+				executeCallback(callback, response[0]);
 				self.emit('configurationDeleted', response[0]);
-				return true;
 			}
+			else
+			{
+				let errorMessage = processDatabaseError(data);
+				if(errorMessage === null)
+				{
+					self.onError('configurationDeleted', 'Unable to process database response: ' + data, new Error());
+					return false;
+				}
+				self.processError(errorMessage.Class, errorMessage.Function, errorMessage.Message, new Error());
+				return false;
+			}
+			return true;
 
-			//if the code makes it here, then it was not a valid JSON object
-			//this is an error
-			self.processDatabaseError(data);
-			return false;
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('configurationDeleted', err.message, err);
+			return false;
 		}
-
 	};
 
 	/**
 	 * Retrieves all the settings for the selected configuration
-	 * Test URL: http://localhost/sbGlobal/sbDatabaseFunctions.php?debug=true&dostuff=getCalibrationConfigurationV2&configurationID=108
+	 * Test URL: http://localhost/sbGlobal/sbDatabaseFunctions.php?debug=true&dostuff=RunStoredProcedure&username=mvorkapich&pcname=1234&applicationname=CalRun&connection=calibration&storedProcedure=GetConfigurationSettings&systemID=35&configurationID=35
 	 * Function Type: Async
 	 * 
+	 * @param {integer} systemID - id of the system, used to get calibratable device information
 	 * @param {integer} configurationID - the configuration being recalled
+	 * @param {function} callback - (optional) function to be called when the settings have been retrieved
 	 */
-	self.retrieveConfigurationSettings = function(configurationID)
+	self.getConfigurationSettings = function(systemID, configurationID, callback)
 	{
 		try
 		{
-			//isPositiveInteger is in sbGlobal
-			//value must be a positive integer
-			if(isPositiveInteger(configurationID) === false)
+			if(isPositiveInteger(systemID) === false || isPositiveInteger(configurationID) === false)
 			{
-				throw new RangeError('Configuration ID is invalid. Configuration ID = ' + configurationID);
+				self.onError('getConfigurationSettings', 'System ID and Configuration ID must both be a positive integer, systemID: ' + systemID + ', configurationID: ' + configurationID + ' were passed in', new Error());
+				return false;
 			}
 
-			//configuration ID must be in local memory
-			if(self.checkExistingConfigurationID(configurationID) === false)
-			{
-				throw new Error('Configuration ID ' + configurationID + ' cannot be found, please use a different configuration id.');
-			}
-
-			//build parameters for the database
 			let parameters = {
 				debug: self.debugFlag,
-				dostuff: 'getCalibrationConfigurationV2',
+				dostuff: 'RunStoredProcedure',
+				connection: 'calibration',
+				storedProcedure: 'GetConfigurationSettings',
+				systemID: systemID,
 				configurationID: configurationID
 			};
-
-			self.logDebug('retrieveConfigurationSettings', 'parameters', parameters);
+			//console.warn(parameters);
+			self.logDebug('getConfigurationSettings', 'parameters', parameters);
 	
-			//call the database
 			ProcessDatabaseRequest(parameters, function(data)
 			{
-				self.processConfigurationSettings(data);
+				self.settingsRetrieved(data, callback);
 			});
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('getConfigurationSettings', err.message, err);
+			return false;
 		}
 	};
 
@@ -861,215 +938,238 @@ function ConfigurationManager(isDebug)
 	 * Function Type: Sync
 	 * 
 	 * @param {string} data - JSON encoded string
+	 * @param {function} callback - function to be called
+	 * @returns {boolean} were the settings retrieved successfully?
 	 */
-	self.processConfigurationSettings = function(data)
+	self.settingsRetrieved = function(data, callback)
 	{
 		try
 		{
-			//a blank JSON object indicates configuration not in database
-			if(data === '[]')
-			{
-				throw new Error('Configuration not found in database');
-			}
-
-			//must be a valid JSON object
 			if(isJson(data))
 			{
-				//stuff the settings into local memory for later use
+				//when the configuration settings are retrieved
+				//put them in the settings list
 				self.configurationSettings = JSON.parse(data);
 
-				self.logDebug('processConfigurationSettings', 'settings retrieved successfully', data);
-
+				self.logDebug('settingsRetrieved', 'settings retrieved successfully', data);
+				//console.warn(self.configurationSettings);
+				executeCallback(callback, self.configurationSettings);
 				self.emit('settingsRetrieved', self.configurationSettings);
-				return true;
 			}
+			else
+			{
+				let errorMessage = processDatabaseError(data);
+				if(errorMessage === null)
+				{
+					self.onError('settingsRetrieved', 'Unable to process database response: ' + data, new Error());
+					return false;
+				}
+				self.processError(errorMessage.Class, errorMessage.Function, errorMessage.Message, new Error());
+				return false;
+			}
+			return true;
 
-			//if the code makes it here, then it was not a valid JSON object
-			//this is an error
-			self.processDatabaseError(data);
+		}
+		catch(err)
+		{
+			self.onError('settingsRetrieved', err.message, err);
 			return false;
 		}
-		catch(err)
-		{
-			self.onError(err);
-		}
 	};
 
 	/**
-	 * Can get any settings by area and, if desired, narrowed down to item name
-	 * Case insensitive
+	 * Returns a subset of the settings that contains only the area of interest
 	 * Function Type: Sync
 	 * 
-	 * @param {string} configurationArea - must match the configuration area in the object
-	 * @param {string} itemName (optional) - if you want more specific results, include the item name
-	 * @return {array} - an array that contains the results. If no results are found, the array will be empty
+	 * @param {string} configurationArea - must be an area that's in the settings list.
+	 * @returns {array} - array containing the desired configuration area. If the area doesn't exist, the array will be empty
 	 */
-	self.getSettings = function(configurationArea, itemName)
+	self.getConfigurationByArea = function(configurationArea)
 	{
 		try
 		{
-			//MUST have configuration area
 			if(!configurationArea)
 			{
-				throw new RangeError('Configuration Area is blank. You must provide Configuration Area in order to retrieve settings.');
+				self.onError('getConfigurationByArea', 'Configuration area name cannot be blank', new Error());
+				return false;
 			}
 
-			if(configurationArea && itemName)
+			//simple filter function
+			let configArea = self.configurationSettings.filter(function(setting)
 			{
-				//do thing
-			}
+				return setting.ConfigurationArea.toLowerCase() === configurationArea.toLowerCase();
+			});
 
-			if(configurationArea && !itemName)
-			{
-				return self.getTopLevelNode(configurationArea);
-			}
+			self.logDebug('getConfigurationByArea', 'configuration area filtered', configArea);
 
-			self.logDebug('getSettings', 'Settings filtered', settings);
-			
-			return settings;
-
+			return configArea;
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('getConfigurationByArea', err.message, err);
+			return false;
 		}
 	};
 
 	/**
-	 * Get the child level nodes for the configuration area based on node name
-	 * See configurationManager.test.js for an example
-	 * @param {string} configurationArea - the name of the configuration area
-	 * @param {string} nodeName - the name of the child nodes to retrieve
-	 * @returns {Array} - Array of nodes 
+	 * Intended for removing all the settings from one area before adding back in a bunch of new ones
+	 * Function Type: Sync
+	 * 
+	 * @param {string} configurationArea - the area to clear out
+	 * @returns {boolean} - did the clearing work?
 	 */
-	self.getChildNodes = function(configurationArea, nodeName)
+	self.clearSettings = function(configurationArea)
 	{
 		try
 		{
-			//MUST have configuration area
 			if(!configurationArea)
 			{
-				throw new RangeError('Configuration Area is blank. You must provide Configuration Area in order to retrieve settings.');
-			}
-			//MUST have nodeName
-			if(!nodeName)
-			{
-				throw new RangeError('Node Name is blank. You must provide NodeName in order to retrieve settings.');
+				self.onError('clearSettings', 'Configuration area cannot be blank', new Error());
+				return false;
 			}
 
-			//first get the area
-			let settings = self.getTopLevelNode(configurationArea);
-
-			if(settings === null)
+			//Remove all the settings for the one configuration area
+			for(let i = self.configurationSettings.length - 1; i > -1; i--)
 			{
-				return [];
+				if(self.configurationSettings[i].ConfigurationArea === configurationArea)
+				{
+					self.configurationSettings.splice(i, 1);
+				}
 			}
 
-			//then get the nodes
-			let childNodes = settings.childNodes.filter(function(childNode)
-			{
-				return childNode.displayValue.toLowerCase() === nodeName.toLowerCase();
-			});
-
-			return childNodes;
+			self.logDebug('clearSettings', 'settings cleared for area ' + configurationArea, self.configurationSettings);
+			return true;
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('clearSettings', err.message, err);
+			return false;
 		}
-		return [];
-	}
+	};
 
 	/**
-	 * Retrieve the top level node from the settings
-	 * There should only be one of each top level area
-	 * See test file configurationManager.test.js for an example
+	 * For adding settings to the settings object. Does not allow duplicate settings
+	 * Example setting object : {ConfigurationID:35,ConfigurationName:'default',ConfigurationArea:'dataPoint',OptionIndex:0,ParameterIndex:0,ItemName:'Device Type',ItemValue:'System'}
+	 * Must be a valid array of setting objects
+	 * Function Type: Sync
 	 * 
-	 * @param {string} configurationArea - Name of the configuration area to be retrieved
-	 * @returns {object} - Top level node from the settings
+	 * @param {object} settings - Array of setting objects
+	 * @returns {boolean} - did the adding work?
 	 */
-	self.getTopLevelNode = function(configurationArea)
+	self.addSettings = function(settings)
 	{
 		try
 		{
-			//MUST have configuration area
-			if(!configurationArea)
+			if(self.validateSettings(settings) === false)
 			{
-				throw new RangeError('Configuration Area is blank. You must provide Configuration Area in order to retrieve settings.');
+				return false;
 			}
 
-			//filter the settings
-			let settings = self.configurationSettings.filter(function(setting)
-			{
-				//must use configuration area
-				return setting.configurationArea.toLowerCase() === configurationArea.toLowerCase();
-			});
+			self.logDebug('addSettings', 'settings valid', settings);
 
-			self.logDebug('getTopLevelNode', 'Settings filtered', settings);
-			
-			if(settings.length > 0)
+			//make sure the setting doesn't already exist
+			for(let i = 0; i < settings.length; i++)
 			{
-				return settings[0];
+				for(let j = 0; j < self.configurationSettings.length; j++)
+				{
+					if(settings[i].ConfigurationArea === self.configurationSettings[j].ConfigurationArea &&
+						parseInt(settings[i].OptionIndex) === parseInt(self.configurationSettings[j].OptionIndex) &&
+						parseInt(settings[i].ParameterIndex) === parseInt(self.configurationSettings[j].ParameterIndex) &&
+						settings[i].ItemName.toLowerCase() === self.configurationSettings[j].ItemName.toLowerCase() )
+					{
+						self.onError('addSettings', 'Setting is already present: ' + JSON.stringify(settings[i]), new Error());
+						return false;
+					}
+				}
 			}
+
+			self.logDebug('addSettings', 'settings do not already exist', settings);
+
+			//add the new setting
+			for(let i = 0; i < settings.length; i++)
+			{
+				settings[i].ConfigurationID = self.currentConfiguration;
+				settings[i].ConfigurationName = self.currentConfigurationName;
+				self.configurationSettings.push(settings[i]);
+			}
+
+			self.logDebug('addSettings', 'settings added', settings);
+
+			self.emit('settingsAdded', settings);
+			return true;
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('addSettings', err.message, err);
+			return false;
 		}
-		return null;
-	}
+	};
+
+	/**
+	 * For validating an array of settings
+	 * Function Type: Sync
+	 * 
+	 * @param {array} settings - Example
+	 * @returns {boolean} - are the settings valid?
+	 */
+	self.validateSettings = function(settings)
+	{
+		try
+		{
+			if(Array.isArray(settings) === false || settings.length === 0)
+			{
+				self.onError('validateSettings', 'No settings passed in', new Error());
+				return false;
+			}
+
+			for(let i = 0; i < settings.length; i++)
+			{
+				if(self.validateSetting(settings[i]) === false)
+				{
+					return false;
+				}
+			}
+
+			self.logDebug('validateSettings', 'all settings are valid', settings);
+	
+			return true;
+		}
+		catch(err)
+		{
+			self.onError('validateSettings', err.message, err);
+			return false;
+		}
+	};
 
 	/**
 	 * For validating one setting value. Makes sure it has all the required keys
 	 * Function Type: Sync
 	 * 
-	 * @param {object} setting - Example:  
-	 * 	{
-	 * 		configurationNodeID:1,
-	 * 		displayIndex:2,
-	 * 		value:'Not Set',
-	 * 		itemName: 'SN',
-	 * 		nodeSubIndex:1
-	 * 	}
-	 * 
+	 * @param {object} setting - Example: {ConfigurationArea:'dataPoint', OptionIndex:0, ParameterIndex:0, ItemName:'Device Type', ItemValue:'System'}
 	 * @returns {boolean} - Is this one setting valid?
 	 */
 	self.validateSetting = function(setting)
 	{
 		try
 		{
-			//must pass in a setting object
 			if (!setting)
 			{
-				throw new Error('No setting object passed in');
+				self.onError('validateSetting', 'No setting object passed in', new Error());
+				return false;
 			}
 
 			//make sure all the required keys are present
 			//if not, that's a problem
-			let expectedKeys = [
-				'configurationNodeID',
-				'displayIndex',
-				'value',
-				'nodeSubIndex',
-				'itemName'
-		 	];
+			let expectedKeys = ['ConfigurationArea', 'OptionIndex', 'ParameterIndex', 'ItemName', 'ItemValue'];
 			let objectKeys = Object.keys(setting);
 			for(let i = 0; i < expectedKeys.length; i++)
 			{
-				//lets us know there was a match
-				let foundIt = false;
-				for(let j = 0; j < objectKeys.length; j++)
+				if(objectKeys.indexOf(expectedKeys[i]) === -1)
 				{
-					//case insensitive check
-					if(expectedKeys[i].toLowerCase() === objectKeys[j].toLowerCase())
-					{
-						foundIt = true;
-					}
+					self.onError('validateSettings', 'Unable to locate setting value ' + expectedKeys[i] + ' in setting ' + JSON.stringify(setting), new Error());
+					self.logDebug('validateSetting', 'setting is not valid', setting);
+					return false;
 				}
-				if(!foundIt)
-				{
-					throw new Error('Unable to locate setting value ' + expectedKeys[i] + ' in setting ' + JSON.stringify(setting));
-				}	
 			}
 
 			self.logDebug('validateSetting', 'setting is valid', setting);
@@ -1077,77 +1177,143 @@ function ConfigurationManager(isDebug)
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('validateSetting', err.message, err);
 			return false;
 		}
 	};
 
 	/**
 	 * For updating one individual setting
-	 * The setting must be in the list
-	 * You should never get here if the setting isn't in the list
-	 * If it isn't, then nothing will happen and no error will occur
-	 * This is a recursive function that seeks out a setting
+	 * If the setting isn't in the list, then add it
 	 * Function Type: Sync
 	 * 
-	 * @param {object} setting - a valid setting object. 
-	 * {
-	 * 		configurationNodeID:1, 
-	 * 		displayIndex:2,
-	 * 		itemName:'SN', 
-	 * 		value:'Not Set',
-	 * 		nodeSubIndex:1
-	 * }
+	 * @param {object} setting - a valid setting object. See validateSetting for an example object
 	 * @returns {boolean} - was the setting updated successfully?
 	 */
-	self.updateSetting = function(setting, nodes = self.configurationSettings)
+	self.updateSetting = function(setting)
 	{
 		try
 		{
-			//make sure the setting is a valid setting object
 			if(self.validateSetting(setting) === false)
 			{
 				return false;
 			}
+			let foundIt = false;
 
-			//iterate through the nodes looking for the one we want
-			for(let i = 0; i < nodes.length; i++)
+			//try to update the setting
+			for(let i = 0; i < self.configurationSettings.length; i++)
 			{
-				//if this is the one we want, then try to update it
-				if(parseInt(nodes[i].configurationNodeID) === parseInt(setting.configurationNodeID)
-					&& parseInt(nodes[i].displayIndex) === parseInt(setting.displayIndex)
-					&& parseInt(nodes[i].nodeSubIndex) === parseInt(setting.nodeSubIndex))
+				if(self.configurationSettings[i].ConfigurationArea.toLowerCase() === setting.ConfigurationArea.toLowerCase()
+					&& parseInt(self.configurationSettings[i].OptionIndex) === parseInt(setting.OptionIndex)
+					&& parseInt(self.configurationSettings[i].ParameterIndex) === parseInt(setting.ParameterIndex)
+					&& self.configurationSettings[i].ItemName.toLowerCase() === setting.ItemName.toLowerCase())
 				{
-					//find the correct control and see if we can update it
-					for(let j = 0; j < nodes[i].controls.length; j++)
-					{
-						if(nodes[i].controls[j].label.toLowerCase() === setting.itemName.toLowerCase())
-						{
-							//change the value if it is found
-							nodes[i].controls[j].value = setting.value;
-							return true;
-						}
-					}
-				}
-				//if this node has child nodes, then check those ones also
-				else if(nodes[i].childNodes.length > 0)
-				{
-					//by checking the result of updateSetting, we can avoid iterating through more
-					//nodes if we found the correct one. Just stop there
-					if(self.updateSetting(setting, nodes[i].childNodes) === true)
-					{
-						return true;
-					}
+					self.configurationSettings[i].ItemValue = setting.ItemValue;
+					foundIt = true;
+					self.logDebug('updateSetting', 'setting was found and updated', setting);
 				}
 			}
+
+	
+			//if the setting doesn't exist, add it
+			if(!foundIt)
+			{
+				setting.ConfigurationID = self.currentConfiguration;
+				setting.ConfigurationName = self.currentConfigurationName;
+				self.configurationSettings.push(setting);
+				self.logDebug('updateSetting', 'setting was not found and was added', setting);
+			}
+
+			self.emit('settingUpdated', setting);
+			return true;
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('updateSetting', err.message, err);
+			return false;
 		}
-		return false;
 	};
 
+		/**
+	 * Gets a list of configurations to display to user under tabbed option page
+	 * Test URL: http://localhost/sbGlobal/sbDatabaseFunctions.php?debug=true&dostuff=RunStoredProcedure&username=mvorkapich&pcname=1234&applicationname=CalRun&connection=calibration&storedProcedure=getConfigurationAreas
+	 * Function Type: Async
+	 * 
+	 * @param {integer} systemID - The ID of the system to ignore (current system)
+	 * @param {function} callback - function to be called when this is done
+	 */
+		 self.getConfigurationAreas = function(callback)
+		 {
+			 try
+			 {
+	 
+				 let parameters = {
+					 debug: self.debugFlag,
+					 dostuff: 'RunStoredProcedure',
+					 connection: 'calibration',
+					 storedProcedure: 'GetConfigurationAreas'
+				 };
+	 
+				 self.logDebug('getExternalConfigurations', 'parameters', parameters);
+	 
+				 ProcessDatabaseRequest(parameters, function(data)
+				 {
+					 self.configurationAreasRetrieved(data, callback);
+				 });
+			 }
+			 catch(err)
+			 {
+				 self.onError('getExternalConfigurations', err.message, new Error());
+				 return false;
+			 }
+		 };
+
+		 	/**
+	 * When the selected configuration settings have been retrieved
+	 * Updates the configuration settings object
+	 * Function Type: Sync
+	 * 
+	 * @param {string} data - JSON encoded string
+	 * @param {function} callback - function to be called
+	 * @returns {boolean} were the settings retrieved successfully?
+	 */
+	self.configurationAreasRetrieved = function(data, callback)
+	{
+		try
+		{
+			if(isJson(data))
+			{
+				//when the configuration settings are retrieved
+				//put them in the settings list
+				self.configurationTabs = JSON.parse(data);
+
+				self.logDebug('tab data retrieved', 'configuration areas retrieved successfully', data);
+				executeCallback(callback, self.configurationAreasRetrieved);
+				self.emit('configurationAreas', self.configurationAreasRetrieved);
+
+				//TODO: remove this line
+				//console.warn(self.configurationTabs);
+			}
+			else
+			{
+				let errorMessage = processDatabaseError(data);
+				if(errorMessage === null)
+				{
+					self.onError('configurationAreasRetrieved', 'Unable to process database response: ' + data, new Error());
+					return false;
+				}
+				self.processError(errorMessage.Class, errorMessage.Function, errorMessage.Message, new Error());
+				return false;
+			}
+			return true;
+
+		}
+		catch(err)
+		{
+			self.onError('configurationAreasRetrieved', err.message, err);
+			return false;
+		}
+	};
 
 	/**
 	 * Gets a list of configurations from other calibration systems so they can be imported into this one
@@ -1155,16 +1321,16 @@ function ConfigurationManager(isDebug)
 	 * Function Type: Async
 	 * 
 	 * @param {integer} systemID - The ID of the system to ignore (current system)
+	 * @param {function} callback - function to be called when this is done
 	 */
-	self.retrieveExternalConfigurations = function(systemID)
+	self.getExternalConfigurations = function(systemID, callback)
 	{
 		try
 		{
-			//isPositiveInteger is in sbGlobal
-			//value must be a positive integer
 			if(isPositiveInteger(systemID) === false)
 			{
-				throw new RangeError('System ID is invalid. System ID = ' + systemID);
+				self.onError('getExternalConfigurations', 'System ID must be a positive integer, received ' + systemID, new Error());
+				return false;
 			}
 
 			let parameters = {
@@ -1175,16 +1341,17 @@ function ConfigurationManager(isDebug)
 				systemID: systemID
 			};
 
-			self.logDebug('retrieveExternalConfigurations', 'parameters', parameters);
+			self.logDebug('getExternalConfigurations', 'parameters', parameters);
 
 			ProcessDatabaseRequest(parameters, function(data)
 			{
-				self.processExternalConfigurations(data);
+				self.externalConfigurationsRetrieved(data, callback);
 			});
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('getExternalConfigurations', err.message, new Error());
+			return false;
 		}
 	};
 
@@ -1193,295 +1360,265 @@ function ConfigurationManager(isDebug)
 	 * Simply notifies the world that they are here
 	 * 
 	 * @param {string} data - JSON encoded string
+	 * @param {function} callback - function to be called
+	 * @returns {boolean} were the configurations retrieved successfully?
 	 */
-	self.processExternalConfigurations = function(data)
-	{
+	 self.externalConfigurationsRetrieved = function(data, callback)
+	 {
 		try
 		{
-			//An empty response from the database means the configuration could not be found in the database
-			if(data === '[]')
-			{
-				throw new Error('No configurations found in database');
-			}
-
-			//response must be valid JSON
-			//isJson is from sbGlobal
 			if(isJson(data))
 			{
 				let externalConfigurations = JSON.parse(data);
-				self.logDebug('externalConfigurationsRetrieved', 'Configurations retrieved successfully', data);
+				self.logDebug('exteranlConfigurationsRetrieved', 'Configurations retrieved successfully', data);
 
+				executeCallback(callback, externalConfigurations);
 				self.emit('externalConfigurationsRetrieved', externalConfigurations);
-				return true;
 			}
-			//if data is not valid json then it's an error
-			self.processDatabaseError(data);
-			return false;
-
-		}
-		catch(err)
-		{
-			self.onError(err);
-		}
-	};
-
-	self.processDatabaseError = function(data)
-	{
-		try
-		{
-			//if this code is reached, then the return value from the database was not a JSON object
-			//it is probably an error message coming from the database
-			let errorMessage = processDatabaseError(data);
-
-			//if it's not an error message, then we don't know what it is and that's a problem
-			if(errorMessage === null)
+			else
 			{
-				throw new ReferenceError('Unable to process database response');
-			}
-
-			//if it is a database error, then process it
-			self.onError(errorMessage);
-
-		}
-		catch(err)
-		{
-			self.onError(err);
-		}
-
-	};
-
-	self.onError = function(err)
-	{
-		self.emit('error', err);
-	};
-
-	self.logDebug = function()
-	{
-
-	};
-
-	/**
-	 * Looks in the list of configurations and determines if the specified one exists
-	 * Function Type: sync
-	 * 
-	 * @param {string} configurationName - the name of the configuration. Names must be unique and cannot be blank
-	 * @returns {boolean} - does the configuration exist?
-	 */
-	self.checkExistingConfiguration = function(configurationName)
-	{
-		try
-		{
-			//configuration name cannot be blank
-			if(!configurationName)
-			{
-				throw new Error('Configuration name cannot be blank.');
-			}
-
-			//find any configuration that has the same name. This is case insensitive.
-			let foundConfigurations = self.configurations.filter(function(configuration)
-			{
-				return configuration.ConfigurationName.toLowerCase() === configurationName.toLowerCase();
-			});
-
-			//if any configurations are found, this is true
-			self.logDebug('checkExistingConfiguration', 'found configuration: ' + (foundConfigurations.length > 0));
-			return foundConfigurations.length > 0;
-		}
-		catch(err)
-		{
-			self.onError(err);
-		}
-	};
-
-	/**
-	 * Checks if the specified ID exists in the configuration list in local memory
-	 * Function Type: Sync
-	 * 
-	 * @param {integer} configurationID - the ID of the configuration to check
-	 * @returns {boolean} - returns true if the configuration exists
-	 */
-	self.checkExistingConfigurationID = function(configurationID)
-	{
-		try
-		{
-			//check to see that ID passed in is a positive integer
-			//this function exists in sbGlobal
-			if(isPositiveInteger(configurationID) === false)
-			{
-				throw new RangeError('Configuration ID is invalid. Configuration ID = ' + configurationID);
-			}
-
-			//iterate through local memory to find the ID
-			for(let i = 0; i < self.configurations.length ; i++)
-			{
-				if(parseInt(self.configurations[i].ConfigurationID) === parseInt(configurationID))
+				let errorMessage = processDatabaseError(data);
+				if(errorMessage === null)
 				{
-					self.logDebug('checkExistingConfigurationID', 'configuration id already exists in the configuration list', configurationID);
-					return true;
+					self.onError('externalConfigurationsRetrieved', 'Unable to process database response: ' + data, new Error());
+					return false;
 				}
+				self.processError(errorMessage.Class, errorMessage.Function, errorMessage.Message, new Error());
+				return false;
 			}
-
-			//if the program gets to this point, then the configuration ID is not in memory
-			self.logDebug('checkExistingConfigurationID', 'configuration id does not exist in the configuration list', configurationID);
-			return false;
+			return true;
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('externalConfigurationsRetrieved', err.message, err);
+			return false;
 		}
-	};
+	 };
 
 	/**
-	 * Save the settings to the database
-	 * The settings should already be stored in this object
+	 * Saves the configuration settings. but only the ones in the configuration area specified
+	 * Test URL: http://localhost/sbGlobal/sbDatabaseFunctions.php?debug=true&dostuff=SaveCalibrationSystemSettings&values=[{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%220%22,%22ParameterIndex%22:%220%22,%22ItemName%22:%22Device%20Type%22,%22ItemValue%22:%22System%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%220%22,%22ParameterIndex%22:%220%22,%22ItemName%22:%22Model%22,%22ItemValue%22:%22SparkFun%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%220%22,%22ParameterIndex%22:%220%22,%22ItemName%22:%22SN%22,%22ItemValue%22:%228888%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%220%22,%22ParameterIndex%22:%220%22,%22ItemName%22:%22Measurand%22,%22ItemValue%22:%22Not%20Set%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%220%22,%22ParameterIndex%22:%220%22,%22ItemName%22:%22Target%20Value%22,%22ItemValue%22:%221,%2010000%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%220%22,%22ParameterIndex%22:%221%22,%22ItemName%22:%22Device%20Type%22,%22ItemValue%22:%22Reference%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%220%22,%22ParameterIndex%22:%221%22,%22ItemName%22:%22Model%22,%22ItemValue%22:%22SNTL%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%220%22,%22ParameterIndex%22:%221%22,%22ItemName%22:%22SN%22,%22ItemValue%22:%2230%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%220%22,%22ParameterIndex%22:%221%22,%22ItemName%22:%22Measurand%22,%22ItemValue%22:%22Phenanthrene%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%220%22,%22ParameterIndex%22:%221%22,%22ItemName%22:%22Target%20Value%22,%22ItemValue%22:%22100%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%221%22,%22ParameterIndex%22:%220%22,%22ItemName%22:%22Device%20Type%22,%22ItemValue%22:%22Reference%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%221%22,%22ParameterIndex%22:%220%22,%22ItemName%22:%22Model%22,%22ItemValue%22:%22SNTL%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%221%22,%22ParameterIndex%22:%220%22,%22ItemName%22:%22SN%22,%22ItemValue%22:%2230%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%221%22,%22ParameterIndex%22:%220%22,%22ItemName%22:%22Measurand%22,%22ItemValue%22:%22Phenanthrene%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%221%22,%22ParameterIndex%22:%220%22,%22ItemName%22:%22Target%20Value%22,%22ItemValue%22:%221000%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%221%22,%22ParameterIndex%22:%221%22,%22ItemName%22:%22Device%20Type%22,%22ItemValue%22:%22System%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%221%22,%22ParameterIndex%22:%221%22,%22ItemName%22:%22Model%22,%22ItemValue%22:%22SparkFun%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%221%22,%22ParameterIndex%22:%221%22,%22ItemName%22:%22SN%22,%22ItemValue%22:%228888%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%221%22,%22ParameterIndex%22:%221%22,%22ItemName%22:%22Measurand%22,%22ItemValue%22:%22Not%20Set%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%221%22,%22ParameterIndex%22:%221%22,%22ItemName%22:%22Target%20Value%22,%22ItemValue%22:%221,%201000%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%222%22,%22ParameterIndex%22:%220%22,%22ItemName%22:%22Device%20Type%22,%22ItemValue%22:%22Reference%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%222%22,%22ParameterIndex%22:%220%22,%22ItemName%22:%22Model%22,%22ItemValue%22:%22SNTL%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%222%22,%22ParameterIndex%22:%220%22,%22ItemName%22:%22SN%22,%22ItemValue%22:%2230%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%222%22,%22ParameterIndex%22:%220%22,%22ItemName%22:%22Measurand%22,%22ItemValue%22:%22Phenanthrene%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%222%22,%22ParameterIndex%22:%220%22,%22ItemName%22:%22Target%20Value%22,%22ItemValue%22:%2210000%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%222%22,%22ParameterIndex%22:%221%22,%22ItemName%22:%22Device%20Type%22,%22ItemValue%22:%22System%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%222%22,%22ParameterIndex%22:%221%22,%22ItemName%22:%22Model%22,%22ItemValue%22:%22SparkFun%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%222%22,%22ParameterIndex%22:%221%22,%22ItemName%22:%22SN%22,%22ItemValue%22:%228888%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%222%22,%22ParameterIndex%22:%221%22,%22ItemName%22:%22Measurand%22,%22ItemValue%22:%22Not%20Set%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%222%22,%22ParameterIndex%22:%221%22,%22ItemName%22:%22Target%20Value%22,%22ItemValue%22:%221,%201000%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%223%22,%22ParameterIndex%22:%220%22,%22ItemName%22:%22Device%20Type%22,%22ItemValue%22:%22Reference%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%223%22,%22ParameterIndex%22:%220%22,%22ItemName%22:%22Model%22,%22ItemValue%22:%22SNTL%22},{%22ConfigurationID%22:%22999999%22,%22ConfigurationName%22:%22default%22,%22ConfigurationArea%22:%22dataPoint%22,%22OptionIndex%22:%223%22,%22ParameterIndex%22:%220%22,%22ItemName%22:%22SN%22,%22ItemValue%22:%2230%22}]
+	 * Function Type: Async
+	 * 
+	 * @param {array} settings - array of settings objects. See validateSetting for an example object
+	 * @param {function} callback - function to be triggered after the settings are saved
 	 */
-	self.save = function()
+	self.saveConfiguration = function(settings, callback)
 	{
 		try
 		{
-			if(self.configurationSettings.length === 0)
+			if(Array.isArray(settings) === false || settings.length === 0)
 			{
-				throw new Error('No settings found, cannot save');
+				self.onError('saveConfiguration', 'No settings passed in', new Error());
+				return false;
 			}
+
+			//if there is only one setting, we will assume we just want to add it to the list of settings
+			//this supports the idea of saving a setting immediately when the value changes
+			if(settings.length === 1)
+			{
+				self.updateSetting(settings[0]);
+				self.logDebug('saveConfiguration', 'only one setting found, updated and being saved', settings);
+			}
+			else
+			{
+			//if there are multiple settings, then replace them all
+			//this supports the idea of saving when a dialog is closed
+				self.clearSettings(settings[0].ConfigurationArea);
+				self.addSettings(settings);
+				self.logDebug('saveConfiguration', 'multiple settings found, replacing old settings', settings);
+			}
+
+			settings = self.getConfigurationByArea(settings[0].ConfigurationArea);
+
 			let parameters = {
-				dostuff: 'SaveCalibrationSystemSettingsV2',
+				dostuff: 'SaveCalibrationSystemSettings',
 				debug: self.debugFlag,
-				values: self.configurationSettings,
+				values: settings,
+				applicationname: self.applicationName,
+				username: self.userName,
+				pcname: self.pcName
 			};
+			
+			//####### daveg ########
+					console.warn(parameters);
+			//### delete at will ###
+			
 
-			//this is for using the transaction log
-			if(self.userName && self.pcName && self.applicationName)
-			{
-				parameters.applicationName = self.applicationName;
-				parameters.username = self.userName;
-				parameters.pcname = self.pcName;
-			}
-
-			self.logDebug('save', 'parameters', parameters);
+			self.logDebug('saveConfiguration', 'parameters', parameters);
 
 			ProcessDatabaseRequest(parameters, function(data)
 			{
-				//the return from the database should be the settings
-				self.processConfigurationSettings(data);
+				self.configurationSaved(data, callback);
 			});
-
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('saveConfiguration', err.message, err);
 		}
-	}
-
-	//TODO: Needs Unit Tests
-	self.convertToDeviceItem = function(itemName)
-	{
-		try
-		{
-			switch(itemName)
-			{
-			case 'device':
-				return 'modelNumber';
-			case 'baud':
-				return 'baudRate';
-			case 'port':
-				return 'portName';
-			case 'sn':
-				return 'serialNumber';
-			default:
-				return itemName;	
-			}
-	
-		}
-		catch(err)
-		{
-			self.onError(err);
-		}
-		return null;
 	};
 
-
-	//TODO: Needs Unit tests
-	self.setupDeviceList = function(deviceType)
+	/**
+	 * When the configuration settings have been saved
+	 * Doesn't make any changes to the system, just notifies 
+	 * the systems that the save happened
+	 * Function Type: Sync
+	 * 
+	 * @param {string} data - JSON encoded string
+	 * @param {function} callback - function to be called
+	 * @returns {boolean} were the settings saved successfully?
+	 */
+	self.configurationSaved = function(data, callback)
 	{
 		try
 		{
-			let deviceSettings = self.getTopLevelNode(deviceType);
-			let deviceList = [];
-			
-			if(deviceSettings !== null)
+			if(isJson(data))
 			{
-				for(let i = 0; i < deviceSettings.childNodes.length; i++)
+				let response = JSON.parse(data);
+				executeCallback(callback, response[0]);
+				self.emit('configurationSaved', response[0]);
+				self.logDebug('configurationSaved', 'configuration saved successfully', response);
+			}
+			else
+			{
+				let errorMessage = processDatabaseError(data);
+				if(errorMessage === null)
 				{
-					let deviceNode = deviceSettings.childNodes[i];
-					let device = new Device();
-					device.isReference = deviceType.toLowerCase() === 'reference';
-					device.index = i;
-					for(let j = 0; j < deviceNode.controls.length; j++)
-					{
-						let control = deviceNode.controls[j];
-						let itemName = self.convertToDeviceItem(toCamelCase(control.label));
-						let itemValue = control.value;
-						if(device.hasOwnProperty(itemName))
-						{
-							device[itemName] = itemValue;
-						}
-						if(itemName === 'settings')
-						{
-							device.dataBits = itemValue.substring(itemValue.indexOf(',') + 1).trim();
-							device.parityBit = itemValue.substring(0, 1);
-						}
-					}
-					
-					deviceList.push(device);
+					self.onError('configurationSaved', 'Unable to process database response: ' + data, new Error());
+					return false;
 				}
-
+				self.processError(errorMessage.Class, errorMessage.Function, errorMessage.Message, new Error());
+				return false;
 			}
-
-			return deviceList;			
-	
-		}
-		catch(err)
-		{
-			self.onError(err);
-		}
-	};
-
-	//TODO: Need to set up data points
-	//NOTE: Can't do this until data points are defined better
-	//Should be a bunch of devices associated with each data point
-	self.setupDataPoints = function()
-	{
-		try
-		{
+			return true;
 
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('configurationSaved', err.message, err);
+			return false;
 		}
 	};
 
-	//TODO: determine device types that can be calibrated
-	//Maybe this is a new section?
-	self.setupSettings = function()
+	/**
+	 * One level deeper of filtering. By configuration area and item name
+	 * Case insensitive
+	 * Function Type: Sync
+	 * 
+	 * @param {string} configurationArea - must match the configuration area in the object
+	 * @param {string} itemName - must match the item name in the object
+	 * @return {array} - an array that contains the results. If no results are found, the array will be empty
+	 */
+	self.getConfigurationByParameters = function(configurationArea, itemName)
 	{
 		try
 		{
-			let settings = {};
-			let systemSettings = self.getTopLevelNode('settings');
-			for(let i = 0; i < systemSettings.controls.length; i++)
+			if(!configurationArea || !itemName)
 			{
-				let control = systemSettings.controls[i];
-				let itemName = toCamelCase(removeParentheses(control.label));
-				let itemValue = control.value;
-				settings[itemName] = itemValue;
+				self.onError('getConfigurationByParameters', 'Must pass in configuration area and item name.', new Error());
+				return false;
 			}
+			return self.configurationSettings.filter(function(setting)
+			{
+				return setting.ConfigurationArea.toLowerCase() === configurationArea.toLowerCase() && setting.ItemName.toLowerCase() === itemName.toLowerCase();
+			});
 		}
 		catch(err)
 		{
-			self.onError(err);
+			self.onError('getConfigurationByParameters', err.message, err);
+			return false;
 		}
 	};
+
+	/**
+	 * !This should eventually be moved to sbGlobalFunctions
+	 * For notifying processes of errors that happened
+	 * This can be used for internal or external errors
+	 * Function Type: Async
+	 * 
+	 * @param {string} className - the name of the class that had an error
+	 * @param {string} methodName - the name of the function that had an error
+	 * @param {string} errorMessage - the contents of the error message
+	 */
+	self.processError = function(className, methodName, errorMessage, stackTrace)
+	{
+
+		let parameters = {
+			class: className,
+			method: methodName,
+			message: errorMessage
+		};
+
+		let displayMessage = 'Error!\r\n' +
+			'Class: ' + className + '\r\n' + 
+			'Method: ' + methodName + '\r\n' + 
+			'Message: ' + errorMessage;
+
+		if(stackTrace)
+		{
+			let lineNumber = stackTrace.stack.split('\n')[0];
+		
+			while(lineNumber.indexOf('.js') > -1)
+			{
+				lineNumber = lineNumber.substring(lineNumber.indexOf('.js:') + 4);
+			}
+	
+			lineNumber = lineNumber.substring(0, lineNumber.indexOf(':'));
+
+			parameters.lineNumber = lineNumber;
+			displayMessage += '\r\nLine Number: ' + lineNumber;
+		}
+		
+		console.error(displayMessage);
+
+		self.emit('error', parameters);
+	};
+
+	/**
+	 * For notifying processes of errors that happened
+	 * This is for internal errors
+	 * We assume the class is the current one
+	 * Function Type: Sync
+	 * 
+	 * @param {string} methodName - the name of the function that had an error
+	 * @param {string} message - the contents of the error message
+	 */
+	self.onError = function(methodName, errorMessage, stackTrace)
+	{
+		self.processError('ConfigurationManager', methodName, errorMessage, stackTrace);
+	};
+
+	/**
+	 * For sending debug messages to the system, if anything is listening
+	 * 
+	 *	@param {string} methodName - name of the function sending a debug message
+	 * 	@param {string} message - text portion of the message to be sent
+	 *  @param {object} parameters - any additional information that will be sent along 
+	 */
+	self.logDebug = function(methodName, message, parameters)
+	{
+		let debugObject = {
+			class: 'ConfigurationManager',
+			method: methodName,
+			message: message,
+			parameters: 'none'
+		};
+
+		if(typeof parameters !== 'undefined')
+		{
+			if(isJson(parameters))
+			{
+				debugObject.parameters = parameters;
+			}
+			else
+			{
+				debugObject.parameters = JSON.stringify(parameters);
+			}
+		}
+
+		self.emit('debug', debugObject);
+	};
+
 }
 
 /**
@@ -1495,4 +1632,3 @@ if(typeof module !== 'undefined' && typeof module.exports !== 'undefined')
     	ConfigurationManager:ConfigurationManager
     };
 }
-
