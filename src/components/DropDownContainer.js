@@ -31,8 +31,11 @@ class DropDownContainer extends React.Component {
     }
 
     componentDidUpdate() {
-        if (this.state.dropState)
-            this.itemRef.current.scrollIntoView({behavior: 'smooth'});
+        if (this.state.dropState) {
+            // When the dropdown is opened, scroll smoothly to have it in view
+            this.itemRef.current.scrollIntoView({block: "end", inline: "nearest", behavior: 'smooth'});
+        }
+        
     }
 
       /**

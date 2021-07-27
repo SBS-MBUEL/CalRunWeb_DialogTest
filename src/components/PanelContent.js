@@ -54,7 +54,7 @@ class PanelContent extends React.Component {
 
     componentDidUpdate() {
         if (this.scrollTarget.current)
-            this.scrollTarget.current.scrollIntoView({behavior: 'smooth'});
+            this.scrollTarget.current.scrollIntoView({block: "end", inline: "nearest", behavior: 'smooth'});
     }
 
     /**
