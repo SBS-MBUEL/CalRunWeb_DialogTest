@@ -213,9 +213,9 @@ const _system = [
 		master: 0,
 		controls:
 		[
-			{label:'Add Device That Can Be Calibrated', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add device', maxLength:0, titleOrder:-1},
-			{label:'Copy Device Last Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'copy device', maxLength:0, titleOrder:-1},
-			{label:'Remove Last Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove device', maxLength:0, titleOrder:-1},
+			{label:'Add Device That Can Be Calibrated', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add cal device', maxLength:0, titleOrder:-1},
+			{label:'Copy Device Last Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'copy cal device', maxLength:0, titleOrder:-1},
+			{label:'Remove Last Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove cal device', maxLength:0, titleOrder:-1},
 			{label:'Device', type:'dropdown', list:['Not Set', 'AC-S',	'DeepSeapHoxV2',	'Digiquartz',	'Druck', 'ECOV2',	'FloatpH',	'Keithley',	'Kistler',	'SBE3',
 				'SBE37',	'SBE39',	'SBE4',	'SBE63',	'SKR-Mini'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:0},
 		]
