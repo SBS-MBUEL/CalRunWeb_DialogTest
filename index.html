@@ -62,15 +62,15 @@
 	
 				if (!localSettings) { // retrieve database immediately.
 					let interval = setInterval(() =>  {
-						if (self && self.calRun?.configurationManager?.configurationSettings.length > 0) {
-							setLocalStorage(`${systemName}-Settings`, self.calRun.configurationManager.configurationSettings);
+						if (calRun && calRun?.configurationManager?.configurationSettings.length > 0) {
+							setLocalStorage(`${systemName}-Settings`, calRun.configurationManager.configurationSettings);
 
 							clearInterval(interval);
 						}
-					}, 100);
+					}, 200);
 
 
-					localSettings = databaseContent;
+					// localSettings = databaseContent;
 				}
 	
 				if (!localConfig) { // retrieve configuration from database
