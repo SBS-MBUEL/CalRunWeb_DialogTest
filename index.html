@@ -60,15 +60,16 @@
 				localSettings = getLocalStorage(`${systemName}-Settings`);
 				localConfig = getLocalStorage(`${systemName}-Config`);
 	
-				if (!localSettings) { // retrieve database immediately
-					let interval = setInterval(() =>  
-					{
-						if (self && self.configurationManager?.configurationSettings.length > 0){
-							console.log("get configuration from database");
+				if (!localSettings) { // retrieve database immediately.
+					let interval = setInterval(() =>  {
+						if (self && self.calRun?.configurationManager?.configurationSettings.length > 0) {
+							setLocalStorage(`${systemName}-Settings`, self.calRun.configurationManager.configurationSettings);
+
 							clearInterval(interval);
-						}						
-					}, 20);
-					setLocalStorage(`${systemName}-Settings`, databaseContent);
+						}
+					}, 100);
+
+
 					localSettings = databaseContent;
 				}
 	
