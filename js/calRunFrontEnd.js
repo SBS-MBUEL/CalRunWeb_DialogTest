@@ -2410,6 +2410,16 @@ function addListeners()
 				calRun.updateSystemName(document.getElementById('systemName').innerHTML);
 			}
 		});
+		const clearLSButton = document.querySelector('#btnClearLocalStorage');
+		if (self.getIsDebug()) {
+			// THIS CODE WAS IMPLEMENTED TO CLEAR LOCAL STORAGE - it is intended for debug purposes and SHOULD NOT go to production.
+			clearLSButton.addEventListener('click', (e) => {
+				localStorage.clear();
+				window.location.reload();
+			});
+		} else {
+			clearLSButton.style = "display:none";
+		}
 	
 	}
 	catch(err)
