@@ -61,6 +61,13 @@
 				localConfig = getLocalStorage(`${systemName}-Config`);
 	
 				if (!localSettings) { // retrieve database immediately
+					let interval = setInterval(() =>  
+					{
+						if (self && self.configurationManager?.configurationSettings.length > 0){
+							console.log("get configuration from database");
+							clearInterval(interval);
+						}						
+					}, 20);
 					setLocalStorage(`${systemName}-Settings`, databaseContent);
 					localSettings = databaseContent;
 				}

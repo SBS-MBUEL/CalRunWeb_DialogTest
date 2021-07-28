@@ -225,7 +225,10 @@ function CalRun(isDebug)
 
 			let interval2 = setInterval(function()
 			{
-				if(self.calibrationOptions !== null && self.systemID > 0)
+				if(self.calibrationOptions !== null &&
+					self.systemID > 0 &&
+					self.userName &&
+					self.computerName)
 				{
 					clearInterval(interval2);
 					self.configurationManager.on('settingsRetrieved', callback);
