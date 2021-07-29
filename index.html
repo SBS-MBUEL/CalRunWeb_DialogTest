@@ -67,6 +67,8 @@
 							setLocalStorage(`${systemName}-Settings`, calRun.configurationManager.configurationSettings);
 
 							clearInterval(pollDatabaseInterval);
+
+							// TODO: create configuration package based on settings?
 						}
 					}, 200);
 
@@ -74,8 +76,11 @@
 					// TODO: set calRun.configurationManager.configurationSettings to localSettings
 
 					// TODO: in background start asychronous call to database for settings, when returns compare to localSettings - if difference overwrite database
+
+					// TODO: create configuration package based on settings?
 				}
 	
+				// TODO: this likely will move to be called by prior check
 				if (!localConfig) { // retrieve configuration from database
 					setLocalStorage(`${systemName}-Config`, objectCollection);
 					localConfig = objectCollection;
