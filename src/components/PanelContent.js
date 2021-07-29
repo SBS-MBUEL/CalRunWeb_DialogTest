@@ -195,6 +195,8 @@ class PanelContent extends React.Component {
         // });
         // TODO: make passed object match other function - not sending correct object and causing propagation errors.
         // this.props.setContent(undefined, undefined, existingContent, this.props.tabName, fn, 'panel'); // TODO: change signature to pass "add" for fn
+
+        // Since we added a new panel, we want to make sure that we can scroll to it.
         this.setState({validScroll: true})
         return existingContent;
     }
