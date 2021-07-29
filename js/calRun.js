@@ -198,7 +198,9 @@ function CalRun(isDebug)
 
 			self.configurationManager.on('configurationSetAsCurrent', function(data)
 			{
-				self.configurationManager.getConfigurationSettings(self.systemID, data.ConfigurationID);
+				if (!self.configurationManager.configurationSettings) {
+					self.configurationManager.getConfigurationSettings(self.systemID, data.ConfigurationID);
+				}
 			});
 
 			self.configurationManager.on('configurationSaved', function(data)
@@ -207,19 +209,25 @@ function CalRun(isDebug)
 				//console.log(data);
 			});
 
-			self.getAutoConnectSettings();
-			self.getDeviceTypesWithCOV();
+			self.autoConnectSettings = getLocalStorage('CalRunWeb-autoConnectSettings');
+			if (!self.autoConnectSettings) {
+				self.getAutoConnectSettings();
+			}
+			self.measurandCOV = getLocalStorage('CalRunWeb-measurandCOV');
+			if (!self.measurandCOV) {
+				self.getDeviceTypesWithCOV();
+			}
 
 			let interval = setInterval(function()
 			{
 				if(self.widgetCommunications.connected === true)
 				{
+					clearInterval(interval);
 					self.widgetCommunications.getUserName();
 					self.widgetCommunications.getComputerName();
 					self.widgetCommunications.getSerialPortList(self.displayPorts);
 					//TODO: Hard coded value, should come from the database configuration
                     self.widgetCommunications.enableLoggingTimestamps(true);
-					clearInterval(interval);
 				}
 			}, 100);
 
@@ -2069,6 +2077,7 @@ function CalRun(isDebug)
 			self.emit('updateStatus', 'Loading Coefficients', JSON.parse(data));
 
 			self.measurandCOV = JSON.parse(data);
+			setLocalStorage('CalRunWeb-measurandCOV', self.measurandCOV);
 		});
 		//return results;
 	}
@@ -3249,8 +3258,8 @@ function CalRun(isDebug)
 					throw new ReferenceError('Error retrieving autoconnect settings, check VPN & serial widget status.');
 				}
 				self.autoConnectSettings = JSON.parse(data);
-				if(callback && typeof callback === 'function')
-				{
+				setLocalStorage('CalRunWeb-autoConnectSettings', self.autoConnectSettings);
+				if(callback && typeof callback === 'function') {
 					callback();
 				}
 			});

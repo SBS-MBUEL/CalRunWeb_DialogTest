@@ -74,7 +74,13 @@
 
 				} else {
 					//Set the calRun object's parameters to match the localStorage settings
-					calRun.configurationManager.configurationSettings = localSettings;
+
+					let checkCalrunExists = setInterval(() => {
+						if (calRun && calRun.configurationManager) {
+							clearInterval(checkCalrunExists);
+							calRun.configurationManager.configurationSettings = localSettings;
+						}
+					}, 100);
 					// TODO: in background start asychronous call to database for settings, when returns compare to localSettings - if difference overwrite database
 					
 

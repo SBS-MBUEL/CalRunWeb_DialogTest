@@ -52,26 +52,31 @@ function ConfigurationManager(isDebug)
 	{
 		try
 		{
-			if(isPositiveInteger(systemID) === false)
-			{
-				//If the ID is not a positive integer, this is a problem. Typically, this will be because the system has not yet been named
-				self.onError('recallConfigurations', 'Invalid System ID. Has the system been given a name yet?', new Error());
-				return false;
+			let configurations = getLocalStorage('CalRunWeb-configurationsRetrieved');
+			if (!configurations) {
+				if(isPositiveInteger(systemID) === false)
+				{
+					//If the ID is not a positive integer, this is a problem. Typically, this will be because the system has not yet been named
+					self.onError('recallConfigurations', 'Invalid System ID. Has the system been given a name yet?', new Error());
+					return false;
+				}
+				let parameters = {
+					debug: self.debugFlag,
+					dostuff: 'RunStoredProcedure',
+					connection: 'calibration',
+					storedProcedure: 'RecallConfigurations',
+					systemID: systemID
+				};
+
+				self.logDebug('recallConfigurations', 'parameters', parameters);
+
+				ProcessDatabaseRequest(parameters, function(data)
+				{
+					self.configurationsRetrieved(data, callback);
+				});
+			} else {
+				self.configurationsRetrieved(JSON.stringify(configurations), callback);
 			}
-			let parameters = {
-				debug: self.debugFlag,
-				dostuff: 'RunStoredProcedure',
-				connection: 'calibration',
-				storedProcedure: 'RecallConfigurations',
-				systemID: systemID
-			};
-
-			self.logDebug('recallConfigurations', 'parameters', parameters);
-
-			ProcessDatabaseRequest(parameters, function(data)
-			{
-				self.configurationsRetrieved(data, callback);
-			});
 		}
 		catch(err)
 		{
@@ -95,6 +100,7 @@ function ConfigurationManager(isDebug)
 			if(isJson(data))
 			{
 				self.configurations = JSON.parse(data);
+				setLocalStorage('CalRunWeb-configurationsRetrieved', self.configurations);
 				let currentConfig = self.configurations.filter(function(config)
 				{
 					return parseInt(config.CurrentConfiguration) === 1;
