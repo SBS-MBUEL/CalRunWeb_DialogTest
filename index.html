@@ -61,16 +61,19 @@
 				localConfig = getLocalStorage(`${systemName}-Config`);
 	
 				if (!localSettings) { // retrieve database immediately.
-					let interval = setInterval(() =>  {
+					// TODO: move database call to this section
+					let pollDatabaseInterval = setInterval(() =>  {
 						if (calRun && calRun?.configurationManager?.configurationSettings.length > 0) {
 							setLocalStorage(`${systemName}-Settings`, calRun.configurationManager.configurationSettings);
 
-							clearInterval(interval);
+							clearInterval(pollDatabaseInterval);
 						}
 					}, 200);
 
+				} else {
+					// TODO: set calRun.configurationManager.configurationSettings to localSettings
 
-					// localSettings = databaseContent;
+					// TODO: in background start asychronous call to database for settings, when returns compare to localSettings - if difference overwrite database
 				}
 	
 				if (!localConfig) { // retrieve configuration from database
