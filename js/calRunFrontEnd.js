@@ -623,6 +623,7 @@ function enableButtons(enable, allButtons)
 		// document.getElementById('btnControl').disabled = !enable;
 		document.getElementById('btnAction').disabled = !enable;
 		document.getElementById('btnConfigure').disabled = !enable;
+		document.getElementById('btnClearLocalStorage').disabled = !enable;
 
 		//when enabling buttons, always enable all buttons
 		if(enable === true)

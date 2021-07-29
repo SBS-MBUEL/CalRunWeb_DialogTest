@@ -237,11 +237,13 @@ function CalRun(isDebug)
 						self.emit('settingsRetrieved');
 					});
 					self.configurationManager.on('configurationsRetrieved', self.recallConfigurationSettings);
-					self.configurationManager.recallConfigurations(self.systemID);
+					self.configurationManager.recallConfigurations(self.systemID, function() {
+						self.emit('initializationComplete', 'null');
+					});
+
 				}
 			}, 100);
 
-			self.emit('initializationComplete', 'null');
 		}
 		catch(err)
 		{
