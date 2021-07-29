@@ -73,9 +73,10 @@
 					}, 200);
 
 				} else {
-					// TODO: set calRun.configurationManager.configurationSettings to localSettings
-
+					//Set the calRun object's parameters to match the localStorage settings
+					calRun.configurationManager.configurationSettings = localSettings;
 					// TODO: in background start asychronous call to database for settings, when returns compare to localSettings - if difference overwrite database
+					
 
 					// TODO: create configuration package based on settings?
 				}
