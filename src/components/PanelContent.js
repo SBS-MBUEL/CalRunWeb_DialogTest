@@ -23,7 +23,8 @@ class PanelContent extends React.Component {
             mainActiveSlide : 0,
             mainMaxSlides: mainContent && mainContent.length,
             subActiveSlide: 0,
-            subMaxSlides: subContent && subContent.length
+            subMaxSlides: subContent && subContent.length,
+            validScroll: false
         };
         
         this.setContentValues = this.setContentValues.bind(this);
@@ -42,6 +43,7 @@ class PanelContent extends React.Component {
         this.setPanelName = this.setPanelName.bind(this);
         this.updatePanelContent = this.updatePanelContent.bind(this);
 
+        this.scrollTarget = React.createRef();
     }
 
     componentDidMount() {
@@ -49,6 +51,13 @@ class PanelContent extends React.Component {
         let { mainContent, subContent } = this.parseContent(this.state.tabContent);
         this.setPanelName(this.state.mainActiveSlide, mainContent, 'panelName');
         this.setPanelName(this.state.subActiveSlide, subContent, 'subPanelName');
+    }
+
+    componentDidUpdate() {
+        if (this.scrollTarget.current && this.state.validScroll) {
+            this.scrollTarget.current.scrollIntoView({block: "end", inline: "nearest", behavior: 'smooth'});
+            this.setState({validScroll: false});
+        }
     }
 
     /**
@@ -187,6 +196,8 @@ class PanelContent extends React.Component {
         // TODO: make passed object match other function - not sending correct object and causing propagation errors.
         // this.props.setContent(undefined, undefined, existingContent, this.props.tabName, fn, 'panel'); // TODO: change signature to pass "add" for fn
 
+        // Since we added a new panel, we want to make sure that we can scroll to it.
+        this.setState({validScroll: true})
         return existingContent;
     }
 
@@ -223,8 +234,8 @@ class PanelContent extends React.Component {
             tabContent : newTabContent
         });
 
+        
         this.props.setContent(key, val, newTabContent, this.props.tabName, fn); // TODO: change signature to pass "add" for fn
-
         return newTabContent;
     }
 
@@ -347,7 +358,6 @@ class PanelContent extends React.Component {
                 subActiveSlide: 0
             });
 
-
         }
     }
     /**
@@ -467,7 +477,7 @@ class PanelContent extends React.Component {
     setContentValues(key, val, settingIdx, controlIdx) {
         let changedContent = this.state.tabContent.slice();
         let { subContent, mainContent } = this.parseContent(this.state.tabContent);
-        
+
         changedContent[settingIdx].controls[controlIdx].value = val;
         this.setPanelName(this.state.mainActiveSlide, mainContent, 'panelName');
         this.setPanelName(this.state.subActiveSlide, subContent, 'subPanelName');
@@ -555,7 +565,7 @@ class PanelContent extends React.Component {
 
                         })}
                     </div>
-                    
+                    <div ref={this.scrollTarget}/>
 
                 </div>
             </div>

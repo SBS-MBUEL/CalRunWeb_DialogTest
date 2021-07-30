@@ -4,6 +4,8 @@ import { PanelContent } from '../components/PanelContent';
 
 const _configuration_area = 'Mock Control Device';
 
+window.HTMLElement.prototype.scrollIntoView = function() {};
+
 const _mock_device = [
 	{
         for:'calibrationOption',
@@ -176,6 +178,7 @@ describe('invalid content package renders correct error', () => {
             handler={clickRouter} 
         /> );
 
+        window.HTMLElement.prototype.scrollIntoView = function() {};
         const _error_screen = screen.getByText(/Unable to process/);
 
         expect(_error_screen.textContent).toBe('Unable to process variable for CalRun Configuration Page');

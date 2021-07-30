@@ -14,6 +14,8 @@ function testSetup(opts, type="dropdown") {
     return row;
 }
 
+window.HTMLElement.prototype.scrollIntoView = function() {};
+
 function processChange(key, val, idx, loc) {
 
 }

@@ -17,6 +17,8 @@ class DropDownContainer extends React.Component {
         this.toggleDropdown = this.toggleDropdown.bind(this);
         this.handleBodyClick = this.handleBodyClick.bind(this);
         this.toggleState = this.toggleState.bind(this);
+
+        this.itemRef = React.createRef();
     }
 
     componentDidMount() {
@@ -24,9 +26,17 @@ class DropDownContainer extends React.Component {
 
       }
 
-      componentWillUnmount() {
+    componentWillUnmount() {
         this._isMounted = false;
-      }
+    }
+
+    componentDidUpdate() {
+        if (this.state.dropState) {
+            // When the dropdown is opened, scroll smoothly to have it in view
+            this.itemRef.current.scrollIntoView({block: "end", inline: "nearest", behavior: 'smooth'});
+        }
+        
+    }
 
       /**
        * when an element outside of ref (in return below) is clicked, it will toggle the state of the drop down
@@ -98,8 +108,9 @@ class DropDownContainer extends React.Component {
                 </div>
                 <div className="dropdown-menu modalPopUp" id="dropdown-menu" role="menu">
                     <div role="dropdownlist-content" className="dropdown-content">
-                        <DropDownItem index={index} userValue={this.state.userValue} trackChanges={this.changeDropItem} row={row} />
+                        <DropDownItem index={index} userValue={this.state.userValue} trackChanges={this.changeDropItem} row={row}/>
                     </div>
+                    <div ref={this.itemRef} />
                 </div>
             </div>
         )
