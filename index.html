@@ -57,6 +57,7 @@
 					localConfig = populateControlObject(settingsCollection);
 
 					setLocalStorage(`${systemName}-Config`, localConfig);
+					
 				}
 				initializeGlobals(initializeCalRun);
 				// This is how we get the program working
@@ -92,6 +93,8 @@
 					
 
 					// TODO: create configuration package based on settings?
+
+					// TODO: connect localSettings / localConfig to calRun object so changes actually are reflected in calibration.
 				}
 	
 				// TODO: this likely will move to be called by prior check

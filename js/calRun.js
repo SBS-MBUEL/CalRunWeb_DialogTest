@@ -239,6 +239,13 @@ function CalRun(isDebug)
 					self.configurationManager.on('configurationsRetrieved', self.recallConfigurationSettings);
 					self.configurationManager.recallConfigurations(self.systemID, function() {
 						self.emit('initializationComplete', 'null');
+					
+						let msg = {
+							message: 'Calrun Init is complete, ready to perform calibration.',
+							level: 'success',
+							consoleOnly: false
+						}
+						displayEvent(msg);
 					});
 
 				}

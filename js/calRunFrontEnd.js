@@ -172,7 +172,7 @@ function showConfigurationDialog()
 	// TODO: this was being updated when making changes in the setup fields. This was causing issues in test, the test wasn't able to find the variables.
 	//TODO: replace local storage call with database call
 	localSettings = getLocalStorage(`${systemName}-Settings`);
-	localConfig = getLocalStorage(`${systemName}-Config`);
+	localConfig = populateControlObject(getLocalStorage(`${systemName}-Config`));
 
 	renderConfig(popUp.contentArea.id, databaseTabs, localSettings, localConfig);
 }
