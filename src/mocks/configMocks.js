@@ -104,8 +104,6 @@ const _datapoint = [
 		master: 0,
 		controls:
 		[
-			{label:'Add Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add SP device data', maxLength:0, titleOrder:-1},
-			{label:'Remove Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove SP device data', maxLength:0, titleOrder:-1},
 			{label:'Device Type', type:'dropdown', list:['Reference', 'System'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:0},
 			{label:'Model', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:1},
 			{label:'SN', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:2},
@@ -124,8 +122,6 @@ const _datapoint = [
 		master: 0,
 		controls:
 		[
-			{label:'Add Set Point', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add SP setpoint data', maxLength:0, titleOrder:-1},
-			{label:'Remove Set Point', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove SP setpoint data', maxLength:0, titleOrder:-1},
 			{label:'Device Type', type:'dropdown', list:['Reference', 'System'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:0},
 			{label:'Model', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:1},
 			{label:'SN', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:2},
@@ -144,8 +140,6 @@ const _datapoint = [
 		master: 1,
 		controls:
 		[
-			{label:'Add Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add SP device data', maxLength:0, titleOrder:-1},
-			{label:'Remove Device', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove SP device data', maxLength:0, titleOrder:-1},
 			{label:'Device Type', type:'dropdown', list:['Reference', 'System'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:0},
 			{label:'Model', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:1},
 			{label:'SN', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:2},
@@ -164,8 +158,6 @@ const _datapoint = [
 		master: 1,
 		controls:
 		[
-			{label:'Add Set Point', type:'button', list:[], width:'50px', height:'30px', control:null, value:'add SP setpoint data', maxLength:0, titleOrder:-1},
-			{label:'Remove Set Point', type:'button', list:[], width:'50px', height:'30px', control:null, value:'remove SP setpoint data', maxLength:0, titleOrder:-1},
 			{label:'Device Type', type:'dropdown', list:['Reference', 'System'], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:0},
 			{label:'Model', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:0, titleOrder:1},
 			{label:'SN', type:'dropdown', list:[], width:'100px', height:'30px', control:null, value:'Not Set', maxLength:20, titleOrder:2},

@@ -135,7 +135,7 @@ describe('normal functions', () => {
         
         const _sub_list = screen.getAllByText(/Device/);
 
-        expect(_sub_list.length).toBe(22);
+        expect(_sub_list.length).toBe(18);
 
         _sub_list.forEach((el, i) => {
             expect(el.textContent).toMatch(/Device/i);
@@ -159,7 +159,7 @@ describe('normal functions', () => {
         
         const _sub_list = screen.getAllByText(/Device/);
 
-        expect(_sub_list.length).toBe(22);
+        expect(_sub_list.length).toBe(18);
 
         _sub_item_list = screen.getAllByText(/DeepSeapHoxV2/);
         _sub_drop_items = screen.getAllByText(/Not Set/);
@@ -180,7 +180,7 @@ describe('normal functions', () => {
         
         const _sub_list = screen.getAllByText(/Device/);
 
-        expect(_sub_list.length).toBe(22);
+        expect(_sub_list.length).toBe(18);
 
         _sub_list.forEach((el, i) => {
             expect(el.textContent).toMatch(/Device/i);
@@ -199,7 +199,7 @@ describe('normal functions', () => {
         
         const _sub_list = screen.getAllByText(/Device/);
 
-        expect(_sub_list.length).toBe(18);
+        expect(_sub_list.length).toBe(14);
     });
 
     // at this stage it does add it to the list
@@ -213,7 +213,7 @@ describe('normal functions', () => {
         
         const _sub_list = screen.getAllByText(/Device/);
 
-        expect(_sub_list.length).toBe(18);
+        expect(_sub_list.length).toBe(14);
 
         _sub_list.forEach((el, i) => {
             expect(el.textContent).toMatch(/Device/i);
