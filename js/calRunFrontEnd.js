@@ -130,7 +130,7 @@ function continueCalRunInitialization()
 function displayEvent(msg)
 {
 	//notify status is located in sbGlobal
-	notifyStatus(msg.message, msg.level, msg.consoleOnly); 
+	renderGrowl('growl', msg.message, msg.level, undefined, undefined, msg.consoleOnly)
 	if(msg.level === statusLevel.Error && systemStatus !== null)
 	{
 		//if the system status box is loaded, then display the error count
@@ -1376,6 +1376,10 @@ function populateControlObject(config) {
 	// TODO: need to filter settings object for each area then take settings and map to the control object
 	
 	// TODO: copy mapping below and see if we can apply that to the new methods
+
+	// TODO: Need to appropriately update list options from database 
+
+	// TODO: Need to appropriately update serial port options from Serial Widget
 	
 	return config;
 }

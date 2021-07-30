@@ -9,12 +9,13 @@
  * @param {string} level info, success, warning, danger
  * @param {string} title optional parameter that displays title of growl
  * @param {boolean} timeout optional, passing in false will make the div for the growl permanent
+ * @param {boolean} consoleOnly optional - if true will not render growl warning
  * 
  * // TODO: forgot to add timeout to params
  * // TODO: needs try / catch
  * // TODO: investigate react-growl
  */
-function renderGrowl(elementID, msg, level, title = '', timeout = true) {
+function renderGrowl(elementID, msg, level, title = '', timeout = true, consoleOnly = false) {
 
     // need to validate parameters
     if (!elementID || !msg || !level) {
@@ -24,37 +25,57 @@ function renderGrowl(elementID, msg, level, title = '', timeout = true) {
         level: ${level}\n`);
         return;
     }
-
-    const root = document.querySelector(`#${elementID}`)
-    if (!root) {
-        console.warn('unable to find specified elementID on page, cannot render growl');
-        console.log(`elementID: ${elementID}`);
-        return;
-    }
-    
-    const article = document.createElement('article');
-    article.className = `tile is-child notification is-${level} growling ${timeout ? 'removed' : ''}`;
-
-    const growlContent = document.createElement('p');
-    growlContent.className = 'subtitle';
-    growlContent.textContent = msg;
-
-    let growlTitle = '';
-    if (title != '') {
-        growlTitle = document.createElement('p');
-        growlTitle.className = 'title';
-        growlTitle.textContent = title;
-        article.appendChild(growlTitle);
-    }
-
-    article.appendChild(growlContent);
-
-    root.appendChild(article);
-
-    if (timeout) {
-        let timer = setTimerToRemoveGrowl(article);
+    if (!consoleOnly) {
+        const root = document.querySelector(`#${elementID}`)
+        if (!root) {
+            console.warn('unable to find specified elementID on page, cannot render growl');
+            console.log(`elementID: ${elementID}`);
+            return;
+        }
         
-        setListener(article, timer);
+        const article = document.createElement('article');
+        article.className = `tile is-child notification is-${level} growling ${timeout ? 'removed' : ''}`;
+    
+        const growlContent = document.createElement('p');
+        growlContent.className = 'subtitle';
+        growlContent.textContent = msg;
+    
+        let growlTitle = '';
+        if (title != '') {
+            growlTitle = document.createElement('p');
+            growlTitle.className = 'title';
+            growlTitle.textContent = title;
+            article.appendChild(growlTitle);
+        }
+    
+        article.appendChild(growlContent);
+    
+        root.appendChild(article);
+    
+        if (timeout) {
+            let timer = setTimerToRemoveGrowl(article);
+            
+            setListener(article, timer);
+        }
+    }
+    switch(level) {
+        case 'danger':
+            console.error(msg);
+            break;
+        case 'warning':
+            console.warn(msg);
+            break;
+        case 'success':
+            console.log('%c ' + msg, 'background: green; color: white;');
+            break;
+        case 'info':
+            console.log('%c ' + msg, 'background: blue; color: white;');
+            break;
+        case 'debug':
+            console.log('%c ' + msg, 'background: dark-blue; color: white;');
+            break;
+        default:
+            console.log(msg);
     }
 }
 
