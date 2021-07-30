@@ -1347,39 +1347,31 @@ function populateControlObject(config) {
 	databaseTabs.forEach((el, index) => {
 		let controlSettings = localSettings.filter((a, b) => a.ConfigurationArea === el.ConfigurationArea);
 
-		// for (let index = 0; index < controlSettings.length; index++) {
-			
-			
-		// }
 		controlSettings.forEach((el) => {
-			if (el.ParameterIndex === "-1") {
-				let controlItem = JSON.parse(JSON.stringify(config[`_${el.ConfigurationArea}`][0].controls)).filter((a, i) => {
-					if (a.label === el.ItemName) {
-						config[`_${el.ConfigurationArea}`][0].controls[i].value = el.ItemValue;
-						return true;
-					} else {
-						return false;
+			let copiedObject = JSON.parse(JSON.stringify(config[`_${el.ConfigurationArea}`]));
+
+			let index = el.ParameterIndex === "-1" ? 0 : 1;
+
+			copiedObject[index].controls.forEach((row, i) => {
+				if (row.label === el.ItemName) {
+					config[`_${el.ConfigurationArea}`][index].controls[i].value = el.ItemValue;
+					config[`_${el.ConfigurationArea}`][index].controls[i].settingIndex = el.index;
+					if (row.label === 'Port') {
+						config[`_${el.ConfigurationArea}`][index].controls[i].list = calRun.portList;
 					}
-				});
-			} else if (el.ParameterIndex === "0") {
-				let controlItem = JSON.parse(JSON.stringify(config[`_${el.ConfigurationArea}`][0].controls)).filter((a, i) => {
-					if (a.label === el.ItemName) {
-						config[`_${el.ConfigurationArea}`][0].controls[i].value = el.ItemValue;
-						return true;
-					} else {
-						return false;
-					}
-				});
-			}
+				}
+				// const setSerialList = (serialList, configIndex, rowIndex) => 
+
+
+			});
 		});
+
 	});
-	// TODO: need to filter settings object for each area then take settings and map to the control object
+	// DONE: need to filter settings object for each area then take settings and map to the control object
 	
-	// TODO: copy mapping below and see if we can apply that to the new methods
+	// TODO: Need to appropriately update list options from database  (devices, cal locations, etc)
 
-	// TODO: Need to appropriately update list options from database 
-
-	// TODO: Need to appropriately update serial port options from Serial Widget
+	// TODO: Need to appropriately update serial port list options from Serial Widget
 	
 	return config;
 }

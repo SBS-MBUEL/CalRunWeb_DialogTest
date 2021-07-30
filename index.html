@@ -68,7 +68,7 @@
 				if (!localSettings) { // retrieve database immediately.
 					// TODO: move database call to this section
 					let pollDatabaseInterval = setInterval(() =>  {
-						if (calRun && calRun?.configurationManager?.configurationSettings.length > 0) {
+						if (calRun && calRun?.configurationManager?.configurationSettings.length > 0 && calRun.portList.length > 0) {
 							clearInterval(pollDatabaseInterval);
 							setLocalStorage(`${systemName}-Settings`, calRun.configurationManager.configurationSettings);
 							localSettings = calRun.configurationManager.configurationSettings
@@ -76,18 +76,18 @@
 
 							// TODO: create configuration package based on settings?
 						}
-					}, 200);
+					}, 300);
 
 				} else {
 					//Set the calRun object's parameters to match the localStorage settings
 
 					let checkCalrunExists = setInterval(() => {
-						if (calRun && calRun.configurationManager) {
+						if (calRun && calRun.configurationManager && calRun.portList.length > 0) {
 							clearInterval(checkCalrunExists);
 							calRun.configurationManager.configurationSettings = localSettings;
 							setLocalConfig();
 						}
-					}, 100);
+					}, 300);
 					// TODO: in background start asychronous call to database for settings, when returns compare to localSettings - if difference overwrite database
 					
 
