@@ -1,4 +1,5 @@
 'use strict';
+
 //Reviewed 2020-01-21 (MHV) to ensure it complies with our error handling scheme
 //See CalRun.js for details
 
@@ -69,7 +70,7 @@ function loadDependencies()
 	//LazyLoader updates the header of the file
 	let lazyLoad = new LazyLoader();
 	lazyLoad.load([
-		// 'js/controlObjects.js',
+		'js/controlObjects.js',
 		'js/configurationManager.js',
 		// 'js/calibrationConfigurationFunctions.js',
 		// 'js/calibrationParameter.js',
@@ -1329,6 +1330,54 @@ function processDataPointValue(parameters)
 		calRun.onError(err);
 	}
 
+}
+
+function populateControlObject(config) {
+	// TODO: settings from local storage / database synced already
+	if (!config || !localSettings) {
+		console.error('Cannot populate control object, local settings are not retrieved from database or not in system storage.');
+		renderGrowl('growl', 'Cannot populate control object and cannot continue calibration.', 'danger');
+		enableButtons(false);
+		return;
+	}
+	localSettings.forEach((el, index) => {
+		el.index = index;
+	});
+
+	databaseTabs.forEach((el, index) => {
+		let controlSettings = localSettings.filter((a, b) => a.ConfigurationArea === el.ConfigurationArea);
+
+		// for (let index = 0; index < controlSettings.length; index++) {
+			
+			
+		// }
+		controlSettings.forEach((el) => {
+			if (el.ParameterIndex === "-1") {
+				let controlItem = JSON.parse(JSON.stringify(config[`_${el.ConfigurationArea}`][0].controls)).filter((a, i) => {
+					if (a.label === el.ItemName) {
+						config[`_${el.ConfigurationArea}`][0].controls[i].value = el.ItemValue;
+						return true;
+					} else {
+						return false;
+					}
+				});
+			} else if (el.ParameterIndex === "0") {
+				let controlItem = JSON.parse(JSON.stringify(config[`_${el.ConfigurationArea}`][0].controls)).filter((a, i) => {
+					if (a.label === el.ItemName) {
+						config[`_${el.ConfigurationArea}`][0].controls[i].value = el.ItemValue;
+						return true;
+					} else {
+						return false;
+					}
+				});
+			}
+		});
+	});
+	// TODO: need to filter settings object for each area then take settings and map to the control object
+	
+	// TODO: copy mapping below and see if we can apply that to the new methods
+	
+	return config;
 }
 
 /**

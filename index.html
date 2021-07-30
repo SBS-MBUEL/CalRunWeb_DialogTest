@@ -40,8 +40,8 @@
 		<script type="text/javascript" src="./js/utils/growl.js"></script>
 		
 		<!-- // Load mocks to simulate database retrieval -->
-		<script type="text/javascript" src="js/mocks/databaseMockContent.js"></script>
-		<script type="text/javascript" src="js/mocks/configMocks.js"></script>
+		<!-- <script type="text/javascript" src="js/mocks/databaseMockContent.js"></script> -->
+		<!-- <script type="text/javascript" src="js/mocks/configMocks.js"></script> -->
 
 		<!-- // used to get local data before database retrieval (expensive) -->
 		<script type="text/javascript" src="./js/utils/LocalStorage.js"></script>
@@ -53,6 +53,11 @@
 			var localConfig;
 			var systemName = 'calRunWeb';
 			document.addEventListener('DOMContentLoaded', function() {
+				function setLocalConfig() {
+					localConfig = populateControlObject(settingsCollection);
+
+					setLocalStorage(`${systemName}-Config`, localConfig);
+				}
 				initializeGlobals(initializeCalRun);
 				// This is how we get the program working
 				//Load global files and then initialize the calRun system
@@ -64,9 +69,10 @@
 					// TODO: move database call to this section
 					let pollDatabaseInterval = setInterval(() =>  {
 						if (calRun && calRun?.configurationManager?.configurationSettings.length > 0) {
-							setLocalStorage(`${systemName}-Settings`, calRun.configurationManager.configurationSettings);
-
 							clearInterval(pollDatabaseInterval);
+							setLocalStorage(`${systemName}-Settings`, calRun.configurationManager.configurationSettings);
+							localSettings = calRun.configurationManager.configurationSettings
+							setLocalConfig();
 
 							// TODO: create configuration package based on settings?
 						}
@@ -74,7 +80,14 @@
 
 				} else {
 					//Set the calRun object's parameters to match the localStorage settings
-					calRun.configurationManager.configurationSettings = localSettings;
+
+					let checkCalrunExists = setInterval(() => {
+						if (calRun && calRun.configurationManager) {
+							clearInterval(checkCalrunExists);
+							calRun.configurationManager.configurationSettings = localSettings;
+							setLocalConfig();
+						}
+					}, 100);
 					// TODO: in background start asychronous call to database for settings, when returns compare to localSettings - if difference overwrite database
 					
 
@@ -82,10 +95,10 @@
 				}
 	
 				// TODO: this likely will move to be called by prior check
-				if (!localConfig) { // retrieve configuration from database
-					setLocalStorage(`${systemName}-Config`, objectCollection);
-					localConfig = objectCollection;
-				}
+				// if (!localConfig) { // retrieve configuration from database
+				// 	setLocalStorage(`${systemName}-Config`, settingsCollection);
+				// 	localConfig = settingsCollection;
+				// }
 			
 			});
 		</script>
