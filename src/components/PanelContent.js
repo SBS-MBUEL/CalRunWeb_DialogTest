@@ -526,6 +526,7 @@ class PanelContent extends React.Component {
                                         onChange={this.setContentValues} 
                                         changeSlide={this.changeSlide}
                                         currentPane={activeTab}
+                                        settings={this.props.settings}
                                         optionView={panel.controls[0].value}
                                         maxSlides={this.state.mainMaxSlides}
                                     />
@@ -552,6 +553,7 @@ class PanelContent extends React.Component {
                                                     contentIdx={subContentIdx}
                                                     onChange={this.setContentValues} 
                                                     changeSlide={this.changeSlide}
+                                                    settings={this.props.settings}
                                                     currentPane={activeTab}
                                                     optionView={'sub'}
                                                     maxSlides={this.state.mainMaxSlides}

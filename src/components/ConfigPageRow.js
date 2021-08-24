@@ -16,7 +16,7 @@ import { ErrorRow } from './ErrorRow';
     constructor(props) {
         super(props);
         this.state = {
-            userValue: props && props.row && props.row.value ? props.row.value : undefined,
+            userValue: props && props.row  ? this.props.initialValue : undefined,
         }
         this.trackChanges = this.trackChanges.bind(this);
         this.btnClickHandler = this.btnClickHandler.bind(this);

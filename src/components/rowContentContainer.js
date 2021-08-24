@@ -7,8 +7,8 @@ class RowContentContainer extends React.Component {
         this.state = {
             panelContent : props.panelContent,
             maxSlides: props.maxSlides,
-            currentView: props.optionView
-            
+            currentView: props.optionView,
+            settings: props.settings
         }
 
         this.setContentValues = this.setContentValues.bind(this);
@@ -41,6 +41,11 @@ class RowContentContainer extends React.Component {
                     <React.Fragment>
 
                         {this.state.panelContent.controls.map((row, rowIdx) => {
+                            let initialValue = 0;
+                            if (row.type !== 'button') {
+                                initialValue = this.state.settings.find(el => (el.ItemName === row.label)).ItemValue;
+                            }
+                            
                             return (
                                 <div className="column content" key={`${row.label}-${rowIdx}`}>
                                     <ConfigPageRow 
@@ -48,6 +53,7 @@ class RowContentContainer extends React.Component {
                                         onChange={this.setContentValues} 
                                         row={row} 
                                         settingIndex={this.state.panelContent.indice}
+                                        initialValue={initialValue}
                                         controlIndex={rowIdx} 
                                         buttonHandler={this.buttonHandler}
                                     />

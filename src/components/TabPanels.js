@@ -35,6 +35,7 @@ class TabPanels extends React.Component {
                                 index={i} 
                                 content={content[`_${tab.ConfigurationArea}`]}
                                 setContent={this.props.setContent}
+                                settings={this.props.settings}
                                 tabName={tab.ConfigurationArea}
                                 handler={clickRouter}
                                 activeTab={i == activeTab}
