@@ -16,7 +16,7 @@ import { ErrorRow } from './ErrorRow';
     constructor(props) {
         super(props);
         this.state = {
-            userValue: props && props.row  ? this.props.initialValue : undefined,
+            userValue: props && props.row && props.row.value ? props.row.value : undefined,
         }
         this.trackChanges = this.trackChanges.bind(this);
         this.btnClickHandler = this.btnClickHandler.bind(this);
@@ -44,7 +44,7 @@ import { ErrorRow } from './ErrorRow';
 
         let content = <ErrorRow />;
         let subContent = '';
-        if (row && row.value && row.label) {
+        if (row && row.label) {
             subContent = row.type === 'dropdown' ?
                     <DropDownContainer index={row.label} userValue={this.state.userValue} trackChanges={this.trackChanges} row={row} />
                 : (row.type === 'text' || row.type === 'number') ?
@@ -52,7 +52,7 @@ import { ErrorRow } from './ErrorRow';
                 : row.type === 'textarea' ?
                     <TextArea index={row.label} value={this.state.userValue} label={row.label} trackChanges={this.trackChanges} />
                 :
-                    <ButtonItem value={row.value} handler={this.btnClickHandler} />;
+                    <ButtonItem value={this.state.userValue} handler={this.btnClickHandler} />;
         
             content = ( 
                 <div key={`${row.label}-row-data`} className="columns font-weight-bold is-vcentered">

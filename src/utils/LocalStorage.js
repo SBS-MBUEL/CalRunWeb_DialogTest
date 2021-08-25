@@ -29,8 +29,7 @@ function setLocalStorage(key, value) {
  */
 function getLocalStorage(key) {
     if (!key) {
-        // console.error(`Cannot retrieve Local Storage with an empty key value\nkey: ${JSON.stringify(key)}`);
-        console.log("uh oh!");
+        console.error(`Cannot retrieve Local Storage with an empty key value\nkey: ${JSON.stringify(key)}`);
         return null;
     }
     try {

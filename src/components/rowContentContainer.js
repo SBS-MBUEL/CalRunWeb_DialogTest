@@ -54,6 +54,7 @@ class RowContentContainer extends React.Component {
                                     //console.error("could not find an inital value for " + row.label + ", got error " + e.message);
                                 }
                             }
+                            row.value = initialValue !== undefined ? initialValue : row.value;
                             return (
                                 <div className="column content" key={`${row.label}-${rowIdx}`}>
                                     <ConfigPageRow 
@@ -61,7 +62,6 @@ class RowContentContainer extends React.Component {
                                         onChange={this.setContentValues} 
                                         row={row} 
                                         settingIndex={this.state.panelContent.indice}
-                                        initialValue={initialValue}
                                         controlIndex={rowIdx} 
                                         buttonHandler={this.buttonHandler}
                                     />
