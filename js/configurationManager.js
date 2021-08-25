@@ -88,7 +88,6 @@ function ConfigurationManager(isDebug)
 			//This function is in sbGlobal
 			if(isJson(data))
 			{
-				console.log("Nice! " + data);
 				//store the configurations for later use
 				self.configurations = JSON.parse(data);
 
@@ -181,12 +180,14 @@ function ConfigurationManager(isDebug)
 	{
 		try
 		{
+			//comenting out so new configuration can be found
 			//a blank JSON object indicates configuration not in database
 			if(data === '[]')
 			{
-				throw new Error('Configuration not found in database');
+				self.emit('settingsRetrieved', self.configurationSettings);
+				return false;
 			}
-
+			
 			//must be a valid JSON object
 			if(isJson(data))
 			{
@@ -203,6 +204,55 @@ function ConfigurationManager(isDebug)
 			//this is an error
 			self.processDatabaseError(data);
 			return false;
+		}
+		catch(err)
+		{
+			self.onError(err);
+		}
+	};
+
+	/**
+	 * Sets a single setting for the given configuration
+	 * Test URL: http://localhost/sbGlobal/sbDatabaseFunctions.php?debug=true&dostuff=getCalibrationConfigurationV2&configurationID=108
+	 * Function Type: Async
+	 * 
+	 * @param {integer} configurationID - the configuration being recalled
+	 */
+	self.setConfigurationSettings = function(configurationID, configurationArea, optionIndex, parameterIndex, itemName, itemValue)
+	{
+		try
+		{
+			//isPositiveInteger is in sbGlobal
+			//value must be a positive integer
+			if(isPositiveInteger(configurationID) === false)
+			{
+				throw new RangeError('Configuration ID is invalid. Configuration ID = ' + configurationID);
+			}
+
+			//configuration ID must be in local memory
+			if(self.checkExistingConfigurationID(configurationID) === false)
+			{
+				throw new Error('Configuration ID ' + configurationID + ' cannot be found, please use a different configuration id.');
+			}
+
+			//build parameters for the database
+			let parameters = 
+			{
+				debug: self.isDebug,
+				dostuff: 'RunStoredProcedure',
+				connection: 'calibration',
+				storedProcedure: 'SetConfigurationSetting',
+				Configuration_ID: configurationID,
+				Configuration_Area: configurationArea,
+				Option_Index: optionIndex,
+				parameterIndex: parameterIndex,
+				Item_Name: itemName,
+				Item_Value: itemValue
+			};
+
+			self.logDebug('SetConfigurationSetting', 'parameters', parameters);
+			//call the database
+			ProcessDatabaseRequest(parameters, function(data){});
 		}
 		catch(err)
 		{

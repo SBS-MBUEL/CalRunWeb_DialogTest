@@ -9,10 +9,7 @@ import Growl from './utils/growl-containter';
 
 
 export default function App(props) {
-
-
-
-    return (
+    return (  
         <div>
             <ConfigContainer 
                 tabs={databaseTabs} 

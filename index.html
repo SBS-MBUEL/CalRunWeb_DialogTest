@@ -67,14 +67,25 @@
 			});
 
 			configMgr.on("settingsRetrieved", function() {
-				setLocalStorage('SystemName-Settings', configMgr.configurationSettings);
-				localSettings = configMgr.configurationSettings;
+				// Prepend a dummy object so that index 0 is occupied
+				let dummyObj = {
+						'ItemName': 'Invalid', 
+						'ConfigurationArea': 'Invalid',
+						'ItemValue': '-1',
+						'ConfigurationNodeID': '-1',
+						'displayIndex': '-1',
+						'NodeSubIndex': '-1'
+				};
+				let fullSettings = configMgr.configurationSettings;
+				fullSettings.unshift(dummyObj);
+				setLocalStorage('SystemName-Settings', fullSettings);
+				localSettings = fullSettings;
 			});
 
 			if (!localSettings) { // retrieve database immediately
 				//setLocalStorage('SystemName-Settings', databaseContent);
 				//localSettings = databaseContent;
-				configMgr.recallConfigurations(61);	// TODO: This id to be replaced or dynamically found
+				configMgr.recallConfigurations(64);	// TODO: This id to be replaced or dynamically found
 			}
 
 			if (!localConfig) { // retrieve configuration from database

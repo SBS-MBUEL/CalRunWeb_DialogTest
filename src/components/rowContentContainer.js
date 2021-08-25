@@ -8,7 +8,8 @@ class RowContentContainer extends React.Component {
             panelContent : props.panelContent,
             maxSlides: props.maxSlides,
             currentView: props.optionView,
-            settings: props.settings
+            settings: props.settings,
+            tabName: props.tabName
         }
 
         this.setContentValues = this.setContentValues.bind(this);
@@ -41,11 +42,18 @@ class RowContentContainer extends React.Component {
                     <React.Fragment>
 
                         {this.state.panelContent.controls.map((row, rowIdx) => {
-                            let initialValue = 0;
+                            let initialValue = undefined;
                             if (row.type !== 'button') {
-                                initialValue = this.state.settings.find(el => (el.ItemName === row.label)).ItemValue;
+                                try 
+                                {
+                                    initialValue = this.state.settings.find(el => (el.ItemName === row.label &&
+                                        el.ConfigurationArea === this.state.tabName)).ItemValue;
+                                }
+                                catch (e)
+                                {
+                                    //console.error("could not find an inital value for " + row.label + ", got error " + e.message);
+                                }
                             }
-                            
                             return (
                                 <div className="column content" key={`${row.label}-${rowIdx}`}>
                                     <ConfigPageRow 

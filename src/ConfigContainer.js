@@ -110,7 +110,17 @@ class ConfigContainer extends React.Component {
                 copiedSettings[index].ItemValue = value;
                 successfulUpdate = true;
             } else {
-                console.error(`Error trying to set value: `);
+                // Couldn't find setting, let's add it
+                let newSetting = {
+                    "ItemValue": value,
+                    "ItemName": key,
+                    "ConfigurationArea": tabName.toLowerCase(),
+                    "configurationNodeID": -1,  //currently unused
+                    "displayIndex": -1, //currently unused
+                    "NodeSubIndex": 1
+                }
+                copiedSettings.push(newSetting);
+                successfulUpdate = true;
             }
 
         } catch(err) {
