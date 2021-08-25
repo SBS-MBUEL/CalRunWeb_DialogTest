@@ -83,9 +83,9 @@
 			});
 
 			if (!localSettings) { // retrieve database immediately
-				setLocalStorage('SystemName-Settings', databaseContent);
-				localSettings = databaseContent;
-				//configMgr.recallConfigurations(64);	// TODO: This id to be replaced or dynamically found
+				//setLocalStorage('SystemName-Settings', databaseContent);
+				//localSettings = databaseContent;
+				configMgr.recallConfigurations(64);	// TODO: This id to be replaced or dynamically found
 			}
 
 			if (!localConfig) { // retrieve configuration from database
