@@ -122,6 +122,145 @@ function ConfigurationManager(isDebug)
 	};
 
 	/**
+	 * Retrieves all the settings for the selected configuration
+	 * Test URL: http://localhost/sbGlobal/sbDatabaseFunctions.php?debug=true&dostuff=getCalibrationConfigurationV2&configurationID=108
+	 * Function Type: Async
+	 * 
+	 * @param {integer} configurationID - the configuration being recalled
+	 */
+	self.getConfigurationSettings = function(configurationID)
+	{
+		try
+		{
+			//isPositiveInteger is in sbGlobal
+			//value must be a positive integer
+			if(isPositiveInteger(configurationID) === false)
+			{
+				throw new RangeError('Configuration ID is invalid. Configuration ID = ' + configurationID);
+			}
+
+			//configuration ID must be in local memory
+			if(self.checkExistingConfigurationID(configurationID) === false)
+			{
+				throw new Error('Configuration ID ' + configurationID + ' cannot be found, please use a different configuration id.');
+			}
+
+			//build parameters for the database
+			let parameters = 
+			{
+				debug: self.isDebug,
+				dostuff: 'RunStoredProcedure',
+				connection: 'calibration',
+				storedProcedure: 'GetConfigurationSettingsV2',
+				configurationID: configurationID
+			};
+
+			self.logDebug('retrieveConfigurationSettings', 'parameters', parameters);
+	
+			//call the database
+			ProcessDatabaseRequest(parameters, function(data)
+			{
+				self.processConfigSettings(data);
+			});
+		}
+		catch(err)
+		{
+			self.onError(err);
+		}
+	};
+
+	/**
+	 * When the selected configuration settings have been retrieved
+	 * Updates the configuration settings object
+	 * Function Type: Sync
+	 * 
+	 * @param {string} data - JSON encoded string
+	 */
+	self.processConfigSettings = function(data)
+	{
+		try
+		{
+			//comenting out so new configuration can be found
+			//a blank JSON object indicates configuration not in database
+			if(data === '[]')
+			{
+				self.emit('settingsRetrieved', self.configurationSettings);
+				return false;
+			}
+			
+			//must be a valid JSON object
+			if(isJson(data))
+			{
+				//stuff the settings into local memory for later use
+				self.configurationSettings = JSON.parse(data);
+
+				self.logDebug('processConfigurationSettings', 'settings retrieved successfully', data);
+
+				self.emit('settingsRetrieved', self.configurationSettings);
+				return true;
+			}
+
+			//if the code makes it here, then it was not a valid JSON object
+			//this is an error
+			self.processDatabaseError(data);
+			return false;
+		}
+		catch(err)
+		{
+			self.onError(err);
+		}
+	};
+
+	/**
+	 * Sets a single setting for the given configuration
+	 * Test URL: http://localhost/sbGlobal/sbDatabaseFunctions.php?debug=true&dostuff=getCalibrationConfigurationV2&configurationID=108
+	 * Function Type: Async
+	 * 
+	 * @param {integer} configurationID - the configuration being recalled
+	 */
+	self.setConfigurationSettings = function(configurationID, configurationArea, optionIndex, parameterIndex, itemName, itemValue)
+	{
+		try
+		{
+			//isPositiveInteger is in sbGlobal
+			//value must be a positive integer
+			if(isPositiveInteger(configurationID) === false)
+			{
+				throw new RangeError('Configuration ID is invalid. Configuration ID = ' + configurationID);
+			}
+
+			//configuration ID must be in local memory
+			if(self.checkExistingConfigurationID(configurationID) === false)
+			{
+				throw new Error('Configuration ID ' + configurationID + ' cannot be found, please use a different configuration id.');
+			}
+
+			//build parameters for the database
+			let parameters = 
+			{
+				debug: self.isDebug,
+				dostuff: 'RunStoredProcedure',
+				connection: 'calibration',
+				storedProcedure: 'SetConfigurationSetting',
+				Configuration_ID: configurationID,
+				Configuration_Area: configurationArea,
+				Option_Index: optionIndex,
+				parameterIndex: parameterIndex,
+				Item_Name: itemName,
+				Item_Value: itemValue
+			};
+
+			self.logDebug('SetConfigurationSetting', 'parameters', parameters);
+			//call the database
+			ProcessDatabaseRequest(parameters, function(data){});
+		}
+		catch(err)
+		{
+			self.onError(err);
+		}
+	};
+
+	/**
 	 * Creates a new, blank, named configuration in the database
 	 * Test URL: http://localhost/sbGlobal/sbDatabaseFunctions.php?debug=true&dostuff=RunStoredProcedure&username=mvorkapich&pcname=1234&applicationname=CalRun&connection=calibration&storedProcedure=CreateNewConfiguration&systemID=35&configurationName=blargyblarg
 	 * Function Type: Async
@@ -875,6 +1014,7 @@ function ConfigurationManager(isDebug)
 			//must be a valid JSON object
 			if(isJson(data))
 			{
+				console.log("Nice! " + data);
 				//stuff the settings into local memory for later use
 				self.configurationSettings = JSON.parse(data);
 

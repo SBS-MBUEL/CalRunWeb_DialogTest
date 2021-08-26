@@ -3,6 +3,7 @@
 //calRun object. This is the magic that does all the work
 let calRun = null;
 let popUp = null;
+//let configMgr = null;
 
 function initializeCalRun(enable = false)
 {
@@ -48,6 +49,16 @@ function continueCalRunInitialization()
 	{
 		console.log('Continuing CalRun initialization');
 		calRun = new CalRun(true);
+		configMgr = new ConfigurationManager(true);
+		configMgr.on("configurationsProcessed", function() {
+			// Set each setting in the database
+			getLocalStorage('SystemName-Settings').forEach(el => 
+				configMgr.setConfigurationSettings(configMgr.currentConfiguration, el.ConfigurationArea,
+												   el.configurationNodeID, el.displayIndex, el.ItemName, 
+												   el.ItemValue)	
+			); 
+		});
+	
 		addListeners();
 		calRun.initialize();
 	
@@ -454,6 +465,9 @@ function showPopUpDialog(title, width, height)
 		pu.on('closed', function()
 		{
 			enableButtons(true);
+
+			// Note: this should only happen during the Calibration Configuration dialog
+			updateConfigSettingsDB();
 		});
 		pu.show();
 		pu.id = title.split(' ').join('-');
@@ -463,6 +477,18 @@ function showPopUpDialog(title, width, height)
 	{
 		onError(err);
 	}
+}
+
+/**
+ * Triggered when the Configuration Configuration popup is closed
+ * Saves all local storage config settings to the database.
+ * TODO: Make the systemID used to access DB dynamic
+ */
+function updateConfigSettingsDB()
+{
+
+	configMgr.recallConfigurations(64);	// TODO: This id needs to be replaced or dynamically found
+
 }
 
 /**

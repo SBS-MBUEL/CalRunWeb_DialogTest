@@ -32,7 +32,7 @@ function setup() {
 describe('value errors not popping up.', () => {
     test('changing sub option 0 propagates appropriately with no errors.', () => {
         setup();
-        render(<App /> );
+        render(<App mockLS={true}/> );
 
         const _sub_drop_items = screen.getAllByText(/Not Set/);
 
@@ -51,7 +51,7 @@ describe('value errors not popping up.', () => {
 
         const new_length = screen.getAllByText(/Not Set/).length;
 
-        expect(new_length).toBe(initial_length - 2);
+        expect(new_length).toBe(initial_length - 1);
     });
 });
 
@@ -59,7 +59,7 @@ describe('normal functions', () => {
     test('renders config', () => {
         setup();
 
-        render(<App /> );
+        render(<App mockLS={true}/> );
         const linkElement = screen.getAllByText(/SYSTEM/)[0];
     
         expect(linkElement).toBeDefined();
@@ -70,7 +70,7 @@ describe('normal functions', () => {
     test('switch tabs', () => {
         setup();
 
-        render(<App /> );
+        render(<App mockLS={true}/> );
     
         const linkElement = screen.getAllByText('reference')[0];
         
@@ -89,10 +89,10 @@ describe('normal functions', () => {
     test('add sub item propagates, has no undefined values.', () => {
         setup();
 
-        render(<App /> );
+        render(<App mockLS={true}/> );
 
         let _sub_drop_items = screen.getAllByText(/Not Set/);
-        expect(_sub_drop_items.length).toBe(77);
+        expect(_sub_drop_items.length).toBe(58);
 
         const _sub_drop_item = _sub_drop_items[5];
 
@@ -111,7 +111,7 @@ describe('normal functions', () => {
         _sub_drop_items = screen.getAllByText(/Not Set/);
 
         expect(_sub_item_list.length).toBe(3);
-        expect(_sub_drop_items.length).toBe(77);
+        expect(_sub_drop_items.length).toBe(59);
 
         const _add_item = screen.getAllByText(/add device/)[0];
         fireEvent.click(_add_item);
@@ -121,7 +121,7 @@ describe('normal functions', () => {
         _sub_drop_items = screen.getAllByText(/Not Set/);
 
         expect(_sub_item_list.length).toBe(3);
-        expect(_sub_drop_items.length).toBe(92);
+        expect(_sub_drop_items.length).toBe(69);
         
     });
 
@@ -130,7 +130,7 @@ describe('normal functions', () => {
         
         setup();
 
-        render(<App /> );
+        render(<App mockLS={true}/> );
 
         const _sub_item = screen.getAllByText(/add device/)[0];
         fireEvent.click(_sub_item);
@@ -148,7 +148,7 @@ describe('normal functions', () => {
     test('copy sub item propagates, has no undefined values.', () => {
         setup();
 
-        render(<App /> );
+        render(<App mockLS={true}/> );
 
         let _sub_drop_items = screen.getAllByText(/Not Set/);
         let _sub_item_list = screen.getAllByText(/DeepSeapHoxV2/);
@@ -157,7 +157,7 @@ describe('normal functions', () => {
         fireEvent.click(_copy_button);
 
         expect(_sub_item_list.length).toBe(3);
-        expect(_sub_drop_items.length).toBe(77);
+        expect(_sub_drop_items.length).toBe(58);
         
         const _sub_list = screen.getAllByText(/Device/);
 
@@ -167,7 +167,7 @@ describe('normal functions', () => {
         _sub_drop_items = screen.getAllByText(/Not Set/);
 
         expect(_sub_item_list.length).toBe(3);
-        expect(_sub_drop_items.length).toBe(92);
+        expect(_sub_drop_items.length).toBe(67);
     });
 
     // at this stage it does add it to the list
@@ -175,7 +175,7 @@ describe('normal functions', () => {
         
         setup();
 
-        render(<App /> );
+        render(<App mockLS={true}/> );
 
         const _sub_item = screen.getAllByText(/copy device/)[0];
         fireEvent.click(_sub_item);
@@ -194,7 +194,7 @@ describe('normal functions', () => {
     test('remove sub item propagates, has no undefined values.', () => {
         setup();
 
-        render(<App /> );
+        render(<App mockLS={true}/> );
 
         const _sub_item = screen.getAllByText(/remove device/)[0];
         fireEvent.click(_sub_item);
@@ -208,7 +208,7 @@ describe('normal functions', () => {
     test('Keys are correct after removing last item.', () => {
         setup();
 
-        render(<App /> );
+        render(<App mockLS={true}/> );
 
         const _sub_item = screen.getAllByText(/remove device/)[0];
         fireEvent.click(_sub_item);

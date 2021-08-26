@@ -42,8 +42,8 @@ class ConfigContainer extends React.Component {
 
     /**
      * setContent takes the changes from the tabs, updates the real-time objects and saves them to local-storage
-     * @param {string} key @deprecated
-     * @param {string} value @deprecated
+     * @param {string} key 
+     * @param {string} value 
      * @param {object} content 
      * @param {string} tabName 
      * @param {string} fn - default is update mode / options "update", "delete", "add" (copy is dealt with as an add)
@@ -59,7 +59,7 @@ class ConfigContainer extends React.Component {
         let successfulUpdate = false;
         
         if (fn === 'update') {
-            successfulUpdate = this.copyRow(copiedSettings, tabName);
+            successfulUpdate = this.copyRow(key, value, copiedSettings, tabName);
         }
         
         if (fn === 'add' || fn === 'copy') {
@@ -99,22 +99,32 @@ class ConfigContainer extends React.Component {
      * @param {string} tabName 
      * @returns 
      */
-    copyRow(copiedSettings, tabName) {
+    copyRow(key, value, copiedSettings, tabName) {
         console.log('copy Row');
         let successfulUpdate = false;
 
         try {
             let index = copiedSettings.map((el, index) => el.ItemName === key && el.ConfigurationArea === tabName.toLowerCase() ? index : undefined).filter((a, b) => a !== undefined)[0];
-                
             if (index) {
                 copiedSettings[index].value = value; // TODO: this needs error checking so it's not trying to set something that doesn't exist
+                copiedSettings[index].ItemValue = value;
                 successfulUpdate = true;
             } else {
-                console.error(`Error trying to set value:`);
+                // Couldn't find setting, let's add it
+                let newSetting = {
+                    "ItemValue": value,
+                    "ItemName": key,
+                    "ConfigurationArea": tabName.toLowerCase(),
+                    "configurationNodeID": -1,  //currently unused
+                    "displayIndex": -1, //currently unused
+                    "NodeSubIndex": 1
+                }
+                copiedSettings.push(newSetting);
+                successfulUpdate = true;
             }
 
         } catch(err) {
-            console.error(`Error trying to set value:`);
+            console.error(`Error trying to set value: ` + err.name + err.message);
         }
 
 
@@ -241,14 +251,14 @@ class ConfigContainer extends React.Component {
     }
 
     render() {
-        const { tabs, content, activeTab } = this.state;
+        const { tabs, content, activeTab, settings} = this.state;
         // TODO: make "pages"
         // TODO: columns wrapper for all of config content?
         return (
             <div className="columns">
                 <div className="column">
                     <TabLinkContainer tabs={tabs} changeActiveTab={this.changeActiveTab} activeTab={activeTab} />
-                    <TabPanels tabs={tabs} content={content} setContent={this.setContent} activeTab={activeTab} clickRouter={this.clickRouter} />
+                    <TabPanels tabs={tabs} content={content} settings={settings} setContent={this.setContent} activeTab={activeTab} clickRouter={this.clickRouter} />
                 </div>
             </div>
         );

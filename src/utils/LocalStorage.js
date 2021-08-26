@@ -9,7 +9,7 @@ import { renderGrowl } from "./growl";
  */
 function setLocalStorage(key, value) {
     if (!key || !value || value.length <= 0) {
-        // console.error(`Not storing anything to Local Storage.\nkey: ${JSON.stringify(key)}\nvalue: ${JSON.stringify(value)}`);
+        console.error(`Not storing anything to Local Storage.\nkey: ${JSON.stringify(key)}\nvalue: ${JSON.stringify(value)}`);
         return null;
     }
     try {
@@ -29,7 +29,7 @@ function setLocalStorage(key, value) {
  */
 function getLocalStorage(key) {
     if (!key) {
-        // console.error(`Cannot retrieve Local Storage with an empty key value\nkey: ${JSON.stringify(key)}`);
+        console.error(`Cannot retrieve Local Storage with an empty key value\nkey: ${JSON.stringify(key)}`);
         return null;
     }
     try {
