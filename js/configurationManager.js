@@ -21,6 +21,8 @@ function ConfigurationManager(isDebug)
 	self.controlList = [];
 	self.dataPoints = [];
 	self.settings = [];
+	self.deviceID = -1;
+	self.largestConfigurationID = -1;
 
 	//for database calls
 	self.isDebug = isDebug === true;
@@ -29,6 +31,75 @@ function ConfigurationManager(isDebug)
 	self.userName = '';
 	self.pcName = '';
 	self.applicationName = '';
+
+	/**
+	 * Used to find the DeviceID from associated with the given SystemName
+	 * This searches the configuration table to find the most recent configuration with this name.
+	 */
+	self.getDeviceIDFromSystemName = function(systemName) {
+		try
+		{
+
+			//build the database call
+			let parameters = 
+			{
+				debug: self.isDebug,
+				dostuff: 'RunStoredProcedure',
+				connection: 'calibration',
+				storedProcedure: 'GetDeviceID',
+				systemName: systemName
+			};
+
+			//log the parameters
+			self.logDebug('GetDeviceID', 'parameters', parameters);
+
+			//database call
+			ProcessDatabaseRequest(parameters, function(data)
+			{
+				//process the retrieved data
+				self.processDeviceID(data);
+			})
+		}
+		catch(err)
+		{
+			self.onError(err);
+		}
+	}
+
+	self.processDeviceID = function(data)
+	{
+		try
+		{
+			//This function is in sbGlobal
+			if(isJson(data))
+			{
+				//store the device ids for later use
+				let deviceIDs = JSON.parse(data);
+
+				if (!deviceIDs.length) 
+				{
+					self.deviceID = -1;
+				} else 
+				{
+					// Since the procedure lists the newest first, we just want the first value there
+					self.deviceID = deviceIDs[0].CalibrationSystemID;
+				}
+
+				//notify the outside world that processing has happened
+				self.emit('deviceIdFound', self.deviceID);
+				self.logDebug('deviceIdFound', 'Searching for a Device Id concluded', data);
+				return true;
+			}
+
+			self.processDatabaseError(data);
+			return false;
+		}
+		catch(err)
+		{
+			self.onError(err);
+		}
+	};
+
 
 	/**
 	 * Recalls a list of configurations that have been stored in teh database

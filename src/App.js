@@ -13,7 +13,7 @@ export default function App(props) {
         <div>
             <ConfigContainer 
                 tabs={databaseTabs} 
-                settings={props.mockLS ? databaseContent : getLocalStorage("SystemName-Settings")}
+                settings={props.mockLS ? databaseContent : getLocalStorage(getLocalStorage("SystemName") + "-Settings")}
                 configurations={objectCollection}
             />
             {/* <!-- This is required for the growl to display correctly --> */}

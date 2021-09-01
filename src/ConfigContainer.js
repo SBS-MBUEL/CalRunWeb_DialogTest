@@ -81,9 +81,8 @@ class ConfigContainer extends React.Component {
                 content: changedContent
             });
 
-            // TODO: need "SystemName" to be dynamic
-            setLocalStorage('SystemName-Settings', copiedSettings);
-            setLocalStorage('SystemName-Config', changedContent);
+            setLocalStorage(getLocalStorage("SystemName") + '-Settings', copiedSettings);
+            setLocalStorage(getLocalStorage("SystemName") + '-Config', changedContent);
             
         }
 
