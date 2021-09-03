@@ -54,10 +54,14 @@
 		<script type="text/javascript">
 			window.onload = function() 
 			{
+				// This script runs when the html finishes loading
+
 				// This is how we get the program working
 				//Load global files and then initialize the calRun system
 				var systemNameEdit = document.getElementById('systemNameEdit');
 				let systemName = getLocalStorage("SystemName");
+
+				// Want to get the system name if it exists, or set it to "default" otherwise
 				if (systemName) 
 				{
 					systemNameEdit.textContent = systemName;
@@ -72,23 +76,26 @@
 				// set up config manager to listen to db queries emitting
 				let configMgr = new ConfigurationManager(true);
 
+				// Called when a search for a deviceId matching this systemName concludes
 				configMgr.on("deviceIdFound", function() 
 				{
 					if (configMgr.deviceID >= 0) 
 					{
 						configMgr.recallConfigurations(configMgr.deviceID);
 					} else {
-						// make a new one!
+						// TODO: Make a new configuration for this systemName
 						console.log("configuration not found!");
 					}
 				});
 
+				// Called when recallConfigurations finishes
 				configMgr.on("configurationsProcessed", function() 
 				{
 					// Since we have the configuration id, we can now get the settings
 					configMgr.getConfigurationSettings(configMgr.currentConfiguration);
 				});
 
+				// Called when getconfigurationSettins concludes
 				configMgr.on("settingsRetrieved", function() 
 				{
 					// Prepend a dummy object so that index 0 is occupied
@@ -107,22 +114,26 @@
 					//renderGrowl('growl', 'Set local storage from db!', 'warning');
 				});
 
-				if (!localSettings && systemNameEdit.textContent !== 'Not Set') { // retrieve database immediately
+				// If we don't already have the local settings for this systemName, get from the DB 
+				if (!localSettings) { // retrieve database immediately
 					configMgr.getDeviceIDFromSystemName(systemNameEdit.textContent);
 				}
 
+				// This is still mocked
 				if (!localConfig) { // retrieve configuration from database
 					setLocalStorage('default-Config', objectCollection);
 					localConfig = objectCollection;
 				}
 
+				// Runs when a user starts editing the system name
 				systemNameEdit.addEventListener("focus", function() 
 				{
 					systemNameEdit.setAttribute("data-initial", systemNameEdit.textContent);
 				});
 
+				// Runs when a user finishes ending the system name
 				systemNameEdit.addEventListener("blur", function () {
-        			// ...if content is different...
+        			// if changes were made, run the db query process for the new name
         			if (systemNameEdit.getAttribute("data-initial") !== content.innerHTML) {
 						setLocalStorage("SystemName", systemNameEdit.textContent);
 						setLocalStorage(systemNameEdit.textContent + "-Config", getLocalStorage("default-Config"));

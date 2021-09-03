@@ -174,6 +174,9 @@ function showConfigurationDialog()
 		let localConfig = getLocalStorage(systemName + '-Config');
 	
 		renderConfig(popUp.contentArea.id, databaseTabs, localSettings, localConfig);
+	} else 
+	{
+		console.error("Config Dialog could not be created, systemName could not be found");
 	}
 }
 

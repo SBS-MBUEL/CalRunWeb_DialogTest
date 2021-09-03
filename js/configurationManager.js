@@ -22,7 +22,6 @@ function ConfigurationManager(isDebug)
 	self.dataPoints = [];
 	self.settings = [];
 	self.deviceID = -1;
-	self.largestConfigurationID = -1;
 
 	//for database calls
 	self.isDebug = isDebug === true;
@@ -66,6 +65,11 @@ function ConfigurationManager(isDebug)
 		}
 	}
 
+	/**
+	 * Processes the response for finding the deviceID based on the systemID.
+	 * If the deviceID is found, the self.deviceID field gets set to it. 
+	 * Otherwise, it gets set to -1.
+	 */
 	self.processDeviceID = function(data)
 	{
 		try

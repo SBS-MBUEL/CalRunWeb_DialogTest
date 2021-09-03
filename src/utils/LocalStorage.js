@@ -47,28 +47,7 @@ function getLocalStorage(key)
         return null;
     }
 }
-/*
-function getSystemName() 
-{
-    if (!localStorage.length)
-    {
-        return "";
-    } else 
-    {
-        for(let i = 0; i < localStorage.length; i++) 
-        {
-            let el = localStorage.key(i);
-            let splitKey = el.split("-");
-            if (splitKey.length > 1) 
-            {
-                return splitKey[0];
-            }
-        }
-        return "";
-        
-    }
-}
-*/
+
 /**
  * Code to make these functions visible in NODE.JS for testing
  * module.exports is Node specific so we need to test for it's existence
@@ -77,6 +56,5 @@ function getSystemName()
      module.exports = {
          setLocalStorage: setLocalStorage,
          getLocalStorage: getLocalStorage,
-         //getSystemName: getSystemName
      };
  }
