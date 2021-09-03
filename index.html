@@ -52,51 +52,97 @@
 
 		<!-- // Initialize application -->
 		<script type="text/javascript">
-			// This is how we get the program working
-			//Load global files and then initialize the calRun system
-			var localSettings = getLocalStorage('SystemName-Settings');
-			var localConfig = getLocalStorage('SystemName-Config');
+			window.onload = function() 
+			{
+				// This script runs when the html finishes loading
 
+				// This is how we get the program working
+				//Load global files and then initialize the calRun system
+				var systemNameEdit = document.getElementById('systemNameEdit');
+				let systemName = getLocalStorage("SystemName");
 
-			// set up config manager to listen to db queries emitting
-			let configMgr = new ConfigurationManager(true);
+				// Want to get the system name if it exists, or set it to "default" otherwise
+				if (systemName) 
+				{
+					systemNameEdit.textContent = systemName;
+				} else {
+					setLocalStorage("SystemName", "default");
+				}
+				
+				console.log(systemNameEdit.textContent);
+				var localSettings = getLocalStorage(systemNameEdit.textContent + '-Settings');
+				var localConfig = getLocalStorage(systemNameEdit.textContent + '-Config');
 
-			configMgr.on("configurationsProcessed", function() {
-				// Since we have the configuration id, we can now get the settings
-				configMgr.getConfigurationSettings(configMgr.currentConfiguration);
-			});
+				// set up config manager to listen to db queries emitting
+				let configMgr = new ConfigurationManager(true);
 
-			configMgr.on("settingsRetrieved", function() {
-				// Prepend a dummy object so that index 0 is occupied
-				let dummyObj = {
-						'ItemName': 'Invalid', 
-						'ConfigurationArea': 'Invalid',
-						'ItemValue': '-1',
-						'ConfigurationNodeID': '-1',
-						'displayIndex': '-1',
-						'NodeSubIndex': '-1'
-				};
-				let fullSettings = configMgr.configurationSettings;
-				fullSettings.unshift(dummyObj);
-				setLocalStorage('SystemName-Settings', fullSettings);
-				localSettings = fullSettings;
-			});
+				// Called when a search for a deviceId matching this systemName concludes
+				configMgr.on("deviceIdFound", function() 
+				{
+					if (configMgr.deviceID >= 0) 
+					{
+						configMgr.recallConfigurations(configMgr.deviceID);
+					} else {
+						// TODO: Make a new configuration for this systemName
+						console.log("configuration not found!");
+					}
+				});
 
-			if (!localSettings) { // retrieve database immediately
-				//setLocalStorage('SystemName-Settings', databaseContent);
-				//localSettings = databaseContent;
-				configMgr.recallConfigurations(64);	// TODO: This id to be replaced or dynamically found
-			}
+				// Called when recallConfigurations finishes
+				configMgr.on("configurationsProcessed", function() 
+				{
+					// Since we have the configuration id, we can now get the settings
+					configMgr.getConfigurationSettings(configMgr.currentConfiguration);
+				});
 
-			if (!localConfig) { // retrieve configuration from database
-				setLocalStorage('SystemName-Config', objectCollection);
-				localConfig = objectCollection;
-			}
-			
-			document.addEventListener('DOMContentLoaded', function() {
+				// Called when getconfigurationSettins concludes
+				configMgr.on("settingsRetrieved", function() 
+				{
+					// Prepend a dummy object so that index 0 is occupied
+					let dummyObj = {
+							'ItemName': 'Invalid', 
+							'ConfigurationArea': 'Invalid',
+							'ItemValue': '-1',
+							'ConfigurationNodeID': '-1',
+							'displayIndex': '-1',
+							'NodeSubIndex': '-1'
+					};
+					let fullSettings = configMgr.configurationSettings;
+					fullSettings.unshift(dummyObj);
+					setLocalStorage(systemNameEdit.textContent + '-Settings', fullSettings);
+					localSettings = fullSettings;
+					//renderGrowl('growl', 'Set local storage from db!', 'warning');
+				});
+
+				// If we don't already have the local settings for this systemName, get from the DB 
+				if (!localSettings) { // retrieve database immediately
+					configMgr.getDeviceIDFromSystemName(systemNameEdit.textContent);
+				}
+
+				// This is still mocked
+				if (!localConfig) { // retrieve configuration from database
+					setLocalStorage('default-Config', objectCollection);
+					localConfig = objectCollection;
+				}
+
+				// Runs when a user starts editing the system name
+				systemNameEdit.addEventListener("focus", function() 
+				{
+					systemNameEdit.setAttribute("data-initial", systemNameEdit.textContent);
+				});
+
+				// Runs when a user finishes ending the system name
+				systemNameEdit.addEventListener("blur", function () {
+        			// if changes were made, run the db query process for the new name
+        			if (systemNameEdit.getAttribute("data-initial") !== content.innerHTML) {
+						setLocalStorage("SystemName", systemNameEdit.textContent);
+						setLocalStorage(systemNameEdit.textContent + "-Config", getLocalStorage("default-Config"));
+						configMgr.getDeviceIDFromSystemName(systemNameEdit.textContent);
+					}
+				});
+				
 				initializeGlobals(initializeCalRun);
-			
-			});
+			}
 		</script>
 				
     </HEAD>
@@ -155,7 +201,7 @@
 
 					</div>
 					<div class="column is-half float-right">
-						<div class='systemName' contenteditable='true'>Not Set</div>
+						<div class='systemName' id='systemNameEdit' contenteditable='true'>default</div>
 						<div class='systemName'>System Name:</div>
 						
 					</div>

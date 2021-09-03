@@ -3,7 +3,7 @@
 //calRun object. This is the magic that does all the work
 let calRun = null;
 let popUp = null;
-//let configMgr = null;
+let configMgr = null;
 
 function initializeCalRun(enable = false)
 {
@@ -52,11 +52,16 @@ function continueCalRunInitialization()
 		configMgr = new ConfigurationManager(true);
 		configMgr.on("configurationsProcessed", function() {
 			// Set each setting in the database
-			getLocalStorage('SystemName-Settings').forEach(el => 
-				configMgr.setConfigurationSettings(configMgr.currentConfiguration, el.ConfigurationArea,
-												   el.configurationNodeID, el.displayIndex, el.ItemName, 
-												   el.ItemValue)	
-			); 
+			let systemName = getLocalStorage("SystemName");
+			if (systemName) 
+			{
+				getLocalStorage(systemName + '-Settings').forEach(el => 
+					configMgr.setConfigurationSettings(configMgr.currentConfiguration, el.ConfigurationArea,
+													   el.configurationNodeID, el.displayIndex, el.ItemName, 
+													   el.ItemValue)	
+				); 
+			}
+			
 		});
 	
 		addListeners();
@@ -162,10 +167,17 @@ function showConfigurationDialog()
 
 	// Make sure latest bits are reflected in fields
 	// TODO: this was being updated when making changes in the setup fields. This was causing issues in test, the test wasn't able to find the variables.
-	localSettings = getLocalStorage('SystemName-Settings');
-	localConfig = getLocalStorage('SystemName-Config');
-
-	renderConfig(popUp.contentArea.id, databaseTabs, localSettings, localConfig);
+	let systemName = getLocalStorage("SystemName");
+	if (systemName) 
+	{
+		let localSettings = getLocalStorage(systemName + '-Settings');
+		let localConfig = getLocalStorage(systemName + '-Config');
+	
+		renderConfig(popUp.contentArea.id, databaseTabs, localSettings, localConfig);
+	} else 
+	{
+		console.error("Config Dialog could not be created, systemName could not be found");
+	}
 }
 
 /**
